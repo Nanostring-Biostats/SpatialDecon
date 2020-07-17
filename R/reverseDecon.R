@@ -34,6 +34,20 @@
 #'  have independend of cell mixing. 
 #' }
 #' @import logNormReg
+#' @examples
+#' data(mini_geomx_dataset)
+#' # estimate background:
+#' mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+#'    norm = mini_geomx_dataset$normalized,
+#'    probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+#'    negnames = "NegProbe")
+#' # run basic decon:
+#' res0 = spatialdecon(norm = mini_geomx_dataset$normalized, 
+#'                     bg = mini_geomx_dataset$bg,
+#'                     X = safeTME)
+#' # run reverse decon:
+#' rdecon = reverseDecon(norm = mini_geomx_dataset$norm,
+#'                       beta = res0$beta)
 #' @export  
 reverseDecon <- function(norm, beta, epsilon = NULL) {
    

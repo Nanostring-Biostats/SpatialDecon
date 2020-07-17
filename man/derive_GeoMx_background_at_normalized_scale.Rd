@@ -19,3 +19,11 @@ Estimates per-datapoint background levels from a GeoMx experiment.
 In studies with two or more probe pools, different probes will have different 
 background levels. This function provides a convenient way to account for this phenomenon.
 }
+\examples{
+data(mini_geomx_dataset)
+# estimate background:
+mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+   norm = mini_geomx_dataset$normalized,
+   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+   negnames = "NegProbe")
+}

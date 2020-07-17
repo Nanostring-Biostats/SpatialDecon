@@ -19,3 +19,16 @@ A reshaped deconvolution result object
 Given the input of an SpatialDecon result output and a list of which cell types to combine,
  returns a reshaped deconvolution result object with the specified cell types merged.
 }
+\examples{
+data(mini_geomx_dataset)
+# estimate background:
+mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+   norm = mini_geomx_dataset$normalized,
+   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+   negnames = "NegProbe")
+# run basic decon:
+res0 = spatialdecon(norm = mini_geomx_dataset$normalized, 
+                    bg = mini_geomx_dataset$bg,
+                    X = safeTME)
+res1 = collapseCellTypes(fit = res0, matching = SpatialDecon::safeTME.matches)
+}

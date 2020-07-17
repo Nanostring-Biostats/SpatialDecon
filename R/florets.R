@@ -31,6 +31,23 @@
 #' @param xlab xlab, defaults to ""
 #' @param ylab ylab, defaults to ""
 #' @param ... additional arguments passed to plot()
+#' @examples
+#' data(mini_geomx_dataset)
+#' # estimate background:
+#' mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+#'    norm = mini_geomx_dataset$normalized,
+#'    probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+#'    negnames = "NegProbe")
+#' # run basic decon:
+#' res0 = spatialdecon(norm = mini_geomx_dataset$normalized, 
+#'                     bg = mini_geomx_dataset$bg,
+#'                     X = safeTME)
+#' # draw florets:
+#' florets(x = mini_geomx_dataset$annot$x,
+#'         y = mini_geomx_dataset$annot$y,
+#'         b = res0$beta, cex = 2)
+
+#' 
 #' @export
 florets <- function(x, y, b, col = NULL, legendwindow = FALSE, rescale.by.sqrt = TRUE, 
                     border = NA, add = FALSE, cex = 1, 

@@ -22,6 +22,13 @@
 #'  Must include negprobes, and must have rownames. 
 #' @param probepool Vector of probe pool names for each gene, aligned to the rows of "norm". 
 #' @param negnames Names of all negProbes in the dataset. Must be at least one neg.name within each probe pool.
+#' @examples
+#' data(mini_geomx_dataset)
+#' # estimate background:
+#' mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+#'    norm = mini_geomx_dataset$normalized,
+#'    probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+#'    negnames = "NegProbe")
 #' @export
 derive_GeoMx_background_at_normalized_scale <- function(norm, probepool, negnames) {
   

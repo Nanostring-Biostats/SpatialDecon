@@ -22,6 +22,21 @@
 #' @param draw_legend Logical. If TRUE, the function draws a legend in a new plot frame.
 #' @param main Title for barplot
 #' @param ... Arguments passed to barplot()
+#' @examples
+#' data(mini_geomx_dataset)
+#' # estimate background:
+#' mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+#'    norm = mini_geomx_dataset$normalized,
+#'    probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+#'    negnames = "NegProbe")
+#' # run basic decon:
+#' res0 = spatialdecon(norm = mini_geomx_dataset$normalized, 
+#'                     bg = mini_geomx_dataset$bg,
+#'                     X = safeTME)
+#' # run barplot:
+#' TIL_barplot(mat = res0$beta)
+#' # run barplot and draw a color legend
+#' TIL_barplot(mat = res0$beta, draw_legend = TRUE)
 #' @export
 TIL_barplot = function(mat, draw_legend = FALSE, main = "", ...) {
   

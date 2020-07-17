@@ -31,3 +31,16 @@ and cutree() is used to define clusters.
 \item 2. Each cluster's geomean profile is merged into the immune cell profile matrix.
 }
 }
+\examples{
+data(mini_geomx_dataset)
+mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+   norm = mini_geomx_dataset$normalized,
+   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+   negnames = "NegProbe")
+safeTME.with.tumor = mergeTumorIntoX(
+   norm = mini_geomx_dataset$norm, 
+   bg = mini_geomx_dataset$bg, 
+   pure.tumor.ids = mini_geomx_dataset$annot$AOI.name == "Tumor",
+   X = safeTME, 
+   K = 3) 
+}

@@ -20,3 +20,19 @@ whatever order is best for display.}
 \description{
 Draw barplot of the "betas" from a decon fit
 }
+\examples{
+data(mini_geomx_dataset)
+# estimate background:
+mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+   norm = mini_geomx_dataset$normalized,
+   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+   negnames = "NegProbe")
+# run basic decon:
+res0 = spatialdecon(norm = mini_geomx_dataset$normalized, 
+                    bg = mini_geomx_dataset$bg,
+                    X = safeTME)
+# run barplot:
+TIL_barplot(mat = res0$beta)
+# run barplot and draw a color legend
+TIL_barplot(mat = res0$beta, draw_legend = TRUE)
+}

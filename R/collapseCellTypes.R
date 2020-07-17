@@ -19,6 +19,18 @@
 #' @param matching A list object holding the mapping from beta's cell names to official cell names. 
 #'  See str(safeTME.matches) for an example. 
 #' @return A reshaped deconvolution result object 
+#' @examples 
+#' data(mini_geomx_dataset)
+#' # estimate background:
+#' mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+#'    norm = mini_geomx_dataset$normalized,
+#'    probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+#'    negnames = "NegProbe")
+#' # run basic decon:
+#' res0 = spatialdecon(norm = mini_geomx_dataset$normalized, 
+#'                     bg = mini_geomx_dataset$bg,
+#'                     X = safeTME)
+#' res1 = collapseCellTypes(fit = res0, matching = SpatialDecon::safeTME.matches)
 #' @export
 collapseCellTypes <- function(fit, matching) {
   

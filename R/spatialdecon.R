@@ -13,8 +13,8 @@
 
 #' Perform complete deconvolution workflow on a tumor-immune dataset
 #' 
-#' Runs the complete TILs (tumor-immune) decon workflow, including:
-#' Runs the generic SpatialDecon decon workflow, including:
+#' Runs the spatialdecon algorithm with added optional functionalities. 
+#' Workflow is:
 #' \enumerate{
 #' \item compute weights from raw data
 #' \item Estimate a tumor profile and merge it into the cell profiles matrix
@@ -63,6 +63,24 @@
 #' \item resids: a matrix of residuals from the model fit. (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))). 
 #' \item X: the cell profile matrix used in the decon fit. 
 #' }
+#' @examples
+#' data(mini_geomx_dataset)
+#' # estimate background:
+#' mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+#'    norm = mini_geomx_dataset$normalized,
+#'    probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+#'    negnames = "NegProbe")
+#' # run basic decon:
+#' res0 = spatialdecon(norm = mini_geomx_dataset$normalized, 
+#'                     bg = mini_geomx_dataset$bg,
+#'                     X = safeTME)
+#' # run decon with bells and whistles:
+#' res = spatialdecon(norm = mini_geomx_dataset$normalized, 
+#'                    bg = mini_geomx_dataset$bg,
+#'                    X = safeTME,
+#'                    cellmerges = safeTME.matches,
+#'                    cell_counts = mini_geomx_dataset$annot$nuclei,
+#'                    is_pure_tumor = mini_geomx_dataset$annot$AOI.name == "Tumor")
 #' @export
 spatialdecon <- function(norm, bg, X = NULL, 
                          raw = NULL, wts = NULL, 

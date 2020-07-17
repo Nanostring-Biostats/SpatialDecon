@@ -30,6 +30,18 @@
 #' @param X The training matrix
 #' @param K the number of clusters to fit
 #' @return an updated X matrix with new columns, "tumor.1", "tumor.2", ...
+#' @examples 
+#' data(mini_geomx_dataset)
+#' mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+#'    norm = mini_geomx_dataset$normalized,
+#'    probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+#'    negnames = "NegProbe")
+#' safeTME.with.tumor = mergeTumorIntoX(
+#'    norm = mini_geomx_dataset$norm, 
+#'    bg = mini_geomx_dataset$bg, 
+#'    pure.tumor.ids = mini_geomx_dataset$annot$AOI.name == "Tumor",
+#'    X = safeTME, 
+#'    K = 3) 
 #' @export
 mergeTumorIntoX = function(norm, bg, pure.tumor.ids, X, K = 10) {
   
