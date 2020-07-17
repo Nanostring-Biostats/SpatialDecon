@@ -91,7 +91,7 @@ algorithm2 = function(Y, X, bg = 0, weights = NULL,
   Y.nooutliers = replace(Y, outliers, NA)
   
   # re-run decon without outliers:
-  out = deconLNR(Y = Y.nooutliers, X = X, bg = bg, weights = weights, epsilon = epsilon, ...)
+  out = deconLNR(Y = Y.nooutliers, X = X, bg = bg, weights = weights, epsilon = epsilon)
   out$yhat = X %*% out$beta + bg
   out$resids = log2(pmax(Y.nooutliers, 0.5)) - log2(pmax(out$yhat, 0.5))
     

@@ -20,10 +20,10 @@
 #' 
 #' @param beta K * n matrix of estimated beta values (cell type abundances)
 #' @param matching A list object holding the mapping from beta's cell names to official cell names. 
+#'  See str(safeTME.matches) for an example. 
 #' @param stat The function used to combine related cell types. Defaults to sum.
 #' @param na.rm Whether to ignore NAs while computing stat
 #' @param sigma A list of covariance matrices of beta estimates, in the format output by spatialdecon.
-#' @export
 convertCellTypes = function(beta, matching, stat = sum, na.rm = F, sigma = NULL) {
   # format matching list as a matrix to take a linear combination of beta:
   A = matrix(0, length(matching), nrow(beta), dimnames = list(names(matching), rownames(beta)))

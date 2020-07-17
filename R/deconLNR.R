@@ -37,38 +37,54 @@ deconLNR = function(Y, X, bg = 0, weights = NULL, epsilon = NULL) {
   if (length(epsilon) == 0) {
     epsilon = min(replace(Y, (Y == 0) & !is.na(Y), NA), na.rm = T)
   }
-  beta = matrix(NA, ncol(X), ncol(Y), dimnames = list(colnames(X), colnames(Y)))
-  sigmas = array(NA, dim = c(ncol(X), ncol(X), ncol(Y)), dimnames = list(colnames(X), colnames(X), colnames(Y)))
-  for (i in 1:ncol(Y)) {
-    y = Y[, i]
-    b = bg[, i]
-    wts = weights[, i]
+  
+  # matrix-like data for apply:
+  mat = rbind(Y, bg, weights)
+  # fn to apply:
+  fn = function(zz) {
+    # break into y, b, w:
+    y = zz[1:(length(zz)/3)]
+    b = zz[1:(length(zz)/3) + (length(zz)/3)]
+    wts = zz[1:(length(zz)/3) + (length(zz)/3) * 2]
     
     # remove NA data:
     use = !is.na(y)
     y = y[use]
     b = b[use]
-    Xtemp = X[use,  , drop = F]
+    Xtemp = X[use, , drop = F]
     wts = wts[use]
     
     init = rep(mean(y) / (mean(X) * ncol(X)), ncol(X)); names(init) = colnames(X)
     
     # run lognlm:
     fit = lognlm(pmax(y, epsilon) ~ b + Xtemp - 1,
-                lik = FALSE,
-                weights = wts,
-                #start = rep(1, ncol(X) + 1),
-                start = c(1, init),
-                method = "L-BFGS-B", 
-                lower = c(1, rep(0, ncol(Xtemp))), 
-                upper = c(1, rep(Inf, ncol(Xtemp))),
-                opt = "optim",
-                control = list(maxit = 1000))
-    # save estimate, excluding the intercept:
-    beta[, i] = fit$coefficients[-1]
-    # save vcov, excluding the intercept:
-    sigmas[, , i] = solve(fit$hessian)[-1, -1]
+                 lik = FALSE,
+                 weights = wts,
+                 start = c(1, init),
+                 method = "L-BFGS-B", 
+                 lower = c(1, rep(0, ncol(Xtemp))), 
+                 upper = c(1, rep(Inf, ncol(Xtemp))),
+                 opt = "optim",
+                 control = list(maxit = 1000))
+    fnout = list(beta = fit$coefficients[-1],
+                 sigma = solve(fit$hessian)[-1, -1])
+    return(fnout)
   }
+  # apply across all observations:
+  fnlist = apply(mat, 2, fn)
+  # extract beta and sigmas:
+  getbeta = function(zz) {
+    return(zz$beta)
+  }
+  getsigma = function(zz) {
+    return(zz$sigma)
+  }
+  
+  beta = sapply(fnlist, getbeta)
+  rownames(beta) = colnames(X)
+  sigmas = array(sapply(fnlist, getsigma), dim = c(ncol(X), ncol(X), ncol(Y)),
+                 dimnames = list(colnames(X), colnames(X), colnames(Y)))
+  
   out = list(beta = pmax(beta, 0), sigmas = sigmas)
   return(out)
 }

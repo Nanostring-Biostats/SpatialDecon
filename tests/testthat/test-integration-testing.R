@@ -147,4 +147,26 @@ test_that("matrix download works", {
 })
 
 
+### test collapseCellTypes:
 
+# uncollapsed result:
+res2 = spatialdecon(norm = snr,
+                   raw = raw,
+                   bg = replace(snr, TRUE, 1),
+                   cellmerges = NULL,
+                   is_pure_tumor = annot$AOI.name == "Tumor",
+                   cell_counts = annot$nuclei,
+                   n.tumor.clusters = 5)
+# collapse them:
+res2.collapsed = collapseCellTypes(fit = res2, 
+                                   matching = SpatialDecon::safeTME.matches)
+# compare collapsed results from within spatialdecon vs. post-hoc:
+test_that("collapseCellTypes works", {
+  expect_true(all(abs(res2.collapsed$beta - res$beta) < 1e-3))
+  expect_true(all(abs(res2.collapsed$sigmas - res$sigmas) < 1e-3))
+  expect_true(all(abs(res2.collapsed$p - res$p) < 1e-3))
+  expect_true(all(abs(res2.collapsed$t - res$t) < 1e-3))
+  expect_true(all(abs(res2.collapsed$se - res$se) < 1e-3))
+  
+})
+  

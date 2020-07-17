@@ -55,10 +55,10 @@
 #' @export
 download_profile_matrix <- function(matrixname) {
   
+  #X = as.matrix(utils::read.csv(paste0("https://github.com/Nanostring-Biostats/Extensions/blob/refactor/cell-profile-library/",
   X = as.matrix(utils::read.csv(paste0("https://raw.githubusercontent.com/patrickjdanaher/cell-profile-library/master/profile_matrices/",
                                        matrixname, ".csv"), row.names = 1))
-  #X = as.matrix(utils::read.csv(paste0("https://github.com/Nanostring-Biostats/Extensions/blob/refactor/cell-profile-library/",
-  
+
   X = X[rowSums(X) > 0, ]
   return(X)
 }

@@ -57,13 +57,20 @@ We estimate each data point's expected background from the negative control prob
 ```{r estimateBG}
 # use the NegProbe to estimate per-observation background
 per.observation.mean.neg = norm["NegProbe", ]
-# and define a background matrix in which each column (observatoin) is the appropriate 
+# and define a background matrix in which each column (observation) is the appropriate 
 #  value of per-observation background:
 bg = sweep(norm * 0, 2, per.observation.mean.neg, "+")
 dim(bg)
+
 ```
 
-A note for background estimation: in studies with two probesets, the genes from each probeset will have distinct background values, and the above code should be run separately for each probeset using its corresponding NegProbe value.
+A note for background estimation: in studies with two probesets, the genes from each probeset will have distinct background values, and the above code should be run separately for each probeset using its corresponding NegProbe value. Alternatively, the "derive_GeoMx_background_at_normalized_scale" can do this automatically:
+
+```{r derivebg}
+bg2 = derive_GeoMx_background_at_normalized_scale(norm = norm,
+                                                 probepool = rep(1, nrow(norm)),
+                                                 negnames = "NegProbe")
+```
 
 
 ### Cell profile matrices
@@ -232,3 +239,80 @@ florets(x = pc[, 1], y = pc[, 2],
 ```
 
 So we can see that PC1 roughly tracks many vs. few immune cells, and PC2 tracks the relative abundance of lymphoid/myeloid populations.
+
+
+### Other functions
+
+The SpatialDecon library includes several helpful functions for further analysis/fine-tuning of decon results. 
+
+#### Combining cell types:
+
+When two cell types are too similar, the estimation of their abundances becomes unstable. However, their sum can still be estimated easily. 
+The function "convertCellTypes" takes a decon results object and collapses any colsely-related cell types you tell it to:
+
+```{r collapse}
+matching = list()
+matching$myeloid = c( "macrophages", "monocytes", "mDCs")
+matching$T.NK = c("CD4.T.cells","CD8.T.cells", "Treg", "NK")
+matching$B = c("B")
+matching$mast = c("mast")
+matching$neutrophils = c("neutrophils")
+matching$stroma = c("endothelial.cells", "fibroblasts")
+
+
+collapsed = collapseCellTypes(fit = restils, 
+                              matching = matching)
+
+heatmap(collapsed$beta)
+```
+
+#### Inferring an expression profile for a cell type omitted from the cell profile matrix
+
+Sometimes a cell profile matrix will omit a cell type you know to be present in a tissue. 
+If your data includes any regions that are purely this unmodelled cell type - e.g. becuase you've used the GeoMx platform's segmentation capability to specifically select them - then you can infer a profile for that cell type and merge it with your cell profile matrix. 
+The algorithm clusters all the observations you designate as purely the unmodelled cell type, and collapses those clusters into as many profiles of that cell type as you wish. For cancer cell, it may be appropriate to specify 10 or more clusters; for highly regular healthy cells, one cluster may suffice.
+
+(Note: this functionality can also be run within the spatialdecon function, as is demonstrated further above.)
+
+```{r appendtumor, fig.width = 10, fig.height= 5}
+pure.tumor.ids = annot$AOI.name == "Tumor"
+safeTME.with.tumor = mergeTumorIntoX(norm = norm, 
+                                     bg = bg, 
+                                     pure.tumor.ids = pure.tumor.ids, 
+                                     X = safeTME, 
+                                     K = 3) 
+
+heatmap(sweep(safeTME.with.tumor, 1, apply(safeTME.with.tumor, 1, max), "/"),
+        labRow = NA, margins = c(10, 5))
+```
+
+
+#### Reverse deconvolution
+
+Once cell type abundance has been estimated, we can flip the deconvolution around, modelling the expression data as a function of cell abundances, and thereby deriving:
+
+1. Estimated expression of each gene in each cell type. (Including for genes not present in your cell profile matrix)
+2. Fitted expression vlaues for each gene based on cell mixing.
+3. Residuals of each gene: how does their expression compare to what cell mixing would predict?
+4. Two metrics of how well genes are predicted by/ redundant with cell mixing: correlation between observed and fitted expression, and residual SD. 
+
+The function "reversedecon" runs this model.
+
+```{r reverse, fig.height=6, fig.width=6}
+rdecon = reverseDecon(norm = norm,
+                      beta = res$beta)
+str(rdecon)
+
+# look at the residuals:
+heatmap(pmax(pmin(rdecon$resids, 2), -2))
+
+# look at the two metrics of goodness-of-fit:
+plot(rdecon$cors, rdecon$resid.sd, col = 0)
+showgenes = c("CXCL14", "LYZ", "NKG7")
+text(rdecon$cors[setdiff(names(rdecon$cors), showgenes)], rdecon$resid.sd[setdiff(names(rdecon$cors), showgenes)], 
+     setdiff(names(rdecon$cors), showgenes), cex = 0.5)
+text(rdecon$cors[showgenes], rdecon$resid.sd[showgenes], showgenes, cex = 0.75, col = 2)
+
+```
+
+From the above plot, we can see that genes like CXCL14 vary independently of cell mixing, genes like LYZ are correlated with cell mixing but still have variable expression, and genes like NKG7 serve as nothing but obtuse readouts of cell mixing. 

@@ -20,16 +20,17 @@
 #'  (cells in rows, observations in columns). User is free to re-order columns/observations in 
 #'  whatever order is best for display.
 #' @param draw_legend Logical. If TRUE, the function draws a legend in a new plot frame.
+#' @param main Title for barplot
 #' @param ... Arguments passed to barplot()
 #' @export
-TIL_barplot = function(mat, draw_legend = FALSE, ...) {
+TIL_barplot = function(mat, draw_legend = FALSE, main = "", ...) {
   
   usecells = intersect(rownames(mat), names(SpatialDecon::cellcols))
   
   # draw barplot:
   graphics::barplot(mat[usecells, ], cex.lab = 1.5,
-                    col = SpatialDecon::cellcols[rownames(mat)], main = "", border = NA,
-                    las = 2, ...)
+                    col = SpatialDecon::cellcols[rownames(mat)], border = NA,
+                    las = 2, main = main, ...)
   
   # draw a legend:
   if (draw_legend) {

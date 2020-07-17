@@ -68,9 +68,9 @@ spatialdecon <- function(norm, bg, X = NULL,
                          raw = NULL, wts = NULL, 
                          resid_thresh = 3, lower_thresh = 0.5, 
                          align_genes = TRUE,
-                         is_pure_tumor = NULL, 
+                         is_pure_tumor = NULL, n.tumor.clusters = 10, 
                          cell_counts = NULL, 
-                         cellmerges = NULL, n.tumor.clusters = 10) {
+                         cellmerges = NULL) {
   
   #### preliminaries ---------------------------------
   

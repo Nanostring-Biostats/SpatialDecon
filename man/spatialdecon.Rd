@@ -14,9 +14,9 @@ spatialdecon(
   lower_thresh = 0.5,
   align_genes = TRUE,
   is_pure_tumor = NULL,
+  n.tumor.clusters = 10,
   cell_counts = NULL,
-  cellmerges = NULL,
-  n.tumor.clusters = 10
+  cellmerges = NULL
 )
 }
 \arguments{
@@ -43,15 +43,15 @@ points near zero.}
 \item{is_pure_tumor}{A logical vector denoting whether each AOI consists of pure tumor. If specified,
 then the algorithm will derive a tumor expression profile and merge it with the immune profiles matrix.}
 
+\item{n.tumor.clusters}{Number of tumor-specific columns to merge into the cell profile matrix.
+Has an impact only when is_pure_tumor argument is used to indicate pure tumor AOIs.
+Takes this many clusters from the pure-tumor AOI data and gets the average expression profile in each cluster.  Default 10.}
+
 \item{cell_counts}{Number of cells estimated to be within each sample. If provided alongside norm_factors,
 then the algorithm will additionally output cell abundance esimtates on the scale of cell counts.}
 
 \item{cellmerges}{A list object holding the mapping from beta's cell names to combined cell names. If left
 NULL, then defaults to a mapping of granular immune cell definitions to broader categories.}
-
-\item{n.tumor.clusters}{Number of tumor-specific columns to merge into the cell profile matrix.
-Has an impact only when is_pure_tumor argument is used to indicate pure tumor AOIs.
-Takes this many clusters from the pure-tumor AOI data and gets the average expression profile in each cluster.  Default 10.}
 }
 \value{
 a list:

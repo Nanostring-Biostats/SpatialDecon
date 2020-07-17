@@ -2,8 +2,7 @@
 
 export(TIL_barplot)
 export(algorithm2)
-export(convertCellTypes)
-export(deriveWeights)
+export(collapseCellTypes)
 export(derive_GeoMx_background_at_normalized_scale)
 export(download_profile_matrix)
 export(flagOutliers)
