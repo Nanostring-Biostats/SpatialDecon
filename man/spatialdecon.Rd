@@ -16,7 +16,8 @@ spatialdecon(
   is_pure_tumor = NULL,
   n.tumor.clusters = 10,
   cell_counts = NULL,
-  cellmerges = NULL
+  cellmerges = NULL,
+  maxit = 1000
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ then the algorithm will additionally output cell abundance esimtates on the scal
 
 \item{cellmerges}{A list object holding the mapping from beta's cell names to combined cell names. If left
 NULL, then defaults to a mapping of granular immune cell definitions to broader categories.}
+
+\item{maxit}{Maximum number of iterations. Default 1000.}
 }
 \value{
 a list:

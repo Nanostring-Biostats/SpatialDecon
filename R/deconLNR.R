@@ -21,9 +21,10 @@
 #' @param bg scalar or matrix of expected background counts per data point. 
 #' @param weights The same as the weights argument used by lm
 #' @param epsilon optional,  a very small non-zero number to use as a lower threshold to make fits well-behaved
+#' @param maxit Maximum number of iterations. Default 1000.
 #' @return a list: beta (estimate), sigmas (covariance matrix of estimate, derived by inverting the hessian from lognlm)
 #' @import logNormReg
-deconLNR = function(Y, X, bg = 0, weights = NULL, epsilon = NULL) {
+deconLNR = function(Y, X, bg = 0, weights = NULL, epsilon = NULL, maxit = 1000) {
   if (length(weights) == 0) {
     weights = replace(Y, TRUE, 1)
   }
@@ -65,7 +66,7 @@ deconLNR = function(Y, X, bg = 0, weights = NULL, epsilon = NULL) {
                  lower = c(1, rep(0, ncol(Xtemp))), 
                  upper = c(1, rep(Inf, ncol(Xtemp))),
                  opt = "optim",
-                 control = list(maxit = 1000))
+                 control = list(maxit = maxit))
     fnout = list(beta = fit$coefficients[-1],
                  sigma = solve(fit$hessian)[-1, -1])
     return(fnout)

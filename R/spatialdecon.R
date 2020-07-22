@@ -47,6 +47,7 @@
 #' @param n.tumor.clusters Number of tumor-specific columns to merge into the cell profile matrix.
 #'  Has an impact only when is_pure_tumor argument is used to indicate pure tumor AOIs.
 #'  Takes this many clusters from the pure-tumor AOI data and gets the average expression profile in each cluster.  Default 10. 
+#' @param maxit Maximum number of iterations. Default 1000.
 #' @return a list:
 #' \itemize{
 #' \item beta: matrix of cell abundance estimates, cells in rows and observations in columns 
@@ -88,9 +89,31 @@ spatialdecon <- function(norm, bg, X = NULL,
                          align_genes = TRUE,
                          is_pure_tumor = NULL, n.tumor.clusters = 10, 
                          cell_counts = NULL, 
-                         cellmerges = NULL) {
+                         cellmerges = NULL, 
+                         maxit = 1000) {
   
   #### preliminaries ---------------------------------
+  
+  # check formatting:
+  if (!is.matrix(norm)) {
+    stop("norm should be a matrix")
+  }
+  if (!is.matrix(bg)) {
+    stop("bg should be a matrix")
+  }
+  if ((length(X) > 0) & (!is.matrix(X))) {
+    stop("X should be a matrix")
+  }
+  if ((length(raw) > 0) & (!is.matrix(raw))) {
+    stop("raw must be numeric")
+  }
+  if ((length(wts) > 0) & (!is.matrix(wts))) {
+    stop("wts must be numeric")
+  }
+  if ((length(cell_counts) > 0) & (!is.numeric(cell_counts))) {
+    stop("cell_counts must be numeric")
+  }
+  
   
   if (length(bg) == 1) {
     bg = matrix(bg, nrow(norm), ncol(norm), dimnames = list(rownames(norm), colnames(norm)))
@@ -133,7 +156,8 @@ spatialdecon <- function(norm, bg, X = NULL,
   res = algorithm2(Y = norm[sharedgenes, ], 
                    bg = bg[sharedgenes, ], 
                    X = X[sharedgenes, ], 
-                   weights = wts[sharedgenes, ])
+                   weights = wts[sharedgenes, ],
+                   maxit = maxit)
   
   
   #### combine closely-related cell types ------------------------------------
