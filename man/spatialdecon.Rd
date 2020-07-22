@@ -14,7 +14,7 @@ spatialdecon(
   lower_thresh = 0.5,
   align_genes = TRUE,
   is_pure_tumor = NULL,
-  n.tumor.clusters = 10,
+  n_tumor_clusters = 10,
   cell_counts = NULL,
   cellmerges = NULL,
   maxit = 1000
@@ -44,7 +44,7 @@ points near zero.}
 \item{is_pure_tumor}{A logical vector denoting whether each AOI consists of pure tumor. If specified,
 then the algorithm will derive a tumor expression profile and merge it with the immune profiles matrix.}
 
-\item{n.tumor.clusters}{Number of tumor-specific columns to merge into the cell profile matrix.
+\item{n_tumor_clusters}{Number of tumor-specific columns to merge into the cell profile matrix.
 Has an impact only when is_pure_tumor argument is used to indicate pure tumor AOIs.
 Takes this many clusters from the pure-tumor AOI data and gets the average expression profile in each cluster.  Default 10.}
 

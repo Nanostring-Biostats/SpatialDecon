@@ -153,7 +153,7 @@ restils = spatialdecon(norm = norm,                     # normalized data
                        cellmerges = safeTME.matches,   # safeTME.matches object, used by default
                        cell_counts = annot$nuclei,      # nuclei counts, used to estimate total cells
                        is_pure_tumor = annot$istumor,   # identities of the Tumor segments/observations
-                       n.tumor.clusters = 5)            # how many distinct tumor profiles to append to safeTME
+                       n_tumor_clusters = 5)            # how many distinct tumor profiles to append to safeTME
 
 str(restils)
 ```
@@ -278,7 +278,7 @@ The algorithm clusters all the observations you designate as purely the unmodell
 pure.tumor.ids = annot$AOI.name == "Tumor"
 safeTME.with.tumor = mergeTumorIntoX(norm = norm, 
                                      bg = bg, 
-                                     pure.tumor.ids = pure.tumor.ids, 
+                                     pure_tumor_ids = pure.tumor.ids, 
                                      X = safeTME, 
                                      K = 3) 
 

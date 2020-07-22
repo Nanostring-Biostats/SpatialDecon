@@ -44,7 +44,7 @@
 #'  then the algorithm will additionally output cell abundance esimtates on the scale of cell counts.
 #' @param cellmerges A list object holding the mapping from beta's cell names to combined cell names. If left
 #'  NULL, then defaults to a mapping of granular immune cell definitions to broader categories.
-#' @param n.tumor.clusters Number of tumor-specific columns to merge into the cell profile matrix.
+#' @param n_tumor_clusters Number of tumor-specific columns to merge into the cell profile matrix.
 #'  Has an impact only when is_pure_tumor argument is used to indicate pure tumor AOIs.
 #'  Takes this many clusters from the pure-tumor AOI data and gets the average expression profile in each cluster.  Default 10. 
 #' @param maxit Maximum number of iterations. Default 1000.
@@ -87,7 +87,7 @@ spatialdecon <- function(norm, bg, X = NULL,
                          raw = NULL, wts = NULL, 
                          resid_thresh = 3, lower_thresh = 0.5, 
                          align_genes = TRUE,
-                         is_pure_tumor = NULL, n.tumor.clusters = 10, 
+                         is_pure_tumor = NULL, n_tumor_clusters = 10, 
                          cell_counts = NULL, 
                          cellmerges = NULL, 
                          maxit = 1000) {
@@ -97,9 +97,6 @@ spatialdecon <- function(norm, bg, X = NULL,
   # check formatting:
   if (!is.matrix(norm)) {
     stop("norm should be a matrix")
-  }
-  if (!is.matrix(bg)) {
-    stop("bg should be a matrix")
   }
   if ((length(X) > 0) & (!is.matrix(X))) {
     stop("X should be a matrix")
@@ -144,9 +141,9 @@ spatialdecon <- function(norm, bg, X = NULL,
     # derive tumor profiles and merge into X: (derive a separate profile for each tissue)
     X = mergeTumorIntoX(norm = norm,
                         bg = bg, 
-                        pure.tumor.ids = is_pure_tumor, 
+                        pure_tumor_ids = is_pure_tumor, 
                         X = X[sharedgenes, ], 
-                        K = n.tumor.clusters)
+                        K = n_tumor_clusters)
                         
     sharedgenes = intersect(rownames(norm), rownames(X))
   }

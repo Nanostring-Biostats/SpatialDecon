@@ -4,14 +4,14 @@
 \alias{mergeTumorIntoX}
 \title{Estimate a tumor-specific profile and merge it with the pre-specified cell profile matrix (X)}
 \usage{
-mergeTumorIntoX(norm, bg, pure.tumor.ids, X, K = 10)
+mergeTumorIntoX(norm, bg, pure_tumor_ids, X, K = 10)
 }
 \arguments{
 \item{norm}{matrix of normalized data}
 
 \item{bg}{matrix of expected background, on the scale of norm.}
 
-\item{pure.tumor.ids}{Vector identifying columns of norm that are pure tumor. 
+\item{pure_tumor_ids}{Vector identifying columns of norm that are pure tumor. 
 Can be indices, logicals or column names.}
 
 \item{X}{The training matrix}
@@ -40,7 +40,7 @@ mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
 safeTME.with.tumor = mergeTumorIntoX(
    norm = mini_geomx_dataset$norm, 
    bg = mini_geomx_dataset$bg, 
-   pure.tumor.ids = mini_geomx_dataset$annot$AOI.name == "Tumor",
+   pure_tumor_ids = mini_geomx_dataset$annot$AOI.name == "Tumor",
    X = safeTME, 
    K = 3) 
 }

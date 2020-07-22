@@ -25,7 +25,7 @@
 #'  
 #' @param norm matrix of normalized data
 #' @param bg matrix of expected background, on the scale of norm. 
-#' @param pure.tumor.ids Vector identifying columns of norm that are pure tumor. 
+#' @param pure_tumor_ids Vector identifying columns of norm that are pure tumor. 
 #'  Can be indices, logicals or column names. 
 #' @param X The training matrix
 #' @param K the number of clusters to fit
@@ -39,19 +39,19 @@
 #' safeTME.with.tumor = mergeTumorIntoX(
 #'    norm = mini_geomx_dataset$norm, 
 #'    bg = mini_geomx_dataset$bg, 
-#'    pure.tumor.ids = mini_geomx_dataset$annot$AOI.name == "Tumor",
+#'    pure_tumor_ids = mini_geomx_dataset$annot$AOI.name == "Tumor",
 #'    X = safeTME, 
 #'    K = 3) 
 #' @export
-mergeTumorIntoX = function(norm, bg, pure.tumor.ids, X, K = 10) {
+mergeTumorIntoX = function(norm, bg, pure_tumor_ids, X, K = 10) {
   
   # round up 0 values in norm:
   min.nonzero = min(norm[norm > 0], na.rm = T)
   norm = pmax(norm, min.nonzero)
   
   # subset data to only the pure tumor IDs:
-  norm = norm[, pure.tumor.ids, drop = F]
-  bg = bg[, pure.tumor.ids, drop = F]
+  norm = norm[, pure_tumor_ids, drop = F]
+  bg = bg[, pure_tumor_ids, drop = F]
   
   # bg-subtract:
   norm = pmax(norm - bg, min(norm) / 20)

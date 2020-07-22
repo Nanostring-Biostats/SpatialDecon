@@ -30,7 +30,7 @@ test_that("mergeTumorIntoX is as expected", {
   set.seed(0)
   mergedX = mergeTumorIntoX(norm = snr[sharedgenes, ],
                             bg = replace(snr, TRUE, 1)[sharedgenes, ], 
-                            pure.tumor.ids =  annot$AOI.name == "Tumor", 
+                            pure_tumor_ids =  annot$AOI.name == "Tumor", 
                             X = safeTME[sharedgenes, ], 
                             K = 5)
   expect_true(all(abs(mergedX.test - mergedX) < 1e-3))
@@ -76,7 +76,7 @@ res = spatialdecon(norm = snr,
                    cellmerges = SpatialDecon::safeTME.matches,
                    is_pure_tumor = annot$AOI.name == "Tumor",
                    cell_counts = annot$nuclei,
-                   n.tumor.clusters = 5)
+                   n_tumor_clusters = 5)
 
 test_that("cell matching is as expected", {
   expect_equal(rownames(res.test$beta), rownames(res$beta))
@@ -156,7 +156,7 @@ res2 = spatialdecon(norm = snr,
                    cellmerges = NULL,
                    is_pure_tumor = annot$AOI.name == "Tumor",
                    cell_counts = annot$nuclei,
-                   n.tumor.clusters = 5)
+                   n_tumor_clusters = 5)
 # collapse them:
 res2.collapsed = collapseCellTypes(fit = res2, 
                                    matching = SpatialDecon::safeTME.matches)
