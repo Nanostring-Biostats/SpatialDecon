@@ -9,7 +9,7 @@ convertCellTypes(beta, matching, stat = sum, na.rm = F, sigma = NULL)
 \arguments{
 \item{beta}{K * n matrix of estimated beta values (cell type abundances)}
 
-\item{matching}{A list object holding the mapping from beta's cell names to official cell names. 
+\item{matching}{A list object holding the mapping from beta's cell names to official cell names.
 See str(safeTME.matches) for an example.}
 
 \item{stat}{The function used to combine related cell types. Defaults to sum.}

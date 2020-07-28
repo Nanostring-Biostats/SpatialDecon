@@ -18,33 +18,38 @@ Essentially says, "ignore variability in counts below this threshold."}
 \value{
 A list:
 \itemize{
-\item coefs, a matrix of coefficients for genes * cells, where element i,j is interpreted as 
+\item coefs, a matrix of coefficients for genes * cells, where element i,j is interpreted as
 "every unit increase in cell score j is expected to increase expression of gene i by _".
 \item yhat, a matrix of fitted values, in the same dimension as norm
-\item resids, a matrix of log2-scale residuals from the reverse decon fit, in the same 
+\item resids, a matrix of log2-scale residuals from the reverse decon fit, in the same
  dimension as norm
 \item cors, a vector giving each gene's correlation between fitted and observed expression
-\item resid.sd, a vector of each gene's residual SD, a metric of how much variability genes 
- have independend of cell mixing. 
+\item resid.sd, a vector of each gene's residual SD, a metric of how much variability genes
+ have independend of cell mixing.
 }
 }
 \description{
-Performs "reverse deconvolution", modelling each gene expression's ~ cell scores. 
+Performs "reverse deconvolution", modelling each gene expression's ~ cell scores.
 Returns a matrix of "fitted" expression values, a matrix of residuals, a matrix of
 reverse decon coefficients for genes * cells.
 }
 \examples{
 data(mini_geomx_dataset)
 # estimate background:
-mini_geomx_dataset$bg = derive_GeoMx_background(
-   norm = mini_geomx_dataset$normalized,
-   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
-   negnames = "NegProbe")
+mini_geomx_dataset$bg <- derive_GeoMx_background(
+  norm = mini_geomx_dataset$normalized,
+  probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+  negnames = "NegProbe"
+)
 # run basic decon:
-res0 = spatialdecon(norm = mini_geomx_dataset$normalized, 
-                    bg = mini_geomx_dataset$bg,
-                    X = safeTME)
+res0 <- spatialdecon(
+  norm = mini_geomx_dataset$normalized,
+  bg = mini_geomx_dataset$bg,
+  X = safeTME
+)
 # run reverse decon:
-rdecon = reverseDecon(norm = mini_geomx_dataset$norm,
-                      beta = res0$beta)
+rdecon <- reverseDecon(
+  norm = mini_geomx_dataset$norm,
+  beta = res0$beta
+)
 }

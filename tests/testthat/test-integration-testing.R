@@ -10,16 +10,18 @@ context("spatialdecon")
 rm(list = ls())
 load("testdata.RData")
 load("expectedtestresults.RData")
-sharedgenes = intersect(rownames(safeTME), rownames(snr))
+sharedgenes <- intersect(rownames(safeTME), rownames(snr))
 
 
 
 #### test subsidiary functions individually ----------------------------------------
 
 test_that("deriveWeights is as expected", {
-  wts = deriveWeights(norm = snr,
-                      raw = raw,
-                      error.model = "dsp")
+  wts <- deriveWeights(
+    norm = snr,
+    raw = raw,
+    error.model = "dsp"
+  )
   expect_true(all(abs(wts.test - wts) < 1e-3))
 })
 
@@ -28,26 +30,29 @@ test_that("deriveWeights is as expected", {
 # merging tumor profiles:
 test_that("mergeTumorIntoX is as expected", {
   set.seed(0)
-  mergedX = mergeTumorIntoX(norm = snr[sharedgenes, ],
-                            bg = replace(snr, TRUE, 1)[sharedgenes, ], 
-                            pure_tumor_ids =  annot$AOI.name == "Tumor", 
-                            X = safeTME[sharedgenes, ], 
-                            K = 5)
+  mergedX <- mergeTumorIntoX(
+    norm = snr[sharedgenes, ],
+    bg = replace(snr, TRUE, 1)[sharedgenes, ],
+    pure_tumor_ids = annot$AOI.name == "Tumor",
+    X = safeTME[sharedgenes, ],
+    K = 5
+  )
   expect_true(all(abs(mergedX.test - mergedX) < 1e-3))
 })
 
 
 
-# spatialdecon: 
+# spatialdecon:
 set.seed(0)
-gres = spatialdecon(norm = snr[sharedgenes, ], 
-                    X = safeTME[sharedgenes, ],
-                    bg = replace(snr[sharedgenes, ], TRUE, 1), 
-                    resid_thresh = 3, lower_thresh = 0.5)
+gres <- spatialdecon(
+  norm = snr[sharedgenes, ],
+  X = safeTME[sharedgenes, ],
+  bg = replace(snr[sharedgenes, ], TRUE, 1),
+  resid_thresh = 3, lower_thresh = 0.5
+)
 
 test_that("spatialdecon is as expected: beta", {
   expect_true(all(abs(ires.test$beta - gres$beta) < 1e-3))
-  
 })
 
 test_that("spatialdecon is as expected: sigma", {
@@ -59,8 +64,8 @@ test_that("spatialdecon is as expected: yhat", {
 })
 
 test_that("spatialdecon is as expected: resids", {
-  expect_true(all(abs(replace(ires.test$resids, is.na(ires.test$resids), 0) - 
-                        replace(gres$resids, is.na(gres$resids), 0)) < 1e-3))
+  expect_true(all(abs(replace(ires.test$resids, is.na(ires.test$resids), 0) -
+    replace(gres$resids, is.na(gres$resids), 0)) < 1e-3))
 })
 
 test_that("spatialdecon is as expected: p", {
@@ -70,13 +75,15 @@ test_that("spatialdecon is as expected: p", {
 
 
 #### test SpatialDecon with TILs options --------------------------------------------------
-res = spatialdecon(norm = snr,
-                   raw = raw,
-                   bg = replace(snr, TRUE, 1),
-                   cellmerges = SpatialDecon::safeTME.matches,
-                   is_pure_tumor = annot$AOI.name == "Tumor",
-                   cell_counts = annot$nuclei,
-                   n_tumor_clusters = 5)
+res <- spatialdecon(
+  norm = snr,
+  raw = raw,
+  bg = replace(snr, TRUE, 1),
+  cellmerges = SpatialDecon::safeTME.matches,
+  is_pure_tumor = annot$AOI.name == "Tumor",
+  cell_counts = annot$nuclei,
+  n_tumor_clusters = 5
+)
 
 test_that("cell matching is as expected", {
   expect_equal(rownames(res.test$beta), rownames(res$beta))
@@ -96,8 +103,8 @@ test_that("spatialdeconTILs is as expected: yhat", {
 })
 
 test_that("spatialdeconTILs is as expected: resids", {
-  expect_true(all(abs(replace(res.test$resids, is.na(res.test$resids), 0) - 
-                        replace(res$resids, is.na(res$resids), 0)) < 1e-3))
+  expect_true(all(abs(replace(res.test$resids, is.na(res.test$resids), 0) -
+    replace(res$resids, is.na(res$resids), 0)) < 1e-3))
 })
 
 test_that("spatialdeconTILs is as expected: p", {
@@ -110,39 +117,45 @@ test_that("spatialdeconTILs is as expected: props", {
 })
 
 ### test reverse decon:
-rdres = suppressWarnings(reverseDecon(norm = snr, 
-                                      beta = res.test$beta, 
-                                      epsilon = 1))
-                         
+rdres <- suppressWarnings(reverseDecon(
+  norm = snr,
+  beta = res.test$beta,
+  epsilon = 1
+))
+
 test_that("reverseDecon is as expected: ", {
   expect_true(all(abs(rdres.test$resids - rdres$resids) < 1e-3))
   expect_true(all(abs(rdres.test$yhat - rdres$yhat) < 1e-3))
   expect_true(all(abs(rdres.test$coefs - rdres$coefs) < 1e-3))
   expect_true(all(abs(rdres.test$cors - rdres$cors) < 1e-3, na.rm = T))
   expect_true(all(abs(rdres.test$resid.sd - rdres$resid.sd) < 1e-3))
-  
 })
-  
+
 
 
 
 ### test plotting functions
 test_that("florets does not error", {
-  expect_error(florets(x = annot$x, y = annot$y, b = res$beta.granular[!grepl("tumor", rownames(res$beta.granular)), ],
-                       legendwindow = T),
-               NA)
-  
+  expect_error(
+    florets(
+      x = annot$x, y = annot$y, b = res$beta.granular[!grepl("tumor", rownames(res$beta.granular)), ],
+      legendwindow = T
+    ),
+    NA
+  )
 })
 
 test_that("TIL_barplot does not error", {
-  expect_error(TIL_barplot(mat = res$beta, draw_legend = T),
-               NA)
+  expect_error(
+    TIL_barplot(mat = res$beta, draw_legend = T),
+    NA
+  )
 })
 
 
 ### test matrix download:
 test_that("matrix download works", {
-  downloaded.X = download_profile_matrix("Mouse_Brain")
+  downloaded.X <- download_profile_matrix("Mouse_Brain")
   expect_true(is.matrix(downloaded.X))
 })
 
@@ -150,16 +163,20 @@ test_that("matrix download works", {
 ### test collapseCellTypes:
 
 # uncollapsed result:
-res2 = spatialdecon(norm = snr,
-                   raw = raw,
-                   bg = replace(snr, TRUE, 1),
-                   cellmerges = NULL,
-                   is_pure_tumor = annot$AOI.name == "Tumor",
-                   cell_counts = annot$nuclei,
-                   n_tumor_clusters = 5)
+res2 <- spatialdecon(
+  norm = snr,
+  raw = raw,
+  bg = replace(snr, TRUE, 1),
+  cellmerges = NULL,
+  is_pure_tumor = annot$AOI.name == "Tumor",
+  cell_counts = annot$nuclei,
+  n_tumor_clusters = 5
+)
 # collapse them:
-res2.collapsed = collapseCellTypes(fit = res2, 
-                                   matching = SpatialDecon::safeTME.matches)
+res2.collapsed <- collapseCellTypes(
+  fit = res2,
+  matching = SpatialDecon::safeTME.matches
+)
 # compare collapsed results from within spatialdecon vs. post-hoc:
 test_that("collapseCellTypes works", {
   expect_true(all(abs(res2.collapsed$beta - res$beta) < 1e-3))
@@ -167,6 +184,4 @@ test_that("collapseCellTypes works", {
   expect_true(all(abs(res2.collapsed$p - res$p) < 1e-3))
   expect_true(all(abs(res2.collapsed$t - res$t) < 1e-3))
   expect_true(all(abs(res2.collapsed$se - res$se) < 1e-3))
-  
 })
-  

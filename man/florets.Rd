@@ -33,7 +33,7 @@ florets(
 
 \item{legendwindow}{Logical. If TRUE, the function draws a color legend in a new window}
 
-\item{rescale.by.sqrt}{Logical, for whether to rescale b by its square root to make value proportional to 
+\item{rescale.by.sqrt}{Logical, for whether to rescale b by its square root to make value proportional to
 shape area, not shape length.}
 
 \item{border}{Color of pie segment border, defauls to NA/none}
@@ -60,17 +60,21 @@ Draws a scatterplot where each point is a circular barplot, intended to show dec
 \examples{
 data(mini_geomx_dataset)
 # estimate background:
-mini_geomx_dataset$bg = derive_GeoMx_background(
-   norm = mini_geomx_dataset$normalized,
-   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
-   negnames = "NegProbe")
+mini_geomx_dataset$bg <- derive_GeoMx_background(
+  norm = mini_geomx_dataset$normalized,
+  probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+  negnames = "NegProbe"
+)
 # run basic decon:
-res0 = spatialdecon(norm = mini_geomx_dataset$normalized, 
-                    bg = mini_geomx_dataset$bg,
-                    X = safeTME)
+res0 <- spatialdecon(
+  norm = mini_geomx_dataset$normalized,
+  bg = mini_geomx_dataset$bg,
+  X = safeTME
+)
 # draw florets:
-florets(x = mini_geomx_dataset$annot$x,
-        y = mini_geomx_dataset$annot$y,
-        b = res0$beta, cex = 2)
-
+florets(
+  x = mini_geomx_dataset$annot$x,
+  y = mini_geomx_dataset$annot$y,
+  b = res0$beta, cex = 2
+)
 }

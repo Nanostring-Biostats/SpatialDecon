@@ -11,7 +11,7 @@ mergeTumorIntoX(norm, bg, pure_tumor_ids, X, K = 10)
 
 \item{bg}{matrix of expected background, on the scale of norm.}
 
-\item{pure_tumor_ids}{Vector identifying columns of norm that are pure tumor. 
+\item{pure_tumor_ids}{Vector identifying columns of norm that are pure tumor.
 Can be indices, logicals or column names.}
 
 \item{X}{The training matrix}
@@ -22,25 +22,27 @@ Can be indices, logicals or column names.}
 an updated X matrix with new columns, "tumor.1", "tumor.2", ...
 }
 \description{
-Given the input of "tumor-only" AOI's, estimates an collection of tumor-specific 
-expression profiles and merges them with the immune cell expression training matrix. 
-The process: 
+Given the input of "tumor-only" AOI's, estimates an collection of tumor-specific
+expression profiles and merges them with the immune cell expression training matrix.
+The process:
 \enumerate{
-\item log2/normalized data from tumor-only AOIs is clustered with hclust, 
-and cutree() is used to define clusters. 
+\item log2/normalized data from tumor-only AOIs is clustered with hclust,
+and cutree() is used to define clusters.
 \item 2. Each cluster's geomean profile is merged into the immune cell profile matrix.
 }
 }
 \examples{
 data(mini_geomx_dataset)
-mini_geomx_dataset$bg = derive_GeoMx_background(
-   norm = mini_geomx_dataset$normalized,
-   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
-   negnames = "NegProbe")
-safeTME.with.tumor = mergeTumorIntoX(
-   norm = mini_geomx_dataset$norm, 
-   bg = mini_geomx_dataset$bg, 
-   pure_tumor_ids = mini_geomx_dataset$annot$AOI.name == "Tumor",
-   X = safeTME, 
-   K = 3) 
+mini_geomx_dataset$bg <- derive_GeoMx_background(
+  norm = mini_geomx_dataset$normalized,
+  probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+  negnames = "NegProbe"
+)
+safeTME.with.tumor <- mergeTumorIntoX(
+  norm = mini_geomx_dataset$norm,
+  bg = mini_geomx_dataset$bg,
+  pure_tumor_ids = mini_geomx_dataset$annot$AOI.name == "Tumor",
+  X = safeTME,
+  K = 3
+)
 }

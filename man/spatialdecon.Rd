@@ -27,7 +27,7 @@ spatialdecon(
 
 \item{X}{Cell profile matrix. If NULL, the safeTME matrix is used.}
 
-\item{raw}{Optional for using an error model to weight the data points. 
+\item{raw}{Optional for using an error model to weight the data points.
 p-length expression vector or p * N expression matrix - the raw (linear-scale) data}
 
 \item{wts}{Optional, a matrix of weights.}
@@ -35,8 +35,8 @@ p-length expression vector or p * N expression matrix - the raw (linear-scale) d
 \item{resid_thresh}{A scalar, sets a threshold on how extreme individual data points' values
 can be (in log2 units) before getting flagged as outliers and set to NA.}
 
-\item{lower_thresh}{A scalar. Before log2-scale residuals are calculated, both observed and fitted 
-values get thresholded up to this value. Prevents log2-scale residuals from becoming extreme in 
+\item{lower_thresh}{A scalar. Before log2-scale residuals are calculated, both observed and fitted
+values get thresholded up to this value. Prevents log2-scale residuals from becoming extreme in
 points near zero.}
 
 \item{align_genes}{Logical. If TRUE, then Y, X, bg, and wts are row-aligned by shared genes.}
@@ -59,7 +59,7 @@ NULL, then defaults to a mapping of granular immune cell definitions to broader 
 \value{
 a list:
 \itemize{
-\item beta: matrix of cell abundance estimates, cells in rows and observations in columns 
+\item beta: matrix of cell abundance estimates, cells in rows and observations in columns
 \item sigmas: covariance matrices of each observation's beta estimates
 \item p: matrix of p-values for H0: beta == 0
 \item t: matrix of t-statistics for H0: beta == 0
@@ -70,12 +70,12 @@ a list:
 \item beta.granular: cell abundances prior to combining closely-related cell types
 \item sigma.granular: sigmas prior to combining closely-related cell types
 \item cell.counts.granular: cell.counts prior to combining closely-related cell types
-\item resids: a matrix of residuals from the model fit. (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))). 
-\item X: the cell profile matrix used in the decon fit. 
+\item resids: a matrix of residuals from the model fit. (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
+\item X: the cell profile matrix used in the decon fit.
 }
 }
 \description{
-Runs the spatialdecon algorithm with added optional functionalities. 
+Runs the spatialdecon algorithm with added optional functionalities.
 Workflow is:
 \enumerate{
 \item compute weights from raw data
@@ -83,7 +83,7 @@ Workflow is:
 \item run deconvolution once
 \item remove poorly-fit genes from first round of decon
 \item re-run decon with cleaned-up gene set
-\item combine closely-related cell types 
+\item combine closely-related cell types
 \item compute p-values
 \item rescale abundance estimates, to proportions of total, proportions of immune, cell counts
 }
@@ -91,19 +91,24 @@ Workflow is:
 \examples{
 data(mini_geomx_dataset)
 # estimate background:
-mini_geomx_dataset$bg = derive_GeoMx_background(
-   norm = mini_geomx_dataset$normalized,
-   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
-   negnames = "NegProbe")
+mini_geomx_dataset$bg <- derive_GeoMx_background(
+  norm = mini_geomx_dataset$normalized,
+  probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+  negnames = "NegProbe"
+)
 # run basic decon:
-res0 = spatialdecon(norm = mini_geomx_dataset$normalized, 
-                    bg = mini_geomx_dataset$bg,
-                    X = safeTME)
+res0 <- spatialdecon(
+  norm = mini_geomx_dataset$normalized,
+  bg = mini_geomx_dataset$bg,
+  X = safeTME
+)
 # run decon with bells and whistles:
-res = spatialdecon(norm = mini_geomx_dataset$normalized, 
-                   bg = mini_geomx_dataset$bg,
-                   X = safeTME,
-                   cellmerges = safeTME.matches,
-                   cell_counts = mini_geomx_dataset$annot$nuclei,
-                   is_pure_tumor = mini_geomx_dataset$annot$AOI.name == "Tumor")
+res <- spatialdecon(
+  norm = mini_geomx_dataset$normalized,
+  bg = mini_geomx_dataset$bg,
+  X = safeTME,
+  cellmerges = safeTME.matches,
+  cell_counts = mini_geomx_dataset$annot$nuclei,
+  is_pure_tumor = mini_geomx_dataset$annot$AOI.name == "Tumor"
+)
 }

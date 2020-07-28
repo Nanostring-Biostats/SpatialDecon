@@ -5,14 +5,14 @@
 \alias{safeTME.matches}
 \title{Mapping from granularly-defined cell populations to broaded cell populations}
 \format{
-A list. Each element of the list contains the granular cell types that roll up 
+A list. Each element of the list contains the granular cell types that roll up
  to a single coarse cell type.
 }
 \usage{
 safeTME.matches
 }
 \description{
-Mapping from granularly-defined cell populations to broaded cell populations, 
+Mapping from granularly-defined cell populations to broaded cell populations,
  for use by the convertCellTypes function.
 }
 \keyword{datasets}

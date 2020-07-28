@@ -9,7 +9,7 @@ runErrorModel(counts, platform = "general")
 \arguments{
 \item{counts}{vector or matrix of raw counts}
 
-\item{platform}{String specifying which platform was used to create "rawCounts". Default to "dsp". 
+\item{platform}{String specifying which platform was used to create "rawCounts". Default to "dsp".
 Other options include "ncounter", "rsem" and "quantile".}
 }
 \value{

@@ -21,7 +21,7 @@ algorithm2(
 
 \item{X}{p * K Training matrix.}
 
-\item{bg}{Expected background counts. Provide a scalar to apply to all data points, or 
+\item{bg}{Expected background counts. Provide a scalar to apply to all data points, or
 else a matrix/vector aligning with Y to provide more nuanced expected background.}
 
 \item{weights}{The same as the weights argument used by lm}
@@ -29,8 +29,8 @@ else a matrix/vector aligning with Y to provide more nuanced expected background
 \item{resid_thresh}{A scalar, sets a threshold on how extreme individual data points' values
 can be (in log2 units) before getting flagged as outliers and set to NA.}
 
-\item{lower_thresh}{A scalar. Before log2-scale residuals are calculated, both observed and fitted 
-values get thresholded up to this value. Prevents log2-scale residuals from becoming extreme in 
+\item{lower_thresh}{A scalar. Before log2-scale residuals are calculated, both observed and fitted
+values get thresholded up to this value. Prevents log2-scale residuals from becoming extreme in
 points near zero.}
 
 \item{align_genes}{Logical. If TRUE, then Y, X, bg, and wts are row-aligned by shared genes.}
@@ -42,12 +42,12 @@ points near zero.}
 \value{
 a list:
 \itemize{
-\item beta: matrix of cell abundance estimates, cells in rows and observations in columns 
+\item beta: matrix of cell abundance estimates, cells in rows and observations in columns
 \item sigmas: covariance matrices of each observation's beta estimates
 \item p: matrix of p-values for H0: beta == 0
 \item t: matrix of t-statistics for H0: beta == 0
 \item se: matrix of standard errors of beta values
-\item resids: a matrix of residuals from the model fit. (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))). 
+\item resids: a matrix of residuals from the model fit. (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
 }
 }
 \description{

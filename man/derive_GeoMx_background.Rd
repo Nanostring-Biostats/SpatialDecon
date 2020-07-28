@@ -7,7 +7,7 @@
 derive_GeoMx_background(norm, probepool, negnames)
 }
 \arguments{
-\item{norm}{Matrix of normalized data, genes in rows and segments in columns. 
+\item{norm}{Matrix of normalized data, genes in rows and segments in columns.
 Must include negprobes, and must have rownames.}
 
 \item{probepool}{Vector of probe pool names for each gene, aligned to the rows of "norm".}
@@ -15,15 +15,16 @@ Must include negprobes, and must have rownames.}
 \item{negnames}{Names of all negProbes in the dataset. Must be at least one neg.name within each probe pool.}
 }
 \description{
-Estimates per-datapoint background levels from a GeoMx experiment. 
-In studies with two or more probe pools, different probes will have different 
+Estimates per-datapoint background levels from a GeoMx experiment.
+In studies with two or more probe pools, different probes will have different
 background levels. This function provides a convenient way to account for this phenomenon.
 }
 \examples{
 data(mini_geomx_dataset)
 # estimate background:
-mini_geomx_dataset$bg = derive_GeoMx_background(
-   norm = mini_geomx_dataset$normalized,
-   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
-   negnames = "NegProbe")
+mini_geomx_dataset$bg <- derive_GeoMx_background(
+  norm = mini_geomx_dataset$normalized,
+  probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+  negnames = "NegProbe"
+)
 }

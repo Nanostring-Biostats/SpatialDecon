@@ -8,7 +8,7 @@ TIL_barplot(mat, draw_legend = FALSE, main = "", ...)
 }
 \arguments{
 \item{mat}{Matrix of cell proportions or abundances, in the same dimensions output by spatialdecon
-(cells in rows, observations in columns). User is free to re-order columns/observations in 
+(cells in rows, observations in columns). User is free to re-order columns/observations in
 whatever order is best for display.}
 
 \item{draw_legend}{Logical. If TRUE, the function draws a legend in a new plot frame.}
@@ -23,14 +23,17 @@ Draw barplot of the "betas" from a decon fit
 \examples{
 data(mini_geomx_dataset)
 # estimate background:
-mini_geomx_dataset$bg = derive_GeoMx_background(
-   norm = mini_geomx_dataset$normalized,
-   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
-   negnames = "NegProbe")
+mini_geomx_dataset$bg <- derive_GeoMx_background(
+  norm = mini_geomx_dataset$normalized,
+  probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+  negnames = "NegProbe"
+)
 # run basic decon:
-res0 = spatialdecon(norm = mini_geomx_dataset$normalized, 
-                    bg = mini_geomx_dataset$bg,
-                    X = safeTME)
+res0 <- spatialdecon(
+  norm = mini_geomx_dataset$normalized,
+  bg = mini_geomx_dataset$bg,
+  X = safeTME
+)
 # run barplot:
 TIL_barplot(mat = res0$beta)
 # run barplot and draw a color legend

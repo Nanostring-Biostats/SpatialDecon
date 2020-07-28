@@ -16,39 +16,39 @@ A cell profile matrix
 Download a cell profile matrix from the online library
 }
 \details{
-Valid values for the matrixname argument include: 
+Valid values for the matrixname argument include:
 \itemize{
-\item Airway_Epithelium  
-\item Atlas_Adult_Retina_10x  
-\item Census_Adult_Immune_10x  
-\item Census_Newborn_Blood_10x  
-\item Diff_Fetal_Neuron_SS2  
-\item FetalMaternal_Adult_Blood_10x  
-\item FetalMaternal_Adult_Blood_SS2  
-\item FetalMaternal_Adult_Decidua_10x  
-\item FetalMaternal_Adult_Decidua_SS2  
-\item FetalMaternal_Fetal_Placenta_10x  
-\item Human_brain  
-\item Human_Cell_Landscape  
-\item IBD_Adult_Colon_10x  
-\item Landscape_Adult_Liver_10x  
+\item Airway_Epithelium
+\item Atlas_Adult_Retina_10x
+\item Census_Adult_Immune_10x
+\item Census_Newborn_Blood_10x
+\item Diff_Fetal_Neuron_SS2
+\item FetalMaternal_Adult_Blood_10x
+\item FetalMaternal_Adult_Blood_SS2
+\item FetalMaternal_Adult_Decidua_10x
+\item FetalMaternal_Adult_Decidua_SS2
+\item FetalMaternal_Fetal_Placenta_10x
+\item Human_brain
+\item Human_Cell_Landscape
+\item IBD_Adult_Colon_10x
+\item Landscape_Adult_Liver_10x
 \item Lung_plus_neutrophils
-\item Mouse_Brain  
-\item Profiling_Adult_BoneMarrow_10x  
-\item Reprogram_Embryo_Dendritic_10x  
-\item Sensitivity_Adult_Esophagus_10x  
-\item Sensitivity_Adult_Lung_10x  
-\item Sensitivity_Adult_Spleen_10x  
-\item Somatic_Adult_Pancreas_SS2  
-\item SpatioTemporal_Adult_Kidney_10x  
-\item SpatioTemporal_Fetal_Kidney_10x  
-\item Tcell_Adult_Blood_10x  
-\item Tcell_Adult_BoneMarrow_10x  
-\item Tcell_Adult_Lung_10x  
+\item Mouse_Brain
+\item Profiling_Adult_BoneMarrow_10x
+\item Reprogram_Embryo_Dendritic_10x
+\item Sensitivity_Adult_Esophagus_10x
+\item Sensitivity_Adult_Lung_10x
+\item Sensitivity_Adult_Spleen_10x
+\item Somatic_Adult_Pancreas_SS2
+\item SpatioTemporal_Adult_Kidney_10x
+\item SpatioTemporal_Fetal_Kidney_10x
+\item Tcell_Adult_Blood_10x
+\item Tcell_Adult_BoneMarrow_10x
+\item Tcell_Adult_Lung_10x
 \item Tcell_Adult_LymphNode_10x
 }
 }
 \examples{
-X = download_profile_matrix(matrixname = "Human_brain")
+X <- download_profile_matrix(matrixname = "Human_brain")
 head(X)
 }
