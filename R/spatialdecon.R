@@ -11,7 +11,7 @@
 # pdanaher@nanostring.com
 
 
-#' Perform complete deconvolution workflow on a tumor-immune dataset
+#' Mixed cell deconvolution of spatiall-resolved gene expression data
 #'
 #' Runs the spatialdecon algorithm with added optional functionalities.
 #' Workflow is:

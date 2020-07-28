@@ -2,7 +2,7 @@
 % Please edit documentation in R/spatialdecon.R
 \name{spatialdecon}
 \alias{spatialdecon}
-\title{Perform complete deconvolution workflow on a tumor-immune dataset}
+\title{Mixed cell deconvolution of spatiall-resolved gene expression data}
 \usage{
 spatialdecon(
   norm,
