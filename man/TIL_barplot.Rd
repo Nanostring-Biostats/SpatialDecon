@@ -4,7 +4,7 @@
 \alias{TIL_barplot}
 \title{Barplot of abundance estimates}
 \usage{
-TIL_barplot(mat, draw_legend = FALSE, main = "", ...)
+TIL_barplot(mat, draw_legend = FALSE, main = "", col = NULL, ...)
 }
 \arguments{
 \item{mat}{Matrix of cell proportions or abundances, in the same dimensions output by spatialdecon
@@ -14,6 +14,8 @@ whatever order is best for display.}
 \item{draw_legend}{Logical. If TRUE, the function draws a legend in a new plot frame.}
 
 \item{main}{Title for barplot}
+
+\item{col}{Vector of colors for cell types. Defaults to pre-set colors for the safeTME cell types.}
 
 \item{...}{Arguments passed to barplot()}
 }
