@@ -195,7 +195,7 @@ spatialdecon <- function(norm, bg, X = NULL,
   tempbeta <- res$beta
   tempse <- tempp <- tempt <- tempbeta * NA
   for (i in 1:ncol(tempse)) {
-    tempse[, i] <- sqrt(diag(res$sigma[, , i]))
+    tempse[, i] <- suppressWarnings(sqrt(diag(res$sigma[, , i])))
   }
   tempt <- (tempbeta / tempse)
   tempp <- 2 * (1 - stats::pt(tempt, df = length(sharedgenes) - ncol(X) - 1))
