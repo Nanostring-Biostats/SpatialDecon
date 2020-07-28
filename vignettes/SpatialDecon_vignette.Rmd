@@ -64,12 +64,12 @@ dim(bg)
 
 ```
 
-A note for background estimation: in studies with two probesets, the genes from each probeset will have distinct background values, and the above code should be run separately for each probeset using its corresponding NegProbe value. Alternatively, the "derive_GeoMx_background_at_normalized_scale" can do this automatically:
+A note for background estimation: in studies with two probesets, the genes from each probeset will have distinct background values, and the above code should be run separately for each probeset using its corresponding NegProbe value. Alternatively, the "derive_GeoMx_background" can do this automatically:
 
 ```{r derivebg}
-bg2 = derive_GeoMx_background_at_normalized_scale(norm = norm,
-                                                 probepool = rep(1, nrow(norm)),
-                                                 negnames = "NegProbe")
+bg2 = derive_GeoMx_background(norm = norm,
+                             probepool = rep(1, nrow(norm)),
+                             negnames = "NegProbe")
 ```
 
 

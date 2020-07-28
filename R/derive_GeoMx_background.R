@@ -25,12 +25,12 @@
 #' @examples
 #' data(mini_geomx_dataset)
 #' # estimate background:
-#' mini_geomx_dataset$bg = derive_GeoMx_background_at_normalized_scale(
+#' mini_geomx_dataset$bg = derive_GeoMx_background(
 #'    norm = mini_geomx_dataset$normalized,
 #'    probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
 #'    negnames = "NegProbe")
 #' @export
-derive_GeoMx_background_at_normalized_scale <- function(norm, probepool, negnames) {
+derive_GeoMx_background <- function(norm, probepool, negnames) {
   
   # check data input:
   if (nrow(norm) != length(probepool)) {
