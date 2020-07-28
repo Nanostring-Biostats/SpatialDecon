@@ -38,6 +38,29 @@
 #'  \item florets Plot cell abundance on a specified x-y space, with each point a cockscomb plot showing the cell abundances of that region/sample. 
 #'  \item TIL_barplot Plot abundances of tumor infiltrating lymphocytes (TILs) estimated from the safeTME cell profile matrix
 #' }
+#' @examples
+#' data(mini_geomx_dataset)
+#' # estimate background:
+#' mini_geomx_dataset$bg <- derive_GeoMx_background(
+#'   norm = mini_geomx_dataset$normalized,
+#'   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
+#'   negnames = "NegProbe"
+#' )
+#' # run basic decon:
+#' res0 <- spatialdecon(
+#'   norm = mini_geomx_dataset$normalized,
+#'   bg = mini_geomx_dataset$bg,
+#'   X = safeTME
+#' )
+#' # run decon with bells and whistles:
+#' res <- spatialdecon(
+#'   norm = mini_geomx_dataset$normalized,
+#'   bg = mini_geomx_dataset$bg,
+#'   X = safeTME,
+#'   cellmerges = safeTME.matches,
+#'   cell_counts = mini_geomx_dataset$annot$nuclei,
+#'   is_pure_tumor = mini_geomx_dataset$annot$AOI.name == "Tumor"
+#' )
 #' @docType package
-#' @name SpatialDecon
+#' @name SpatialDecon-package
 NULL
