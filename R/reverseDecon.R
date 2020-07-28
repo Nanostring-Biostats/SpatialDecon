@@ -56,6 +56,9 @@
 #' @export
 reverseDecon <- function(norm, beta, epsilon = NULL) {
 
+  # remove cell types with no SD:
+  beta = beta[apply(beta, 1, sd) > 0, ]
+  
   # run reverse decon for all genes:
   rd <- function(y) {
     fit <- logNormReg::lognlm(y ~ t(beta),
@@ -86,7 +89,7 @@ reverseDecon <- function(norm, beta, epsilon = NULL) {
   resids <- log2(pmax(norm, epsilon)) - log2(pmax(yhat, epsilon))
 
   # get summary stats:
-  cors <- diag(stats::cor(t(norm), t(yhat)))
+  cors <- suppressWarnings(diag(stats::cor(t(norm), t(yhat))))
   resid.sd <- apply(resids, 1, stats::sd)
 
   out <- list(coefs = coefs, yhat = yhat, resids = resids, cors = cors, resid.sd = resid.sd)
