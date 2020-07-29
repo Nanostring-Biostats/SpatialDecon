@@ -78,7 +78,7 @@ collapseCellTypes <- function(fit, matching) {
     tempbeta <- out$beta
     tempse <- tempp <- tempt <- tempbeta * NA
     for (i in 1:ncol(tempse)) {
-      tempse[, i] <- sqrt(diag(out$sigmas[, , i]))
+      tempse[, i] <- suppressWarnings(sqrt(diag(out$sigmas[, , i])))
     }
     out$se <- tempse
     out$t <- (tempbeta / tempse)
