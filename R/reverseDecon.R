@@ -57,7 +57,7 @@
 reverseDecon <- function(norm, beta, epsilon = NULL) {
 
   # remove cell types with no SD:
-  beta = beta[apply(beta, 1, sd) > 0, ]
+  beta = beta[apply(beta, 1, stats::sd) > 0, ]
   
   # run reverse decon for all genes:
   rd <- function(y) {
