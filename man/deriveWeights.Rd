@@ -22,6 +22,9 @@ shape of the output "wts" matrix.}
 \item{weight.by.TIL.resid.sd}{If TRUE, then genes are weighted in part based on their
 biological variability as estimated by their residual SD from decon performed on TCGA.}
 }
+\value{
+A matrix of weights, in the same dimension as norm
+}
 \description{
 Compute gene weights from pre-defined biological noise estimates and from
  raw count/ error-model-defined technical noise estimates

@@ -14,6 +14,9 @@ Must include negprobes, and must have rownames.}
 
 \item{negnames}{Names of all negProbes in the dataset. Must be at least one neg.name within each probe pool.}
 }
+\value{
+A matrix of expected background values, in the same scale and dimensions as the "norm" argument.
+}
 \description{
 Estimates per-datapoint background levels from a GeoMx experiment.
 In studies with two or more probe pools, different probes will have different

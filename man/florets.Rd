@@ -54,6 +54,9 @@ shape area, not shape length.}
 
 \item{...}{additional arguments passed to plot()}
 }
+\value{
+Draws a coxcomb plot, returns no data.
+}
 \description{
 Draws a scatterplot where each point is a circular barplot, intended to show decon results
 }

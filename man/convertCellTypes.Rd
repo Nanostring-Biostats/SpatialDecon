@@ -18,6 +18,13 @@ See str(safeTME.matches) for an example.}
 
 \item{sigma}{A list of covariance matrices of beta estimates, in the format output by spatialdecon.}
 }
+\value{
+A list with two elements:
+\itemize{
+\item beta: a matrix of cell abundances, with specified cell types added together
+\item sigma: an array of covariance matrices for each observation's beta vector
+}
+}
 \description{
 Takes betas from a decon run, using any cell type names whatsoever, and maps them back to the
 "official" cell types we use. Allows for multiple rows of beta to map to the same official cell type,

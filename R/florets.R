@@ -31,6 +31,7 @@
 #' @param xlab xlab, defaults to ""
 #' @param ylab ylab, defaults to ""
 #' @param ... additional arguments passed to plot()
+#' @return Draws a coxcomb plot, returns no data. 
 #' @examples
 #' data(mini_geomx_dataset)
 #' # estimate background:

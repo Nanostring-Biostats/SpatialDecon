@@ -22,6 +22,7 @@
 #'  Must include negprobes, and must have rownames.
 #' @param probepool Vector of probe pool names for each gene, aligned to the rows of "norm".
 #' @param negnames Names of all negProbes in the dataset. Must be at least one neg.name within each probe pool.
+#' @return A matrix of expected background values, in the same scale and dimensions as the "norm" argument.
 #' @examples
 #' data(mini_geomx_dataset)
 #' # estimate background:

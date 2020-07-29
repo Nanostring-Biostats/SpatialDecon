@@ -21,6 +21,7 @@
 #' @param error.model Which error model to use. Defaults to "dsp"
 #' @param weight.by.TIL.resid.sd If TRUE, then genes are weighted in part based on their
 #'  biological variability as estimated by their residual SD from decon performed on TCGA.
+#' @return A matrix of weights, in the same dimension as norm  
 deriveWeights <- function(norm, raw = NULL, error.model = "dsp", weight.by.TIL.resid.sd = FALSE) {
 
   # get tech SDs if raw data provided:

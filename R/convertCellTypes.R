@@ -24,6 +24,11 @@
 #' @param stat The function used to combine related cell types. Defaults to sum.
 #' @param na.rm Whether to ignore NAs while computing stat
 #' @param sigma A list of covariance matrices of beta estimates, in the format output by spatialdecon.
+#' @return A list with two elements:
+#' \itemize{
+#' \item beta: a matrix of cell abundances, with specified cell types added together
+#' \item sigma: an array of covariance matrices for each observation's beta vector
+#' }
 convertCellTypes <- function(beta, matching, stat = sum, na.rm = F, sigma = NULL) {
   # format matching list as a matrix to take a linear combination of beta:
   A <- matrix(0, length(matching), nrow(beta), dimnames = list(names(matching), rownames(beta)))
