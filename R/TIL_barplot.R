@@ -58,7 +58,7 @@ TIL_barplot <- function(mat, draw_legend = FALSE, main = "", col = NULL, ...) {
         "#FDBF6F", "#FF7F00", "#1B9E77", "#D95F02", "#7570B3", "#E7298A", "#66A61E",
         "#E6AB02", "#A6761D", "#666666", sample(grDevices::colors(), 99)
       )
-      col <- manycols[1:nrow(mat)]
+      col <- manycols[seq_len(nrow(mat))]
       names(col) <- rownames(mat)
     }
   }
