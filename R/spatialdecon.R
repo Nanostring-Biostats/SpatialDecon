@@ -179,7 +179,7 @@ spatialdecon <- function(norm, bg, X = NULL,
       beta = res$beta,
       matching = cellmerges,
       stat = sum,
-      na.rm = F,
+      na.rm = FALSE,
       sigma = res$sigmas
     )
     # overwrite original beta with merged beta:
@@ -194,7 +194,7 @@ spatialdecon <- function(norm, bg, X = NULL,
   #### compute p-values -------------------------------------------
   tempbeta <- res$beta
   tempse <- tempp <- tempt <- tempbeta * NA
-  for (i in 1:ncol(tempse)) {
+  for (i in seq_len(ncol(tempse))) {
     tempse[, i] <- suppressWarnings(sqrt(diag(res$sigma[, , i])))
   }
   tempt <- (tempbeta / tempse)

@@ -76,7 +76,7 @@ reverseDecon <- function(norm, beta, epsilon = NULL) {
 
   # get yhat
   yhat <- norm * NA
-  for (ind in 1:ncol(yhat)) {
+  for (ind in seq_len(ncol(yhat))) {
     yhat[, ind] <- coefs %*% c(1, beta[, ind])
   }
 

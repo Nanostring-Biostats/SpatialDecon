@@ -45,7 +45,7 @@ deriveWeights <- function(norm, raw = NULL, error.model = "dsp", weight.by.TIL.r
     for (gene in intersect(names(SpatialDecon::mean.resid.sd), rownames(sds.bio))) {
       sds.bio[gene, ] <- SpatialDecon::mean.resid.sd[gene]
     }
-    sds.bio <- replace(sds.bio, is.na(sds.bio), mean(sds.bio, na.rm = T))
+    sds.bio <- replace(sds.bio, is.na(sds.bio), mean(sds.bio, na.rm = TRUE))
   }
 
   # define total SD, and invert to get weights

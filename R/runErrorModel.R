@@ -52,7 +52,7 @@ runErrorModel <- function(counts, platform = "general") {
       sdvec <- c(1.5, 1.383, 1.191, 0.800, 0.48, 0.301, 0.301, 0.301, 0.263, 0.235, 0.235)
 
       s <- replace(m, TRUE, sdvec[1])
-      for (i in 1:(length(meanvec) - 1)) {
+      for (i in seq_len(length(meanvec) - 1)) {
         s <- replace(s, m >= meanvec[i], sdvec[i + 1])
       }
       return(s)

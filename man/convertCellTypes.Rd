@@ -4,7 +4,7 @@
 \alias{convertCellTypes}
 \title{Convert results from an arbitrary training matrix to our standardized cell types.}
 \usage{
-convertCellTypes(beta, matching, stat = sum, na.rm = F, sigma = NULL)
+convertCellTypes(beta, matching, stat = sum, na.rm = FALSE, sigma = NULL)
 }
 \arguments{
 \item{beta}{K * n matrix of estimated beta values (cell type abundances)}

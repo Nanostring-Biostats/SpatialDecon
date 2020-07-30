@@ -78,7 +78,7 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE, rescale.by.sqrt =
       "#FDBF6F", "#FF7F00", "#1B9E77", "#D95F02", "#7570B3", "#E7298A", "#66A61E",
       "#E6AB02", "#A6761D", "#666666", sample(grDevices::colors(), 99)
     )
-    col <- manycols[1:nrow(b)]
+    col <- manycols[seq_len(nrow(b))]
     names(col) <- rownames(b)
   }
   # convert colors to matrix of the same dimension as b:
@@ -94,8 +94,8 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE, rescale.by.sqrt =
   angles <- seq(0, 2 * pi, length.out = nrow(b) + 1)
 
   # scale b based on the range of x and y:
-  maxrange <- max(diff(range(x, na.rm = T)), diff(range(y, na.rm = T)))
-  b <- b * maxrange / mean(b, na.rm = T) * 0.007 * cex
+  maxrange <- max(diff(range(x, na.rm = TRUE)), diff(range(y, na.rm = TRUE)))
+  b <- b * maxrange / mean(b, na.rm = TRUE) * 0.007 * cex
 
 
   # draw plot:
@@ -105,8 +105,8 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE, rescale.by.sqrt =
 
   # draw florets:
   if (nrow(b) > 1) {
-    for (i in 1:length(x)) {
-      for (j in 1:nrow(b)) {
+    for (i in seq_len(length(x))) {
+      for (j in seq_len(nrow(b))) {
         tempangles <- seq(angles[j], angles[j + 1], length.out = 20)
         xt <- b[j, i] * cos(tempangles)
         yt <- b[j, i] * sin(tempangles)
@@ -117,8 +117,8 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE, rescale.by.sqrt =
 
   # if just one point, draw a full circle:
   if (nrow(b) == 1) {
-    for (i in 1:length(x)) {
-      for (j in 1:nrow(b)) {
+    for (i in seq_len(length(x))) {
+      for (j in seq_len(nrow(b))) {
         tempangles <- seq(angles[j], angles[j + 1], length.out = 20)
         xt <- b[j, i] * cos(tempangles)
         yt <- b[j, i] * sin(tempangles)
@@ -130,7 +130,7 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE, rescale.by.sqrt =
   # draw a legend:
   if (legendwindow) {
     graphics::plot(0, 0, col = 0, xlim = c(-1, 1), ylim = c(-1, 1), xaxt = "n", yaxt = "n", xlab = "", ylab = "", ...)
-    for (j in 1:length(angles)) {
+    for (j in seq_len(length(angles))) {
       graphics::lines(c(0, 0.75 * cos(angles[j])), c(0, 0.75 * sin(angles[j])), col = col[j], lwd = 2)
       graphics::text(0.85 * cos(angles[j]), 0.85 * sin(angles[j]), rownames(b)[j], cex = 1.4)
     }

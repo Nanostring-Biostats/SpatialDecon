@@ -25,7 +25,7 @@
 convertCellScoresToCounts <- function(beta, nuclei.counts = NULL, omit.tumor = FALSE) {
   # strip tumor rows if called for:
   if (omit.tumor) {
-    beta <- beta[!grepl("tumor", rownames(beta)), , drop = F]
+    beta <- beta[!grepl("tumor", rownames(beta)), , drop = FALSE]
   }
 
   # calc max abundance scores:

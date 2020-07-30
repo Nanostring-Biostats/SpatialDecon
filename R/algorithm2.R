@@ -101,7 +101,7 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
   # compute p-values
   tempbeta <- out$beta
   tempse <- tempp <- tempt <- tempbeta * NA
-  for (i in 1:ncol(tempse)) {
+  for (i in seq_len(ncol(tempse))) {
     tempse[, i] <- sqrt(diag(out$sigmas[, , i]))
   }
   tempt <- (tempbeta / tempse)

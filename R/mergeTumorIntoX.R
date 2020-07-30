@@ -48,12 +48,12 @@
 mergeTumorIntoX <- function(norm, bg, pure_tumor_ids, X, K = 10) {
 
   # round up 0 values in norm:
-  min.nonzero <- min(norm[norm > 0], na.rm = T)
+  min.nonzero <- min(norm[norm > 0], na.rm = TRUE)
   norm <- pmax(norm, min.nonzero)
 
   # subset data to only the pure tumor IDs:
-  norm <- norm[, pure_tumor_ids, drop = F]
-  bg <- bg[, pure_tumor_ids, drop = F]
+  norm <- norm[, pure_tumor_ids, drop = FALSE]
+  bg <- bg[, pure_tumor_ids, drop = FALSE]
 
   # bg-subtract:
   norm <- pmax(norm - bg, min(norm) / 20)
@@ -77,9 +77,9 @@ mergeTumorIntoX <- function(norm, bg, pure_tumor_ids, X, K = 10) {
     # get clusters' geomean profiles:
     tumorX <- c()
     for (cid in unique(cut)) {
-      tumorX <- cbind(tumorX, exp(rowMeans(log(norm[, cut == cid, drop = F]))))
+      tumorX <- cbind(tumorX, exp(rowMeans(log(norm[, cut == cid, drop = FALSE]))))
     }
-    colnames(tumorX) <- paste0("tumor.", 1:ncol(tumorX))
+    colnames(tumorX) <- paste0("tumor.", seq_len(ncol(tumorX)))
   }
 
   # align tumorX with X:

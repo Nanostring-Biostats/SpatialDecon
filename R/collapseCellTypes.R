@@ -66,7 +66,7 @@ collapseCellTypes <- function(fit, matching) {
         dim = c(nrow(A), nrow(A), dim(sigma)[3]),
         dimnames = list(rownames(A), rownames(A), dimnames(sigma)[[3]])
       )
-      for (i in 1:dim(sigma)[3]) {
+      for (i in seq_len(dim(sigma)[3])) {
         out$sigmas[, , i] <- A %*% sigma[, , i] %*% t(A)
       }
     }
@@ -77,7 +77,7 @@ collapseCellTypes <- function(fit, matching) {
     # compute p-values
     tempbeta <- out$beta
     tempse <- tempp <- tempt <- tempbeta * NA
-    for (i in 1:ncol(tempse)) {
+    for (i in seq_len(ncol(tempse))) {
       tempse[, i] <- suppressWarnings(sqrt(diag(out$sigmas[, , i])))
     }
     out$se <- tempse

@@ -36,7 +36,7 @@ deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL, maxit = 1000)
   }
   # choose "epsilon": a very small non-zero number to make fits well-behaved
   if (length(epsilon) == 0) {
-    epsilon <- min(replace(Y, (Y == 0) & !is.na(Y), NA), na.rm = T)
+    epsilon <- min(replace(Y, (Y == 0) & !is.na(Y), NA), na.rm = TRUE)
   }
 
   # matrix-like data for apply:
@@ -44,15 +44,15 @@ deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL, maxit = 1000)
   # fn to apply:
   fn <- function(zz) {
     # break into y, b, w:
-    y <- zz[1:(length(zz) / 3)]
-    b <- zz[1:(length(zz) / 3) + (length(zz) / 3)]
-    wts <- zz[1:(length(zz) / 3) + (length(zz) / 3) * 2]
+    y <- zz[seq_len((length(zz)) / 3)]
+    b <- zz[seq_len((length(zz)) / 3) + (length(zz) / 3)]
+    wts <- zz[seq_len((length(zz)) / 3) + (length(zz) / 3) * 2]
 
     # remove NA data:
     use <- !is.na(y)
     y <- y[use]
     b <- b[use]
-    Xtemp <- X[use, , drop = F]
+    Xtemp <- X[use, , drop = FALSE]
     wts <- wts[use]
 
     init <- rep(mean(y) / (mean(X) * ncol(X)), ncol(X))
