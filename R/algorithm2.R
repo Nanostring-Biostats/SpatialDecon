@@ -34,7 +34,6 @@
 #'  values get thresholded up to this value. Prevents log2-scale residuals from becoming extreme in
 #'  points near zero.
 #' @param align_genes Logical. If TRUE, then Y, X, bg, and wts are row-aligned by shared genes.
-#' @param ... Parameters for the deconvolution function called
 #' @param maxit Maximum number of iterations. Default 1000.
 #' @return a list:
 #' \itemize{
@@ -48,7 +47,7 @@
 #' @export
 algorithm2 <- function(Y, X, bg = 0, weights = NULL,
                        resid_thresh = 3, lower_thresh = 0.5,
-                       align_genes = TRUE, maxit = 1000, ...) {
+                       align_genes = TRUE, maxit = 1000) {
 
   # align genes:
   if (align_genes) {
@@ -76,7 +75,7 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
 
 
   # initial run to look for outliers:
-  out0 <- deconLNR(Y = Y, X = X, bg = bg, weights = weights, epsilon = epsilon, maxit = maxit, ...)
+  out0 <- deconLNR(Y = Y, X = X, bg = bg, weights = weights, epsilon = epsilon, maxit = maxit)
   # also get yhat and resids:
   out0$yhat <- X %*% out0$beta + bg
   out0$resids <- log2(pmax(Y, lower_thresh)) - log2(pmax(out0$yhat, lower_thresh))
@@ -102,7 +101,7 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
   tempbeta <- out$beta
   tempse <- tempp <- tempt <- tempbeta * NA
   for (i in seq_len(ncol(tempse))) {
-    tempse[, i] <- sqrt(diag(out$sigmas[, , i]))
+    tempse[, i] <- suppressWarnings(sqrt(diag(out$sigmas[, , i])))
   }
   tempt <- (tempbeta / tempse)
   tempp <- 2 * (1 - stats::pt(tempt, df = nrow(X) - ncol(X) - 1))

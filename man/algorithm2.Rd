@@ -12,8 +12,7 @@ algorithm2(
   resid_thresh = 3,
   lower_thresh = 0.5,
   align_genes = TRUE,
-  maxit = 1000,
-  ...
+  maxit = 1000
 )
 }
 \arguments{
@@ -36,8 +35,6 @@ points near zero.}
 \item{align_genes}{Logical. If TRUE, then Y, X, bg, and wts are row-aligned by shared genes.}
 
 \item{maxit}{Maximum number of iterations. Default 1000.}
-
-\item{...}{Parameters for the deconvolution function called}
 }
 \value{
 a list:
