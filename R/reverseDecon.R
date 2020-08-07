@@ -58,6 +58,9 @@ reverseDecon <- function(norm, beta, epsilon = NULL) {
 
   # remove cell types with no SD:
   beta = beta[apply(beta, 1, stats::sd) > 0, ]
+  # remove cell types that get removed by lm() (presumably removed due to linear dependence)
+  lm1 = lm(norm[1,] ~ t(beta))
+  beta = beta[!is.na(lm1$coef[setdiff(names(lm1$coef), "(Intercept)")]), , drop = F]
   
   # run reverse decon for all genes:
   rd <- function(y) {
