@@ -59,18 +59,20 @@ reverseDecon <- function(norm, beta, epsilon = NULL) {
   # remove cell types with no SD:
   beta = beta[apply(beta, 1, stats::sd) > 0, ]
   # remove cell types that get removed by lm() (presumably removed due to linear dependence)
-  lm1 = lm(norm[1,] ~ t(beta))
+  lm1 = stats::lm(norm[1,] ~ t(beta))
   beta = beta[!is.na(lm1$coef[setdiff(names(lm1$coef), "(Intercept)")]), , drop = F]
   
   # run reverse decon for all genes:
   rd <- function(y) {
-    fit <- logNormReg::lognlm(y ~ t(beta),
+    fit <- suppressWarnings(
+      logNormReg::lognlm(y ~ t(beta),
       lik = FALSE,
       method = "L-BFGS-B",
       lower = rep(0, ncol(beta) + 1),
       upper = rep(Inf, ncol(beta) + 1),
       opt = "optim",
       control = list(maxit = 1000)
+    )
     )
     return(fit$coefficients)
   }
