@@ -121,15 +121,6 @@ spatialdecon <- function(norm, bg, X = NULL,
     bg <- matrix(bg, nrow(norm), ncol(norm), dimnames = list(rownames(norm), colnames(norm)))
   }
 
-  # calculate weights based on expected SD of counts
-  # wts = replace(norm, TRUE, 1)
-  if (length(raw) > 0) {
-    wts <- deriveWeights(norm,
-      raw = raw, error.model = "dsp",
-      weight.by.TIL.resid.sd = TRUE
-    )
-  }
-
   # prep training matrix:
   if (length(X) == 0) {
     X <- SpatialDecon::safeTME
@@ -140,6 +131,16 @@ spatialdecon <- function(norm, bg, X = NULL,
   }
   if (length(sharedgenes) < 100) {
     stop(paste0("Only ", length(sharedgenes), " genes are shared between norm and X - this may not be enough to support accurate deconvolution."))
+  }
+  
+  # calculate weights based on expected SD of counts
+  # wts = replace(norm, TRUE, 1)
+  if (length(raw) > 0) {
+    weight.by.TIL.resid.sd = length(intersect(colnames(X), colnames(SpatialDecon::safeTME))) > 10
+    wts <- deriveWeights(norm,
+                         raw = raw, error.model = "dsp",
+                         weight.by.TIL.resid.sd = weight.by.TIL.resid.sd
+    )
   }
 
   #### if pure tumor AOIs are specificed, get tumor expression profile -------------------------------------
