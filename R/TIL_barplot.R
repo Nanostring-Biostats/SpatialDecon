@@ -23,6 +23,7 @@
 #' @param main Title for barplot
 #' @param col Vector of colors for cell types. Defaults to pre-set colors for the safeTME cell types. 
 #' @param ... Arguments passed to barplot()
+#' @return Draws a barplot.
 #' @examples
 #' data(mini_geomx_dataset)
 #' # estimate background:

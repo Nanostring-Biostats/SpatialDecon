@@ -19,6 +19,9 @@ whatever order is best for display.}
 
 \item{...}{Arguments passed to barplot()}
 }
+\value{
+Draws a barplot.
+}
 \description{
 Draw barplot of the "betas" from a decon fit
 }

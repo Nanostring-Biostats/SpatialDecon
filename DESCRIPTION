@@ -1,12 +1,12 @@
 Package: SpatialDecon
 Title: Deconvolution of mixed cells from spatial and/or bulk gene expression data
-Version: 1.0.0.0000
+Version: 0.99.0
 Authors@R: person("Patrick", "Danaher", email = "pdanaher@nanostring.com", role = c("aut", "cre"))
 Description: Using spatial or bulk gene expression data, estimates abundance of mixed cell types
  within each observation. Based on "Advances in mixed cell deconvolution enable quantification
  of cell types in spatially-resolved gene expression data", Danaher (2020). Designed for use with
  the NanoString GeoMx platform, but applicable to any gene expression data. 
-Depends: R (>= 3.5.0), logNormReg
+Depends: R (>= 4.0.0), logNormReg
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -16,3 +16,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+biocViews: ImmunoOncology, FeatureExtraction, GeneExpression, Transcriptomics
