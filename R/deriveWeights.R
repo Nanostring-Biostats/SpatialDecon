@@ -1,8 +1,16 @@
-# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression data
+# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression
+# data
 # Copyright (C) 2020, NanoString Technologies, Inc.
-#    This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-#    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-#    You should have received a copy of the GNU General Public License along with this program.  If not, see https://www.gnu.org/licenses/.
+#    This program is free software: you can redistribute it and/or modify it 
+#    under the terms of the GNU General Public License as published by the Free
+#    Software Foundation, either version 3 of the License, or (at your option)
+#    any later version.
+#    This program is distributed in the hope that it will be useful, but WITHOUT
+#    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+#    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+#    more details.
+#    You should have received a copy of the GNU General Public License along 
+#    with this program.  If not, see https://www.gnu.org/licenses/.
 # Contact us:
 # NanoString Technologies, Inc.
 # 530 Fairview Avenue N
@@ -11,16 +19,20 @@
 # pdanaher@nanostring.com
 
 
+
 #' Compute gene weights
 #'
 #' Compute gene weights from pre-defined biological noise estimates and from
 #'  raw count/ error-model-defined technical noise estimates
-#' @param norm Matrix of data used in decon. Used to define the gene list and the
+#' @param norm Matrix of data used in decon. Used to define the gene list and 
+#' the
 #' shape of the output "wts" matrix.
 #' @param raw Matrix of raw data. If provided, used to define technical noise
 #' @param error.model Which error model to use. Defaults to "dsp"
-#' @param weight.by.TIL.resid.sd If TRUE, then genes are weighted in part based on their
-#'  biological variability as estimated by their residual SD from decon performed on TCGA.
+#' @param weight.by.TIL.resid.sd If TRUE, then genes are weighted in part based 
+#' on their
+#'  biological variability as estimated by their residual SD from decon
+#'   performed on TCGA.
 #' @return A matrix of weights, in the same dimension as norm  
 deriveWeights <- function(norm, raw = NULL, error.model = "dsp", 
                           weight.by.TIL.resid.sd = FALSE) {

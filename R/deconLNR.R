@@ -1,8 +1,16 @@
-# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression data
+# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression
+# data
 # Copyright (C) 2020, NanoString Technologies, Inc.
-#    This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-#    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-#    You should have received a copy of the GNU General Public License along with this program.  If not, see https://www.gnu.org/licenses/.
+#    This program is free software: you can redistribute it and/or modify it 
+#    under the terms of the GNU General Public License as published by the Free
+#    Software Foundation, either version 3 of the License, or (at your option)
+#    any later version.
+#    This program is distributed in the hope that it will be useful, but WITHOUT
+#    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+#    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+#    more details.
+#    You should have received a copy of the GNU General Public License along 
+#    with this program.  If not, see https://www.gnu.org/licenses/.
 # Contact us:
 # NanoString Technologies, Inc.
 # 530 Fairview Avenue N
@@ -12,19 +20,24 @@
 
 
 
-#' Deconvolution using logNormReg package to run linear mean model and log error model
+#' Deconvolution using logNormReg package to run linear mean model and log error
+#'  model
 #'
 #' Calls lognlm() to optimize the model.
 #'
-#' @param Y p-length expression vector or p * N expression matrix - the actual (linear-scale) data
+#' @param Y p-length expression vector or p * N expression matrix - the actual
+#'  (linear-scale) data
 #' @param X p * K Training matrix
 #' @param bg scalar or matrix of expected background counts per data point.
 #' @param weights The same as the weights argument used by lm
-#' @param epsilon optional,  a very small non-zero number to use as a lower threshold to make fits well-behaved
+#' @param epsilon optional,  a very small non-zero number to use as a lower 
+#' threshold to make fits well-behaved
 #' @param maxit Maximum number of iterations. Default 1000.
-#' @return a list: beta (estimate), sigmas (covariance matrix of estimate, derived by inverting the hessian from lognlm)
+#' @return a list: beta (estimate), sigmas (covariance matrix of estimate, 
+#' derived by inverting the hessian from lognlm)
 #' @import logNormReg
-deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL, maxit = 1000) {
+deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL, 
+                     maxit = 1000) {
   if (length(weights) == 0) {
     weights <- replace(Y, TRUE, 1)
   }

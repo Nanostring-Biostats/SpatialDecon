@@ -1,15 +1,22 @@
-# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression data
+# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression
+# data
 # Copyright (C) 2020, NanoString Technologies, Inc.
-#    This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-#    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-#    You should have received a copy of the GNU General Public License along with this program.  If not, see https://www.gnu.org/licenses/.
+#    This program is free software: you can redistribute it and/or modify it 
+#    under the terms of the GNU General Public License as published by the Free
+#    Software Foundation, either version 3 of the License, or (at your option)
+#    any later version.
+#    This program is distributed in the hope that it will be useful, but WITHOUT
+#    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+#    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+#    more details.
+#    You should have received a copy of the GNU General Public License along 
+#    with this program.  If not, see https://www.gnu.org/licenses/.
 # Contact us:
 # NanoString Technologies, Inc.
 # 530 Fairview Avenue N
 # Seattle, WA 98109
 # Tel: (888) 358-6266
 # pdanaher@nanostring.com
-
 
 
 
@@ -23,26 +30,35 @@
 #' \item compute p-values
 #' }
 #'
-#' @param Y p-length expression vector or p * N expression matrix - the actual (linear-scale) data
+#' @param Y p-length expression vector or p * N expression matrix - the actual 
+#' (linear-scale) data
 #' @param X p * K Training matrix.
-#' @param bg Expected background counts. Provide a scalar to apply to all data points, or
-#'  else a matrix/vector aligning with Y to provide more nuanced expected background.
+#' @param bg Expected background counts. Provide a scalar to apply to all
+#'  data points, or
+#'  else a matrix/vector aligning with Y to provide more nuanced expected
+#'   background.
 #' @param weights The same as the weights argument used by lm
-#' @param resid_thresh A scalar, sets a threshold on how extreme individual data points' values
+#' @param resid_thresh A scalar, sets a threshold on how extreme individual 
+#' data points' values
 #'  can be (in log2 units) before getting flagged as outliers and set to NA.
-#' @param lower_thresh A scalar. Before log2-scale residuals are calculated, both observed and fitted
-#'  values get thresholded up to this value. Prevents log2-scale residuals from becoming extreme in
+#' @param lower_thresh A scalar. Before log2-scale residuals are calculated, 
+#' both observed and fitted
+#'  values get thresholded up to this value. Prevents log2-scale residuals from 
+#'  becoming extreme in
 #'  points near zero.
-#' @param align_genes Logical. If TRUE, then Y, X, bg, and wts are row-aligned by shared genes.
+#' @param align_genes Logical. If TRUE, then Y, X, bg, and wts are row-aligned 
+#' by shared genes.
 #' @param maxit Maximum number of iterations. Default 1000.
 #' @return a list:
 #' \itemize{
-#' \item beta: matrix of cell abundance estimates, cells in rows and observations in columns
+#' \item beta: matrix of cell abundance estimates, cells in rows and 
+#' observations in columns
 #' \item sigmas: covariance matrices of each observation's beta estimates
 #' \item p: matrix of p-values for H0: beta == 0
 #' \item t: matrix of t-statistics for H0: beta == 0
 #' \item se: matrix of standard errors of beta values
-#' \item resids: a matrix of residuals from the model fit. (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
+#' \item resids: a matrix of residuals from the model fit. 
+#' (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
 #' }
 #' @export
 algorithm2 <- function(Y, X, bg = 0, weights = NULL,
@@ -123,11 +139,13 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
 
 #' Function to format Y, X inputs for decon
 #'
-#' Takes user-supplied X and Y, checks for accuracy, aligns by dimnames, adds dimnames if missing
+#' Takes user-supplied X and Y, checks for accuracy, aligns by dimnames, adds 
+#' dimnames if missing
 #'
 #' @param X X matrix
 #' @param Y Data matrix
-#' @return X and Y, both formatted as matrices, with full dimnames and aligned to each other by dimname
+#' @return X and Y, both formatted as matrices, with full dimnames and aligned 
+#' to each other by dimname
 tidy_X_and_Y <- function(X, Y) {
 
   # format as matrices:

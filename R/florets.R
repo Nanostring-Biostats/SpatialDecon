@@ -1,8 +1,16 @@
-# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression data
+# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression
+# data
 # Copyright (C) 2020, NanoString Technologies, Inc.
-#    This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-#    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-#    You should have received a copy of the GNU General Public License along with this program.  If not, see https://www.gnu.org/licenses/.
+#    This program is free software: you can redistribute it and/or modify it 
+#    under the terms of the GNU General Public License as published by the Free
+#    Software Foundation, either version 3 of the License, or (at your option)
+#    any later version.
+#    This program is distributed in the hope that it will be useful, but WITHOUT
+#    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+#    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+#    more details.
+#    You should have received a copy of the GNU General Public License along 
+#    with this program.  If not, see https://www.gnu.org/licenses/.
 # Contact us:
 # NanoString Technologies, Inc.
 # 530 Fairview Avenue N
@@ -10,21 +18,26 @@
 # Tel: (888) 358-6266
 # pdanaher@nanostring.com
 
-
 #' Draw coxcomb plots as points in a graphics window
 #'
-#' Draws a scatterplot where each point is a circular barplot, intended to show decon results
+#' Draws a scatterplot where each point is a circular barplot, intended to show 
+#' decon results
 #'
 #' @param x Vector of x coordinates
 #' @param y Vector of y coordinates
-#' @param b matrix or cell abundances, with columns aligned with the elements of x and y
+#' @param b matrix or cell abundances, with columns aligned with the elements 
+#' of x and y
 #' @param col vector of colors, aligned to the rows of b.
-#' @param legendwindow Logical. If TRUE, the function draws a color legend in a new window
-#' @param rescale.by.sqrt Logical, for whether to rescale b by its square root to make value proportional to
+#' @param legendwindow Logical. If TRUE, the function draws a color legend in a
+#'  new window
+#' @param rescale.by.sqrt Logical, for whether to rescale b by its square root 
+#' to make value proportional to
 #'  shape area, not shape length.
 #' @param border Color of pie segment border, defauls to NA/none
-#' @param add Logical. If TRUE, the function draws florets atop an existing graphics device (TRUE) or call a new device (FALSE).
-#' @param cex Floret size. Florets are scaled relative to the range of x and y; this further scales up or down.
+#' @param add Logical. If TRUE, the function draws florets atop an existing 
+#' graphics device (TRUE) or call a new device (FALSE).
+#' @param cex Floret size. Florets are scaled relative to the range of x and y; 
+#' this further scales up or down.
 #' @param bty bty argument passed to plot()
 #' @param xaxt xaxt argument passed to plot()
 #' @param yaxt yaxt argument passed to plot()

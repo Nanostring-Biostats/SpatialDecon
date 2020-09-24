@@ -3,8 +3,8 @@ context("spatialdecon")
 
 # strategy here:
 # spatialdecon calls almost every function in the package
-# we'll run it, then dissect its results to check that every piece of the puzzle worked
-# we'll also test individual functions as a sanity check
+# we'll run it, then dissect its results to check that every piece of the
+# puzzle worked we'll also test individual functions as a sanity check
 
 #### load test data ----------------------
 rm(list = ls())
@@ -14,7 +14,7 @@ sharedgenes <- intersect(rownames(safeTME), rownames(snr))
 
 
 
-#### test subsidiary functions individually ----------------------------------------
+#### test subsidiary functions individually -----------------------------------
 
 test_that("deriveWeights is as expected", {
   wts <- deriveWeights(
@@ -74,7 +74,7 @@ test_that("spatialdecon is as expected: p", {
 
 
 
-#### test SpatialDecon with TILs options --------------------------------------------------
+#### test SpatialDecon with TILs options ---------------------------------------
 res <- spatialdecon(
   norm = snr,
   raw = raw,
@@ -138,7 +138,8 @@ test_that("reverseDecon is as expected: ", {
 test_that("florets does not error", {
   expect_error(
     florets(
-      x = annot$x, y = annot$y, b = res$beta.granular[!grepl("tumor", rownames(res$beta.granular)), ],
+      x = annot$x, y = annot$y, 
+      b = res$beta.granular[!grepl("tumor", rownames(res$beta.granular)), ],
       legendwindow = TRUE
     ),
     NA

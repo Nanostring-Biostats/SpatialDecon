@@ -24,10 +24,13 @@ knitr::opts_chunk$set(
 ### Overview
 
 
-This vignette demonstrates the use of the SpatialDecon package to estimate cell abundance in spatial gene expression studies. 
+This vignette demonstrates the use of the SpatialDecon package to estimate cell 
+abundance in spatial gene expression studies. 
 
-We'll analyze a small GeoMx dataset from a lung tumor, looking for abundance of different immune cell types. 
-This dataset has 30 ROIs. In each ROI, Tumor and Microenvironment segments have been profiled separately. 
+We'll analyze a small GeoMx dataset from a lung tumor, looking for abundance of
+different immune cell types. 
+This dataset has 30 ROIs. In each ROI, Tumor and Microenvironment segments have 
+been profiled separately. 
 
 
 ### Data preparation
@@ -49,7 +52,8 @@ head(annot)
 raw[seq_len(5), seq_len(5)]
 
 # better segment names:
-colnames(norm) = colnames(raw) = rownames(annot) = paste0(annot$ROI, annot$AOI.name)
+colnames(norm) = colnames(raw) = rownames(annot) = 
+  paste0(annot$ROI, annot$AOI.name)
 
 ```
 
@@ -57,23 +61,30 @@ colnames(norm) = colnames(raw) = rownames(annot) = paste0(annot$ROI, annot$AOI.n
 The spatialdecon function takes 3 arguments of expression data:
 
 1. The normalized data.
-2. A matrix of expected background for all data points in the normalized data matrix.
-3. Optionally, either a matrix of per-data-point weights, or the raw data, which is used to derive weights (low counts are less statistically stable, and this allows spatialdecon to down-weight them.) 
+2. A matrix of expected background for all data points in the normalized 
+data matrix.
+3. Optionally, either a matrix of per-data-point weights, or the raw data, 
+which is used to derive weights (low counts are less statistically stable, 
+and this allows spatialdecon to down-weight them.) 
 
 
-We estimate each data point's expected background from the negative control probes from its corresponding observation:
+We estimate each data point's expected background from the negative control 
+probes from its corresponding observation:
 
 ```{r estimateBG}
 # use the NegProbe to estimate per-observation background
 per.observation.mean.neg = norm["NegProbe", ]
-# and define a background matrix in which each column (observation) is the appropriate 
-#  value of per-observation background:
+# and define a background matrix in which each column (observation) is the
+# appropriate value of per-observation background:
 bg = sweep(norm * 0, 2, per.observation.mean.neg, "+")
 dim(bg)
 
 ```
 
-A note for background estimation: in studies with two probesets, the genes from each probeset will have distinct background values, and the above code should be run separately for each probeset using its corresponding NegProbe value. Alternatively, the "derive_GeoMx_background" can do this automatically:
+A note for background estimation: in studies with two probesets, the genes from 
+each probeset will have distinct background values, and the above code should be
+run separately for each probeset using its corresponding NegProbe value. 
+Alternatively, the "derive_GeoMx_background" can do this automatically:
 
 ```{r derivebg}
 bg2 = derive_GeoMx_background(norm = norm,
@@ -84,9 +95,13 @@ bg2 = derive_GeoMx_background(norm = norm,
 
 ### Cell profile matrices
 
-A "cell profile matrix" is a pre-defined matrix that specifies the expected expression profiles of each cell type in the experiment. 
-The SpatialDecon library comes with one such matrix pre-loaded, the "SafeTME" matrix, designed for estimation of immune and stroma cells in the tumor microenvironment. 
-(This matrix was designed to avoid genes commonly expressed by cancer cells; see the SpatialDecon manuscript for details.)
+A "cell profile matrix" is a pre-defined matrix that specifies the expected 
+expression profiles of each cell type in the experiment. 
+The SpatialDecon library comes with one such matrix pre-loaded, the "SafeTME" 
+matrix, designed for estimation of immune and stroma cells in the tumor 
+microenvironment. 
+(This matrix was designed to avoid genes commonly expressed by cancer cells; 
+see the SpatialDecon manuscript for details.)
 
 Let's take a glance at the safeTME matrix:
 
@@ -99,11 +114,13 @@ heatmap(sweep(safeTME, 1, apply(safeTME, 1, max), "/"),
 ```
 
 
-For studies of other tissue types, we have provided a library of cell profile matrices, available on Github and downloadable with the "download_profile_matrix" function. 
+For studies of other tissue types, we have provided a library of cell profile
+matrices, available on Github and downloadable with the "download_profile_matrix" function. 
 
 For a complete list of matrices, see ?download_profile_matrix. 
 
-Below we download a matrix of cell profiles derived from scRNA-seq of a mouse brain. 
+Below we download a matrix of cell profiles derived from scRNA-seq of a mouse 
+brain. 
 
 ```{r downloadmatrix, fig.height=7, fig.width=10, fig.cap = "The Mouse Brain profile matrix"}
 mousebrain = download_profile_matrix(matrixname = "Mouse_Brain")
@@ -118,7 +135,8 @@ heatmap(sweep(mousebrain, 1, apply(mousebrain, 1, max), "/"),
 ### Performing basic deconvolution with the spatialdecon function
 
 Now our data is ready for deconvolution. 
-First we'll show how to use spatialdecon under the basic settings, omitting optional bells and whistles. 
+First we'll show how to use spatialdecon under the basic settings, omitting 
+optional bells and whistles. 
 
 
 ```{r runiss}
@@ -140,10 +158,19 @@ heatmap(res$beta, cexCol = 0.5, cexRow = 0.7, margins = c(10,7))
 
 spatialdecon has several abilities beyond basic deconvolution:
 
-1. If given the nuclei counts for each region/observation, it returns results on the scale of total cell counts.
-2. If given the identities of pure tumor regions/observations, it infers a handful of tumor-specific expression profiles and appends them to the cell profile matrix. Doing this accounts for cancer cell-derived expression from any genes in the cell profile matrix, removing contaminating signal from cancer cells. 
-3. If given raw count data, it derives per-data-point weights, using an error model derived for GeoMx data. 
-4. If given a "cellmatches" argument, it sums multiple closely-related cell types into a single score. E.g. if the safeTME matrix is used with the cell-matching data object "safeTME.matches", it e.g. sums the "T.CD8.naive" and "T.CD8.memory" scores into a single "CD8.T.cells" score. 
+1. If given the nuclei counts for each region/observation, it returns results on
+the scale of total cell counts.
+2. If given the identities of pure tumor regions/observations, it infers a
+handful of tumor-specific expression profiles and appends them to the cell
+profile matrix. Doing this accounts for cancer cell-derived expression from any 
+genes in the cell profile matrix, removing contaminating signal from cancer 
+cells. 
+3. If given raw count data, it derives per-data-point weights, using an error 
+model derived for GeoMx data. 
+4. If given a "cellmatches" argument, it sums multiple closely-related cell 
+types into a single score. E.g. if the safeTME matrix is used with the 
+cell-matching data object "safeTME.matches", it e.g. sums the "T.CD8.naive" and
+"T.CD8.memory" scores into a single "CD8.T.cells" score. 
 
 Let's take a look at an example cell matching object:
 ```{r showmatches}
@@ -173,13 +200,20 @@ str(restils)
 There are quite a few readouts here. Let's review the important ones:
 
 * beta: the cell abundance scores of the rolled-up/major cell types
-* beta.granular: the cell abundance scores of the granular cell types, corresponding to the columns of the cell profile matrix
-* yhat, resids: the fitted values and log2-scale residuals from the deconvolution fit. Can be used to measure each observation's goodness-of-fit, a possible QC metric. 
-* cell.counts, cell.counts.granular: estimated numbers of each cell type, derived using the nuclei count input
-* prop_of_nontumor: the beta matrix rescaled to give the proportions of non-tumor cells in each observation. 
-* X: the cell profile matrix used, including newly-derived tumor-specific columns.
+* beta.granular: the cell abundance scores of the granular cell types, 
+corresponding to the columns of the cell profile matrix
+* yhat, resids: the fitted values and log2-scale residuals from the 
+deconvolution fit. Can be used to measure each observation's goodness-of-fit, a 
+possible QC metric. 
+* cell.counts, cell.counts.granular: estimated numbers of each cell type, 
+derived using the nuclei count input
+* prop_of_nontumor: the beta matrix rescaled to give the proportions of 
+non-tumor cells in each observation. 
+* X: the cell profile matrix used, including newly-derived tumor-specific 
+columns.
 
-To illustrate the derivation of tumor profiles, let's look at the cell profile matrix output by spatialdecon:
+To illustrate the derivation of tumor profiles, let's look at the cell profile 
+matrix output by spatialdecon:
 
 ```{r shownewX, fig.height=5, fig.width=8, fig.cap = "safeTME merged with newly-derived tumor profiles"}
 heatmap(sweep(restils$X, 1, apply(restils$X, 1, max), "/"),
@@ -189,7 +223,8 @@ heatmap(sweep(restils$X, 1, apply(restils$X, 1, max), "/"),
 
 Note the new tumor-specific columns. 
 
-Finally, let's compare deconvolution results from basic vs. the advanced setting with tumor profiles appended (just for a few cell types):
+Finally, let's compare deconvolution results from basic vs. the advanced setting
+with tumor profiles appended (just for a few cell types):
 
 ```{r compareresults, fig.height=6, fig.width=8, fig.cap = "Cell abundance estimates with and without modelling tumor profiles"}
 par(mfrow = c(2, 3))
@@ -214,31 +249,41 @@ for (i in seq_len(6)) {
 
 So the impact of modelling tumor is two-fold:
 
-* Estimated immune cell content in tumor segments is driven down all the way, or almost all the way, to 0.
-* Estimated immune cell abundance in microenvironment segments in suppressed, as part of the gene expression is attributed to cancer cells instead of immune cells. 
+* Estimated immune cell content in tumor segments is driven down all the way, or
+almost all the way, to 0.
+* Estimated immune cell abundance in microenvironment segments in suppressed, as
+part of the gene expression is attributed to cancer cells instead of immune 
+cells. 
 
 
 ### Plotting deconvolution results
 
-The SpatialDecon package contains two specialized plotting functions, and a default color palette for the safeTME matrix. 
+The SpatialDecon package contains two specialized plotting functions, and a 
+default color palette for the safeTME matrix. 
 
-The first function is "TIL_barplot", which is just a convenient way of drawing barplots of cell type abundance. 
+The first function is "TIL_barplot", which is just a convenient way of drawing 
+barplots of cell type abundance. 
 
 ```{r barplot, fig.width=9, fig.height=6, fig.cap="Barplots of TIL abundance"}
-# For reference, show the TILs color data object used by the plotting functions when safeTME has been used:
+# For reference, show the TILs color data object used by the plotting functions 
+# when safeTME has been used:
 cellcols
 
 # show just the TME segments, since that's where the immune cells are:
 layout(mat = (matrix(c(1, 2), 1)), widths = c(7, 3))
-TIL_barplot(restils$cell.counts$cell.counts, draw_legend = TRUE, cex.names = 0.5)
+TIL_barplot(restils$cell.counts$cell.counts, draw_legend = TRUE, 
+            cex.names = 0.5)
 # or the proportions of cells:
-TIL_barplot(restils$prop_of_nontumor[, annot$AOI.name == "TME"], draw_legend = TRUE, cex.names = 0.75)
+TIL_barplot(restils$prop_of_nontumor[, annot$AOI.name == "TME"], 
+            draw_legend = TRUE, cex.names = 0.75)
 
 ```
 
 
-The second function is "florets", used for plotting cell abundances atop some 2-D projection. 
-Here, we'll plot cell abundances atop the first 2 principal components of the data:
+The second function is "florets", used for plotting cell abundances atop some 
+2-D projection. 
+Here, we'll plot cell abundances atop the first 2 principal components of the 
+data:
 
 ```{r florets, fig.width=8, fig.height=6, fig.cap = "TIL abundance plotted on PC space"}
 # PCA of the normalized data:
@@ -252,20 +297,25 @@ florets(x = pc[, 1], y = pc[, 2],
         xlab = "PC1", ylab = "PC2")
 par(mar = c(0,0,0,0))
 frame()
-legend("center", fill = cellcols[rownames(restils$beta)], legend = rownames(restils$beta), cex = 0.7)
+legend("center", fill = cellcols[rownames(restils$beta)], 
+       legend = rownames(restils$beta), cex = 0.7)
 ```
 
-So we can see that PC1 roughly tracks many vs. few immune cells, and PC2 tracks the relative abundance of lymphoid/myeloid populations.
+So we can see that PC1 roughly tracks many vs. few immune cells, and PC2 tracks 
+the relative abundance of lymphoid/myeloid populations.
 
 
 ### Other functions
 
-The SpatialDecon library includes several helpful functions for further analysis/fine-tuning of deconvolution results. 
+The SpatialDecon library includes several helpful functions for further 
+analysis/fine-tuning of deconvolution results. 
 
 #### Combining cell types:
 
-When two cell types are too similar, the estimation of their abundances becomes unstable. However, their sum can still be estimated easily. 
-The function "collapseCellTypes" takes a deconvolution results object and collapses any colsely-related cell types you tell it to:
+When two cell types are too similar, the estimation of their abundances becomes
+unstable. However, their sum can still be estimated easily. 
+The function "collapseCellTypes" takes a deconvolution results object and 
+collapses any colsely-related cell types you tell it to:
 
 ```{r collapse, fig.width=5, fig.height=5, fig.cap="Cell abundance estimates with related cell types collapsed"}
 matching = list()
@@ -283,13 +333,21 @@ collapsed = collapseCellTypes(fit = restils,
 heatmap(collapsed$beta, cexRow = 0.85, cexCol = 0.75)
 ```
 
-#### Inferring an expression profile for a cell type omitted from the cell profile matrix
+#### Inferring an expression profile for a cell type omitted from the profile matrix
 
-Sometimes a cell profile matrix will omit a cell type you know to be present in a tissue. 
-If your data includes any regions that are purely this unmodelled cell type - e.g. because you've used the GeoMx platform's segmentation capability to specifically select them - then you can infer a profile for that cell type and merge it with your cell profile matrix. 
-The algorithm clusters all the observations you designate as purely the unmodelled cell type, and collapses those clusters into as many profiles of that cell type as you wish. For cancer cell, it may be appropriate to specify 10 or more clusters; for highly regular healthy cells, one cluster may suffice.
+Sometimes a cell profile matrix will omit a cell type you know to be present in 
+a tissue. 
+If your data includes any regions that are purely this unmodelled cell type - 
+e.g. because you've used the GeoMx platform's segmentation capability to 
+specifically select them - then you can infer a profile for that cell type and 
+merge it with your cell profile matrix. 
+The algorithm clusters all the observations you designate as purely the 
+unmodelled cell type, and collapses those clusters into as many profiles of that
+cell type as you wish. For cancer cell, it may be appropriate to specify 10 or
+more clusters; for highly regular healthy cells, one cluster may suffice.
 
-(Note: this functionality can also be run within the spatialdecon function, as is demonstrated further above.)
+(Note: this functionality can also be run within the spatialdecon function, as 
+is demonstrated further above.)
 
 ```{r appendtumor, fig.width = 10, fig.height= 5, fig.cap = "safeTME merged with newly-derived tumor profiles"}
 pure.tumor.ids = annot$AOI.name == "Tumor"
@@ -307,12 +365,17 @@ heatmap(sweep(safeTME.with.tumor, 1, apply(safeTME.with.tumor, 1, max), "/"),
 
 #### Reverse deconvolution
 
-Once cell type abundance has been estimated, we can flip the deconvolution around, modelling the expression data as a function of cell abundances, and thereby deriving:
+Once cell type abundance has been estimated, we can flip the deconvolution 
+around, modelling the expression data as a function of cell abundances, and 
+thereby deriving:
 
-1. Estimated expression of each gene in each cell type. (Including for genes not present in your cell profile matrix)
+1. Estimated expression of each gene in each cell type. (Including for genes 
+not present in your cell profile matrix)
 2. Fitted expression values for each gene based on cell mixing.
-3. Residuals of each gene: how does their expression compare to what cell mixing would predict?
-4. Two metrics of how well genes are predicted by/ redundant with cell mixing: correlation between observed and fitted expression, and residual SD. 
+3. Residuals of each gene: how does their expression compare to what cell mixing
+would predict?
+4. Two metrics of how well genes are predicted by/ redundant with cell mixing: 
+correlation between observed and fitted expression, and residual SD. 
 
 The function "reversedecon" runs this model.
 
@@ -335,4 +398,7 @@ text(rdecon$cors[showgenes], rdecon$resid.sd[showgenes], showgenes, cex = 0.75, 
 
 ```
 
-From the above plot, we can see that genes like CXCL14 vary independently of cell mixing, genes like LYZ are correlated with cell mixing but still have variable expression, and genes like NKG7 serve as nothing but obtuse readouts of cell mixing. 
+From the above plot, we can see that genes like CXCL14 vary independently of 
+cell mixing, genes like LYZ are correlated with cell mixing but still have 
+variable expression, and genes like NKG7 serve as nothing but obtuse readouts 
+of cell mixing. 

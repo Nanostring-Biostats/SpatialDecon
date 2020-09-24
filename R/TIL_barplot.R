@@ -1,8 +1,16 @@
-# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression data
+# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression
+# data
 # Copyright (C) 2020, NanoString Technologies, Inc.
-#    This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-#    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-#    You should have received a copy of the GNU General Public License along with this program.  If not, see https://www.gnu.org/licenses/.
+#    This program is free software: you can redistribute it and/or modify it 
+#    under the terms of the GNU General Public License as published by the Free
+#    Software Foundation, either version 3 of the License, or (at your option)
+#    any later version.
+#    This program is distributed in the hope that it will be useful, but WITHOUT
+#    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+#    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+#    more details.
+#    You should have received a copy of the GNU General Public License along 
+#    with this program.  If not, see https://www.gnu.org/licenses/.
 # Contact us:
 # NanoString Technologies, Inc.
 # 530 Fairview Avenue N
@@ -10,18 +18,20 @@
 # Tel: (888) 358-6266
 # pdanaher@nanostring.com
 
-
-
 #' Barplot of abundance estimates
 #'
 #' Draw barplot of the "betas" from a decon fit
 #'
-#' @param mat Matrix of cell proportions or abundances, in the same dimensions output by spatialdecon
-#'  (cells in rows, observations in columns). User is free to re-order columns/observations in
+#' @param mat Matrix of cell proportions or abundances, in the same dimensions 
+#' output by spatialdecon
+#'  (cells in rows, observations in columns). User is free to re-order 
+#'  columns/observations in
 #'  whatever order is best for display.
-#' @param draw_legend Logical. If TRUE, the function draws a legend in a new plot frame.
+#' @param draw_legend Logical. If TRUE, the function draws a legend in a new 
+#' plot frame.
 #' @param main Title for barplot
-#' @param col Vector of colors for cell types. Defaults to pre-set colors for the safeTME cell types. 
+#' @param col Vector of colors for cell types. Defaults to pre-set colors for 
+#' the safeTME cell types. 
 #' @param ... Arguments passed to barplot()
 #' @return Draws a barplot.
 #' @examples

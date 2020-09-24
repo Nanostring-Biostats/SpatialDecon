@@ -1,8 +1,16 @@
-# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression data
+# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression
+# data
 # Copyright (C) 2020, NanoString Technologies, Inc.
-#    This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-#    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-#    You should have received a copy of the GNU General Public License along with this program.  If not, see https://www.gnu.org/licenses/.
+#    This program is free software: you can redistribute it and/or modify it 
+#    under the terms of the GNU General Public License as published by the Free
+#    Software Foundation, either version 3 of the License, or (at your option)
+#    any later version.
+#    This program is distributed in the hope that it will be useful, but WITHOUT
+#    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+#    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+#    more details.
+#    You should have received a copy of the GNU General Public License along 
+#    with this program.  If not, see https://www.gnu.org/licenses/.
 # Contact us:
 # NanoString Technologies, Inc.
 # 530 Fairview Avenue N
@@ -23,45 +31,67 @@
 #' \item re-run decon with cleaned-up gene set
 #' \item combine closely-related cell types
 #' \item compute p-values
-#' \item rescale abundance estimates, to proportions of total, proportions of immune, cell counts
+#' \item rescale abundance estimates, to proportions of total, proportions of
+#'  immune, cell counts
 #' }
 #'
-#' @param norm p-length expression vector or p * N expression matrix - the actual (linear-scale) data
+#' @param norm p-length expression vector or p * N expression matrix - the 
+#' actual (linear-scale) data
 #' @param bg Same dimension as norm: the background expected at each data point.
 #' @param X Cell profile matrix. If NULL, the safeTME matrix is used.
 #' @param raw Optional for using an error model to weight the data points.
-#'  p-length expression vector or p * N expression matrix - the raw (linear-scale) data
+#'  p-length expression vector or p * N expression matrix - the raw 
+#'  (linear-scale) data
 #' @param wts Optional, a matrix of weights.
-#' @param resid_thresh A scalar, sets a threshold on how extreme individual data points' values
+#' @param resid_thresh A scalar, sets a threshold on how extreme individual data
+#'  points' values
 #'  can be (in log2 units) before getting flagged as outliers and set to NA.
-#' @param lower_thresh A scalar. Before log2-scale residuals are calculated, both observed and fitted
-#'  values get thresholded up to this value. Prevents log2-scale residuals from becoming extreme in
+#' @param lower_thresh A scalar. Before log2-scale residuals are calculated,
+#'  both observed and fitted
+#'  values get thresholded up to this value. Prevents log2-scale residuals from 
+#'  becoming extreme in
 #'  points near zero.
-#' @param align_genes Logical. If TRUE, then Y, X, bg, and wts are row-aligned by shared genes.
-#' @param is_pure_tumor A logical vector denoting whether each AOI consists of pure tumor. If specified,
-#'  then the algorithm will derive a tumor expression profile and merge it with the immune profiles matrix.
-#' @param cell_counts Number of cells estimated to be within each sample. If provided alongside norm_factors,
-#'  then the algorithm will additionally output cell abundance esimtates on the scale of cell counts.
-#' @param cellmerges A list object holding the mapping from beta's cell names to combined cell names. If left
-#'  NULL, then defaults to a mapping of granular immune cell definitions to broader categories.
-#' @param n_tumor_clusters Number of tumor-specific columns to merge into the cell profile matrix.
-#'  Has an impact only when is_pure_tumor argument is used to indicate pure tumor AOIs.
-#'  Takes this many clusters from the pure-tumor AOI data and gets the average expression profile in each cluster.  Default 10.
+#' @param align_genes Logical. If TRUE, then Y, X, bg, and wts are row-aligned
+#'  by shared genes.
+#' @param is_pure_tumor A logical vector denoting whether each AOI consists of
+#'  pure tumor. If specified,
+#'  then the algorithm will derive a tumor expression profile and merge it with 
+#'  the immune profiles matrix.
+#' @param cell_counts Number of cells estimated to be within each sample. If 
+#' provided alongside norm_factors,
+#'  then the algorithm will additionally output cell abundance esimtates on the 
+#'  scale of cell counts.
+#' @param cellmerges A list object holding the mapping from beta's cell names to
+#'  combined cell names. If left
+#'  NULL, then defaults to a mapping of granular immune cell definitions to
+#'   broader categories.
+#' @param n_tumor_clusters Number of tumor-specific columns to merge into the 
+#' cell profile matrix.
+#'  Has an impact only when is_pure_tumor argument is used to indicate pure
+#'   tumor AOIs.
+#'  Takes this many clusters from the pure-tumor AOI data and gets the average 
+#'  expression profile in each cluster.  Default 10.
 #' @param maxit Maximum number of iterations. Default 1000.
 #' @return a list:
 #' \itemize{
-#' \item beta: matrix of cell abundance estimates, cells in rows and observations in columns
+#' \item beta: matrix of cell abundance estimates, cells in rows and 
+#' observations in columns
 #' \item sigmas: covariance matrices of each observation's beta estimates
 #' \item p: matrix of p-values for H0: beta == 0
 #' \item t: matrix of t-statistics for H0: beta == 0
 #' \item se: matrix of standard errors of beta values
 #' \item prop_of_all: rescaling of beta to sum to 1 in each observation
-#' \item prop_of_nontumor: rescaling of beta to sum to 1 in each observation, excluding tumor abundance estimates
-#' \item cell.counts: beta rescaled to estimate cell numbers, based on prop_of_all and nuclei count
-#' \item beta.granular: cell abundances prior to combining closely-related cell types
+#' \item prop_of_nontumor: rescaling of beta to sum to 1 in each observation, 
+#' excluding tumor abundance estimates
+#' \item cell.counts: beta rescaled to estimate cell numbers, based on 
+#' prop_of_all and nuclei count
+#' \item beta.granular: cell abundances prior to combining closely-related 
+#' cell types
 #' \item sigma.granular: sigmas prior to combining closely-related cell types
-#' \item cell.counts.granular: cell.counts prior to combining closely-related cell types
-#' \item resids: a matrix of residuals from the model fit. (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
+#' \item cell.counts.granular: cell.counts prior to combining closely-related 
+#' cell types
+#' \item resids: a matrix of residuals from the model fit.
+#'  (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
 #' \item X: the cell profile matrix used in the decon fit.
 #' }
 #' @examples
@@ -147,7 +177,7 @@ spatialdecon <- function(norm, bg, X = NULL,
     )
   }
 
-  #### if pure tumor AOIs are specificed, get tumor expression profile -------------------------------------
+  #### if pure tumor AOIs are specificed, get tumor expression profile --------
   if (sum(is_pure_tumor) > 0) {
 
     # derive tumor profiles and merge into X: 
