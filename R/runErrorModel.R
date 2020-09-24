@@ -59,7 +59,7 @@ runErrorModel <- function(counts, platform = "general") {
     }
 
     if (is.vector(counts)) {
-      sds <- sapply(counts, predictsd.dsp)
+      sds <- vapply(X = counts, FUN = predictsd.dsp, FUN.VALUE = numeric(length(counts)))
     }
     if (is.matrix(counts)) {
       sds <- predictsd.dsp(counts)

@@ -90,7 +90,6 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE, rescale.by.sqrt =
   }
 
   # get radians:
-  # angles = seq(0, 2 * pi, length.out = nrow(b) + 1)[-1]
   angles <- seq(0, 2 * pi, length.out = nrow(b) + 1)
 
   # scale b based on the range of x and y:

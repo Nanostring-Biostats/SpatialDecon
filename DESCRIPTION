@@ -15,5 +15,9 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
+biocViews: 
+    ImmunoOncology, 
+    FeatureExtraction, 
+    GeneExpression, 
+    Transcriptomics
 VignetteBuilder: knitr
-biocViews: ImmunoOncology, FeatureExtraction, GeneExpression, Transcriptomics
