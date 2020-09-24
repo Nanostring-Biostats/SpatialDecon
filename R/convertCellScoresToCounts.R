@@ -22,7 +22,8 @@
 #' @param omit.tumor Logical. If FALSE, any rows of beta with "tumor" in their name will be omitted.
 #' @return A list with two elements, each a rescaled version of beta. cells.per.100 gives estimated
 #'  percents of total, and cell.counts is cells.per.100 * nuclei.counts.
-convertCellScoresToCounts <- function(beta, nuclei.counts = NULL, omit.tumor = FALSE) {
+convertCellScoresToCounts <- function(beta, nuclei.counts = NULL, 
+                                      omit.tumor = FALSE) {
   # strip tumor rows if called for:
   if (omit.tumor) {
     beta <- beta[!grepl("tumor", rownames(beta)), , drop = FALSE]

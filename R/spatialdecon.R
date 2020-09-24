@@ -118,7 +118,8 @@ spatialdecon <- function(norm, bg, X = NULL,
 
 
   if (length(bg) == 1) {
-    bg <- matrix(bg, nrow(norm), ncol(norm), dimnames = list(rownames(norm), colnames(norm)))
+    bg <- matrix(bg, nrow(norm), ncol(norm), 
+                 dimnames = list(rownames(norm), colnames(norm)))
   }
 
   # prep training matrix:
@@ -130,13 +131,16 @@ spatialdecon <- function(norm, bg, X = NULL,
     stop("no shared gene names between norm and X")
   }
   if (length(sharedgenes) < 100) {
-    stop(paste0("Only ", length(sharedgenes), " genes are shared between norm and X - this may not be enough to support accurate deconvolution."))
+    stop(paste0("Only ", length(sharedgenes), 
+                " genes are shared between norm and X - this may not be enough
+                to support accurate deconvolution."))
   }
   
   # calculate weights based on expected SD of counts
   # wts = replace(norm, TRUE, 1)
   if (length(raw) > 0) {
-    weight.by.TIL.resid.sd = length(intersect(colnames(X), colnames(SpatialDecon::safeTME))) > 10
+    weight.by.TIL.resid.sd = 
+      length(intersect(colnames(X), colnames(SpatialDecon::safeTME))) > 10
     wts <- deriveWeights(norm,
                          raw = raw, error.model = "dsp",
                          weight.by.TIL.resid.sd = weight.by.TIL.resid.sd
@@ -146,7 +150,8 @@ spatialdecon <- function(norm, bg, X = NULL,
   #### if pure tumor AOIs are specificed, get tumor expression profile -------------------------------------
   if (sum(is_pure_tumor) > 0) {
 
-    # derive tumor profiles and merge into X: (derive a separate profile for each tissue)
+    # derive tumor profiles and merge into X: 
+    # (derive a separate profile for each tissue)
     X <- mergeTumorIntoX(
       norm = norm,
       bg = bg,
@@ -173,9 +178,6 @@ spatialdecon <- function(norm, bg, X = NULL,
 
   if (length(cellmerges) > 0) {
 
-    # if (is.element("tumor", rownames(res$beta))) {
-    #  cellmerges$tumor = rownames(res$beta)[grepl("tumor", rownames(res$beta))]
-    # }
     tempconv <- convertCellTypes(
       beta = res$beta,
       matching = cellmerges,
@@ -211,7 +213,8 @@ spatialdecon <- function(norm, bg, X = NULL,
   # proportions:
   res$prop_of_all <- sweep(res$beta, 2, colSums(res$beta), "/")
   nontumorcellnames <- rownames(res$beta)[!grepl("tumor", rownames(res$beta))]
-  res$prop_of_nontumor <- sweep(res$beta[nontumorcellnames, ], 2, colSums(res$beta[nontumorcellnames, ]), "/")
+  res$prop_of_nontumor <- sweep(res$beta[nontumorcellnames, ], 2, 
+                                colSums(res$beta[nontumorcellnames, ]), "/")
 
   # on scale of cell counts:
   if (length(cell_counts) > 0) {

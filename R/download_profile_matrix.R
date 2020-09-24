@@ -63,21 +63,23 @@ download_profile_matrix <- function(matrixname) {
 
   librarynames <- c(
     "Airway_Epithelium", "Atlas_Adult_Retina_10x", "Census_Adult_Immune_10x",
-    "Census_Newborn_Blood_10x", "Diff_Fetal_Neuron_SS2", "FetalMaternal_Adult_Blood_10x",
-    "FetalMaternal_Adult_Blood_SS2", "FetalMaternal_Adult_Decidua_10x",
-    "FetalMaternal_Adult_Decidua_SS2", "FetalMaternal_Fetal_Placenta_10x", "Human_brain",
-    "Human_Cell_Landscape", "IBD_Adult_Colon_10x", "Landscape_Adult_Liver_10x",
+    "Census_Newborn_Blood_10x", "Diff_Fetal_Neuron_SS2", 
+    "FetalMaternal_Adult_Blood_10x", "FetalMaternal_Adult_Blood_SS2", 
+    "FetalMaternal_Adult_Decidua_10x", "FetalMaternal_Adult_Decidua_SS2",
+    "FetalMaternal_Fetal_Placenta_10x", "Human_brain","Human_Cell_Landscape", 
+    "IBD_Adult_Colon_10x", "Landscape_Adult_Liver_10x",
     "Lung_plus_neutrophils", "Mouse_Brain", "Profiling_Adult_BoneMarrow_10x",
     "Reprogram_Embryo_Dendritic_10x", "Sensitivity_Adult_Esophagus_10x",
-    "Sensitivity_Adult_Lung_10x", "Sensitivity_Adult_Spleen_10x", "Somatic_Adult_Pancreas_SS2",
-    "SpatioTemporal_Adult_Kidney_10x", "SpatioTemporal_Fetal_Kidney_10x", "Tcell_Adult_Blood_10x",
-    "Tcell_Adult_BoneMarrow_10x", "Tcell_Adult_Lung_10x", "Tcell_Adult_LymphNode_10x"
+    "Sensitivity_Adult_Lung_10x", "Sensitivity_Adult_Spleen_10x", 
+    "Somatic_Adult_Pancreas_SS2","SpatioTemporal_Adult_Kidney_10x", 
+    "SpatioTemporal_Fetal_Kidney_10x", "Tcell_Adult_Blood_10x",
+    "Tcell_Adult_BoneMarrow_10x", "Tcell_Adult_Lung_10x", 
+    "Tcell_Adult_LymphNode_10x"
   )
   if (!is.element(matrixname, librarynames)) {
     warning(paste0(matrixname, " is not an expected cell profile matrix name."))
   }
 
-  # X = as.matrix(utils::read.csv(paste0("https://github.com/Nanostring-Biostats/Extensions/blob/refactor/cell-profile-library/",
   X <- as.matrix(utils::read.csv(paste0(
     "https://raw.githubusercontent.com/patrickjdanaher/cell-profile-library/master/profile_matrices/",
     matrixname, ".csv"

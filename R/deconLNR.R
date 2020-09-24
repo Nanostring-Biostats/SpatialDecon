@@ -87,7 +87,9 @@ deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL, maxit = 1000)
 
   beta <- vapply(X = fnlist, FUN = getbeta, FUN.VALUE = numeric(ncol(X)))
   rownames(beta) <- colnames(X)
-  sigmas <- array(vapply(X = fnlist, FUN = getsigma, FUN.VALUE = numeric(ncol(X)^2)),
+  sigmas <- array(vapply(X = fnlist, 
+                         FUN = getsigma, 
+                         FUN.VALUE = numeric(ncol(X)^2)),
     dim = c(ncol(X), ncol(X), ncol(Y)),
     dimnames = list(colnames(X), colnames(X), colnames(Y))
   )

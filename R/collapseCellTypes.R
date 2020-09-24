@@ -42,7 +42,8 @@ collapseCellTypes <- function(fit, matching) {
 
   # format matching list as a matrix to take a linear combination of beta:
   startingcellnames <- unlist(matching)
-  A <- matrix(0, length(matching), nrow(fit$beta), dimnames = list(names(matching), rownames(fit$beta)))
+  A <- matrix(0, length(matching), nrow(fit$beta), 
+              dimnames = list(names(matching), rownames(fit$beta)))
   for (name in names(matching)) {
     cellnames <- matching[[name]]
     A[name, cellnames] <- 1
@@ -59,7 +60,9 @@ collapseCellTypes <- function(fit, matching) {
   if (is.element("sigmas", names(out))) {
     sigma <- fit$sigmas
     if (length(dim(sigma)) == 2) {
-      out$sigmas <- A[, startingcellnames] %*% sigma[startingcellnames, startingcellnames, ] %*% t(A[, startingcellnames])
+      out$sigmas <- A[, startingcellnames] %*% 
+        sigma[startingcellnames, startingcellnames, ] %*% 
+        t(A[, startingcellnames])
     }
     if (length(dim(sigma)) == 3) {
       out$sigmas <- array(NA,

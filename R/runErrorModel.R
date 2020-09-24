@@ -1,8 +1,16 @@
-# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression data
+# SpatialDecon: mixed cell deconvolution for spatial and/or bulk gene expression
+# data
 # Copyright (C) 2020, NanoString Technologies, Inc.
-#    This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-#    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-#    You should have received a copy of the GNU General Public License along with this program.  If not, see https://www.gnu.org/licenses/.
+#    This program is free software: you can redistribute it and/or modify it 
+#    under the terms of the GNU General Public License as published by the Free
+#    Software Foundation, either version 3 of the License, or (at your option)
+#    any later version.
+#    This program is distributed in the hope that it will be useful, but WITHOUT
+#    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+#    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+#    more details.
+#    You should have received a copy of the GNU General Public License along 
+#    with this program.  If not, see https://www.gnu.org/licenses/.
 # Contact us:
 # NanoString Technologies, Inc.
 # 530 Fairview Avenue N
@@ -14,11 +22,13 @@
 
 #' Apply error model to estimate technical SD from raw counts
 #'
-#' Based on raw counts, uses past data to estimate each raw count's log-scale SD from technical noise.
-#' Sppecifies different error models for different platforms.
+#' Based on raw counts, uses past data to estimate each raw count's log-scale 
+#' SD from technical noise.
+#' Specifies different error models for different platforms.
 #'
 #' @param counts vector or matrix of raw counts
-#' @param platform String specifying which platform was used to create "rawCounts". Default to "dsp".
+#' @param platform String specifying which platform was used to create 
+#' "rawCounts". Default to "dsp".
 #'  Other options include "ncounter", "rsem" and "quantile".
 #' @return a matrix of log2-scale SDs
 runErrorModel <- function(counts, platform = "general") {
@@ -49,7 +59,8 @@ runErrorModel <- function(counts, platform = "general") {
     predictsd.dsp <- function(rawcounts) {
       m <- log2(pmax(rawcounts, 1e-3))
       meanvec <- c(-1e-6, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, Inf)
-      sdvec <- c(1.5, 1.383, 1.191, 0.800, 0.48, 0.301, 0.301, 0.301, 0.263, 0.235, 0.235)
+      sdvec <- c(1.5, 1.383, 1.191, 0.800, 0.48, 0.301, 0.301,
+                 0.301, 0.263, 0.235, 0.235)
 
       s <- replace(m, TRUE, sdvec[1])
       for (i in seq_len(length(meanvec) - 1)) {
@@ -59,7 +70,9 @@ runErrorModel <- function(counts, platform = "general") {
     }
 
     if (is.vector(counts)) {
-      sds <- vapply(X = counts, FUN = predictsd.dsp, FUN.VALUE = numeric(length(counts)))
+      sds <- vapply(X = counts, 
+                    FUN = predictsd.dsp, 
+                    FUN.VALUE = numeric(length(counts)))
     }
     if (is.matrix(counts)) {
       sds <- predictsd.dsp(counts)

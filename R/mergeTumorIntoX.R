@@ -77,7 +77,8 @@ mergeTumorIntoX <- function(norm, bg, pure_tumor_ids, X, K = 10) {
     # get clusters' geomean profiles:
     tumorX <- c()
     for (cid in unique(cut)) {
-      tumorX <- cbind(tumorX, exp(rowMeans(log(norm[, cut == cid, drop = FALSE]))))
+      tumorX <- cbind(tumorX, 
+                      exp(rowMeans(log(norm[, cut == cid, drop = FALSE]))))
     }
     colnames(tumorX) <- paste0("tumor.", seq_len(ncol(tumorX)))
   }

@@ -54,7 +54,8 @@ derive_GeoMx_background <- function(norm, probepool, negnames) {
     tempnegfactor <- colMeans(norm[tempnegs, , drop = FALSE])
 
     # fill in the corresponding elements of bg:
-    bg[probepool == pool, ] <- sweep(bg[probepool == pool, ], 2, tempnegfactor, "+")
+    bg[probepool == pool, ] <- 
+      sweep(bg[probepool == pool, ], 2, tempnegfactor, "+")
   }
   return(bg)
 }
