@@ -11,7 +11,7 @@ A named vector giving SDs of 1179 genes.
 mean.resid.sd
 }
 \description{
-Genes' biological SDs, as estimated from immune deconvolution from TCGA. Used to weight
- genes in spatialdecon.
+Genes' biological SDs, as estimated from immune deconvolution from TCGA. 
+Used to weight genes in spatialdecon.
 }
 \keyword{datasets}

@@ -27,20 +27,25 @@ florets(
 
 \item{y}{Vector of y coordinates}
 
-\item{b}{matrix or cell abundances, with columns aligned with the elements of x and y}
+\item{b}{matrix or cell abundances, with columns aligned with the elements 
+of x and y}
 
 \item{col}{vector of colors, aligned to the rows of b.}
 
-\item{legendwindow}{Logical. If TRUE, the function draws a color legend in a new window}
+\item{legendwindow}{Logical. If TRUE, the function draws a color legend in a
+new window}
 
-\item{rescale.by.sqrt}{Logical, for whether to rescale b by its square root to make value proportional to
-shape area, not shape length.}
+\item{rescale.by.sqrt}{Logical, for whether to rescale b by its square root 
+to make value proportional to
+ shape area, not shape length.}
 
 \item{border}{Color of pie segment border, defauls to NA/none}
 
-\item{add}{Logical. If TRUE, the function draws florets atop an existing graphics device (TRUE) or call a new device (FALSE).}
+\item{add}{Logical. If TRUE, the function draws florets atop an existing 
+graphics device (TRUE) or call a new device (FALSE).}
 
-\item{cex}{Floret size. Florets are scaled relative to the range of x and y; this further scales up or down.}
+\item{cex}{Floret size. Florets are scaled relative to the range of x and y; 
+this further scales up or down.}
 
 \item{bty}{bty argument passed to plot()}
 
@@ -58,7 +63,8 @@ shape area, not shape length.}
 Draws a coxcomb plot, returns no data.
 }
 \description{
-Draws a scatterplot where each point is a circular barplot, intended to show decon results
+Draws a scatterplot where each point is a circular barplot, intended to show 
+decon results
 }
 \examples{
 data(mini_geomx_dataset)

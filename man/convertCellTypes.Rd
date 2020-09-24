@@ -2,31 +2,38 @@
 % Please edit documentation in R/convertCellTypes.R
 \name{convertCellTypes}
 \alias{convertCellTypes}
-\title{Convert results from an arbitrary training matrix to our standardized cell types.}
+\title{Convert results from an arbitrary training matrix to our standardized cell 
+types.}
 \usage{
 convertCellTypes(beta, matching, stat = sum, na.rm = FALSE, sigma = NULL)
 }
 \arguments{
 \item{beta}{K * n matrix of estimated beta values (cell type abundances)}
 
-\item{matching}{A list object holding the mapping from beta's cell names to official cell names.
+\item{matching}{A list object holding the mapping from beta's cell names to
+official cell names.
 See str(safeTME.matches) for an example.}
 
 \item{stat}{The function used to combine related cell types. Defaults to sum.}
 
 \item{na.rm}{Whether to ignore NAs while computing stat}
 
-\item{sigma}{A list of covariance matrices of beta estimates, in the format output by spatialdecon.}
+\item{sigma}{A list of covariance matrices of beta estimates, in the format
+output by spatialdecon.}
 }
 \value{
 A list with two elements:
 \itemize{
-\item beta: a matrix of cell abundances, with specified cell types added together
-\item sigma: an array of covariance matrices for each observation's beta vector
+\item beta: a matrix of cell abundances, with specified cell types added 
+together
+\item sigma: an array of covariance matrices for each observation's beta 
+vector
 }
 }
 \description{
-Takes betas from a decon run, using any cell type names whatsoever, and maps them back to the
-"official" cell types we use. Allows for multiple rows of beta to map to the same official cell type,
+Takes betas from a decon run, using any cell type names whatsoever, and maps
+ them back to the
+"official" cell types we use. Allows for multiple rows of beta to map to the
+ same official cell type,
 in which case those rows will be added up.
 }

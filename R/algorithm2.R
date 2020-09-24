@@ -60,7 +60,6 @@
 #' \item resids: a matrix of residuals from the model fit. 
 #' (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
 #' }
-#' @export
 algorithm2 <- function(Y, X, bg = 0, weights = NULL,
                        resid_thresh = 3, lower_thresh = 0.5,
                        align_genes = TRUE, maxit = 1000) {

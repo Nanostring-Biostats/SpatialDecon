@@ -7,21 +7,25 @@
 flagOutliers(Y, yhat, resids, wts, resid_thresh = 3)
 }
 \arguments{
-\item{Y}{p-length expression vector or p * N expression matrix - the actual (linear-scale) data}
+\item{Y}{p-length expression vector or p * N expression matrix - the actual 
+(linear-scale) data}
 
 \item{yhat}{Expectation of Y given the decon fit}
 
-\item{resids}{Log2-scale residuals of Y vs. yhat (log2(pmax(Y, 0.5)) - log2(yhat))}
+\item{resids}{Log2-scale residuals of Y vs. yhat 
+(log2(pmax(Y, 0.5)) - log2(yhat))}
 
 \item{wts}{Matrix of data point weights, aligned to dimensions of resids}
 
-\item{resid_thresh}{A scalar, sets a threshold on how extreme individual data points' values
-can be (in log2 units) before getting flagged as outliers and set to NA.}
+\item{resid_thresh}{A scalar, sets a threshold on how extreme individual 
+data points' values
+ can be (in log2 units) before getting flagged as outliers and set to NA.}
 }
 \value{
 a vector of names of poorly-fit genes
 }
 \description{
-Analyses a decon result's residuals to identify poorly-fit genes and flag them for removal.
+Analyses a decon result's residuals to identify poorly-fit genes and flag 
+them for removal.
  Rule: flag anything with
 }

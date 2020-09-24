@@ -11,6 +11,7 @@ A named vector
 cellcols
 }
 \description{
-A named vector of colors, giving colors for the cell types of the safeTME matrix.
+A named vector of colors, giving colors for the cell types of the safeTME
+ matrix.
 }
 \keyword{datasets}
