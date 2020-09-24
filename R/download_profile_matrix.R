@@ -63,7 +63,6 @@
 download_profile_matrix <- function(matrixname) {
 
   # check formatting:
-
   if (length(matrixname) > 1) {
     stop("specify just one matrixname")
   }

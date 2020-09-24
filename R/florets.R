@@ -113,7 +113,6 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE,
   maxrange <- max(diff(range(x, na.rm = TRUE)), diff(range(y, na.rm = TRUE)))
   b <- b * maxrange / mean(b, na.rm = TRUE) * 0.007 * cex
 
-
   # draw plot:
   if (!add) {
     graphics::plot(x, y, col = 0, bty = bty, xaxt = xaxt, yaxt = yaxt, 
