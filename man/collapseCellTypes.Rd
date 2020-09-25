@@ -9,7 +9,7 @@ collapseCellTypes(fit, matching)
 \arguments{
 \item{fit}{The object (a list) returned by the SpatialDecon algorithm}
 
-\item{matching}{A list object holding the mapping from beta's cell names to 
+\item{matching}{A list object holding the mapping from beta's cell names to
 official cell names.
  See str(safeTME.matches) for an example.}
 }
@@ -17,9 +17,9 @@ official cell names.
 A reshaped deconvolution result object
 }
 \description{
-Given the input of an SpatialDecon result output and a list of which cell 
+Given the input of an SpatialDecon result output and a list of which cell
 types to combine,
- returns a reshaped deconvolution result object with the specified cell 
+ returns a reshaped deconvolution result object with the specified cell
  types merged.
 }
 \examples{
@@ -36,6 +36,8 @@ res0 <- spatialdecon(
   bg = mini_geomx_dataset$bg,
   X = safeTME
 )
-res1 <- collapseCellTypes(fit = res0, 
-matching = SpatialDecon::safeTME.matches)
+res1 <- collapseCellTypes(
+    fit = res0,
+    matching = SpatialDecon::safeTME.matches
+)
 }

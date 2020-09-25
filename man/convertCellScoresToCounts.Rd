@@ -11,15 +11,15 @@ convertCellScoresToCounts(beta, nuclei.counts = NULL, omit.tumor = FALSE)
 observations in columns. The
 assumption is that this matrix is from well-normalized data.}
 
-\item{nuclei.counts}{Optional. A vector of total nuclei counts. If provided, 
+\item{nuclei.counts}{Optional. A vector of total nuclei counts. If provided,
 the function will
  output not only cells.per.100 but also total cells.}
 
-\item{omit.tumor}{Logical. If FALSE, any rows of beta with "tumor" in their 
+\item{omit.tumor}{Logical. If FALSE, any rows of beta with "tumor" in their
 name will be omitted.}
 }
 \value{
-A list with two elements, each a rescaled version of beta. 
+A list with two elements, each a rescaled version of beta.
 cells.per.100 gives estimated
  percents of total, and cell.counts is cells.per.100 * nuclei.counts.
 }

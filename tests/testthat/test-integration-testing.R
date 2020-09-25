@@ -124,11 +124,11 @@ rdres <- suppressWarnings(reverseDecon(
 ))
 
 test_that("reverseDecon is as expected: ", {
-  expect_true(all(abs(rdres.test$resids - rdres$resids) < 1e-3))
-  expect_true(all(abs(rdres.test$yhat - rdres$yhat) < 1e-3))
-  expect_true(all(abs(rdres.test$coefs - rdres$coefs) < 1e-3))
-  expect_true(all(abs(rdres.test$cors - rdres$cors) < 1e-3, na.rm = TRUE))
-  expect_true(all(abs(rdres.test$resid.sd - rdres$resid.sd) < 1e-3))
+    expect_true(all(abs(rdres.test$resids - rdres$resids) < 1e-3))
+    expect_true(all(abs(rdres.test$yhat - rdres$yhat) < 1e-3))
+    expect_true(all(abs(rdres.test$coefs - rdres$coefs) < 1e-3))
+    expect_true(all(abs(rdres.test$cors - rdres$cors) < 1e-3, na.rm = TRUE))
+    expect_true(all(abs(rdres.test$resid.sd - rdres$resid.sd) < 1e-3))
 })
 
 
@@ -136,21 +136,21 @@ test_that("reverseDecon is as expected: ", {
 
 ### test plotting functions
 test_that("florets does not error", {
-  expect_error(
-    florets(
-      x = annot$x, y = annot$y, 
-      b = res$beta.granular[!grepl("tumor", rownames(res$beta.granular)), ],
-      legendwindow = TRUE
-    ),
-    NA
-  )
+    expect_error(
+        florets(
+            x = annot$x, y = annot$y,
+            b = res$beta.granular[!grepl("tumor", rownames(res$beta.granular)), ],
+            legendwindow = TRUE
+        ),
+        NA
+    )
 })
 
 test_that("TIL_barplot does not error", {
-  expect_error(
-    TIL_barplot(mat = res$beta, draw_legend = TRUE),
-    NA
-  )
+    expect_error(
+        TIL_barplot(mat = res$beta, draw_legend = TRUE),
+        NA
+    )
 })
 
 

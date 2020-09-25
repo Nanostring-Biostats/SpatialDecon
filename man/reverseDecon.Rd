@@ -7,14 +7,14 @@
 reverseDecon(norm, beta, epsilon = NULL)
 }
 \arguments{
-\item{norm}{Matrix of normalized data, with genes in rows and observations 
+\item{norm}{Matrix of normalized data, with genes in rows and observations
 in columns}
 
-\item{beta}{Matrix of cell abundance estimates, with cells in rows and 
+\item{beta}{Matrix of cell abundance estimates, with cells in rows and
 observations in columns.
  Columns are aligned to "norm".}
 
-\item{epsilon}{All y and yhat values are thresholded up to this point when 
+\item{epsilon}{All y and yhat values are thresholded up to this point when
 performing decon.
  Essentially says, "ignore variability in counts below this threshold."}
 }
@@ -23,21 +23,21 @@ A list:
 \itemize{
 \item coefs, a matrix of coefficients for genes * cells, where element i,j is
  interpreted as
-"every unit increase in cell score j is expected to increase expression of 
+"every unit increase in cell score j is expected to increase expression of
 gene i by _".
 \item yhat, a matrix of fitted values, in the same dimension as norm
 \item resids, a matrix of log2-scale residuals from the reverse decon fit,
  in the same
  dimension as norm
-\item cors, a vector giving each gene's correlation between fitted and 
+\item cors, a vector giving each gene's correlation between fitted and
 observed expression
-\item resid.sd, a vector of each gene's residual SD, a metric of how much 
+\item resid.sd, a vector of each gene's residual SD, a metric of how much
 variability genes
  have independend of cell mixing.
 }
 }
 \description{
-Performs "reverse deconvolution", modelling each gene expression's ~ 
+Performs "reverse deconvolution", modelling each gene expression's ~
 cell scores.
 Returns a matrix of "fitted" expression values, a matrix of residuals,
  a matrix of

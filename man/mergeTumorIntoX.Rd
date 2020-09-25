@@ -25,13 +25,13 @@ an updated X matrix with new columns, "tumor.1", "tumor.2", ...
 \description{
 Given the input of "tumor-only" AOI's, estimates an collection of
  tumor-specific
-expression profiles and merges them with the immune cell expression 
+expression profiles and merges them with the immune cell expression
 training matrix.
 The process:
 \enumerate{
 \item log2/normalized data from tumor-only AOIs is clustered with hclust,
 and cutree() is used to define clusters.
-\item 2. Each cluster's geomean profile is merged into the immune cell 
+\item 2. Each cluster's geomean profile is merged into the immune cell
 profile matrix.
 }
 }

@@ -12,7 +12,7 @@ deriveWeights(
 )
 }
 \arguments{
-\item{norm}{Matrix of data used in decon. Used to define the gene list and 
+\item{norm}{Matrix of data used in decon. Used to define the gene list and
 the
 shape of the output "wts" matrix.}
 
@@ -20,7 +20,7 @@ shape of the output "wts" matrix.}
 
 \item{error.model}{Which error model to use. Defaults to "dsp"}
 
-\item{weight.by.TIL.resid.sd}{If TRUE, then genes are weighted in part based 
+\item{weight.by.TIL.resid.sd}{If TRUE, then genes are weighted in part based
 on their
  biological variability as estimated by their residual SD from decon
   performed on TCGA.}

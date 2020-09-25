@@ -7,18 +7,18 @@
 TIL_barplot(mat, draw_legend = FALSE, main = "", col = NULL, ...)
 }
 \arguments{
-\item{mat}{Matrix of cell proportions or abundances, in the same dimensions 
+\item{mat}{Matrix of cell proportions or abundances, in the same dimensions
 output by spatialdecon
- (cells in rows, observations in columns). User is free to re-order 
+ (cells in rows, observations in columns). User is free to re-order
  columns/observations in
  whatever order is best for display.}
 
-\item{draw_legend}{Logical. If TRUE, the function draws a legend in a new 
+\item{draw_legend}{Logical. If TRUE, the function draws a legend in a new
 plot frame.}
 
 \item{main}{Title for barplot}
 
-\item{col}{Vector of colors for cell types. Defaults to pre-set colors for 
+\item{col}{Vector of colors for cell types. Defaults to pre-set colors for
 the safeTME cell types.}
 
 \item{...}{Arguments passed to barplot()}

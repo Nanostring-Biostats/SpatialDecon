@@ -9,7 +9,7 @@ runErrorModel(counts, platform = "general")
 \arguments{
 \item{counts}{vector or matrix of raw counts}
 
-\item{platform}{String specifying which platform was used to create 
+\item{platform}{String specifying which platform was used to create
 "rawCounts". Default to "dsp".
  Other options include "ncounter", "rsem" and "quantile".}
 }
@@ -17,7 +17,7 @@ runErrorModel(counts, platform = "general")
 a matrix of log2-scale SDs
 }
 \description{
-Based on raw counts, uses past data to estimate each raw count's log-scale 
+Based on raw counts, uses past data to estimate each raw count's log-scale
 SD from technical noise.
 Specifies different error models for different platforms.
 }

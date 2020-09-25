@@ -12,10 +12,10 @@ tidy_X_and_Y(X, Y)
 \item{Y}{Data matrix}
 }
 \value{
-X and Y, both formatted as matrices, with full dimnames and aligned 
+X and Y, both formatted as matrices, with full dimnames and aligned
 to each other by dimname
 }
 \description{
-Takes user-supplied X and Y, checks for accuracy, aligns by dimnames, adds 
+Takes user-supplied X and Y, checks for accuracy, aligns by dimnames, adds
 dimnames if missing
 }

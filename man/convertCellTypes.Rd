@@ -2,7 +2,7 @@
 % Please edit documentation in R/convertCellTypes.R
 \name{convertCellTypes}
 \alias{convertCellTypes}
-\title{Convert results from an arbitrary training matrix to our standardized cell 
+\title{Convert results from an arbitrary training matrix to our standardized cell
 types.}
 \usage{
 convertCellTypes(beta, matching, stat = sum, na.rm = FALSE, sigma = NULL)
@@ -24,9 +24,9 @@ output by spatialdecon.}
 \value{
 A list with two elements:
 \itemize{
-\item beta: a matrix of cell abundances, with specified cell types added 
+\item beta: a matrix of cell abundances, with specified cell types added
 together
-\item sigma: an array of covariance matrices for each observation's beta 
+\item sigma: an array of covariance matrices for each observation's beta
 vector
 }
 }

@@ -392,9 +392,11 @@ heatmap(pmax(pmin(rdecon$resids, 2), -2))
 # look at the two metrics of goodness-of-fit:
 plot(rdecon$cors, rdecon$resid.sd, col = 0)
 showgenes = c("CXCL14", "LYZ", "NKG7")
-text(rdecon$cors[setdiff(names(rdecon$cors), showgenes)], rdecon$resid.sd[setdiff(names(rdecon$cors), showgenes)], 
+text(rdecon$cors[setdiff(names(rdecon$cors), showgenes)], 
+     rdecon$resid.sd[setdiff(names(rdecon$cors), showgenes)], 
      setdiff(names(rdecon$cors), showgenes), cex = 0.5)
-text(rdecon$cors[showgenes], rdecon$resid.sd[showgenes], showgenes, cex = 0.75, col = 2)
+text(rdecon$cors[showgenes], rdecon$resid.sd[showgenes], 
+     showgenes, cex = 0.75, col = 2)
 
 ```
 
