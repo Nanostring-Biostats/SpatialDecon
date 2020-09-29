@@ -47,8 +47,9 @@ These include:
 ## Installation
 
 ``` r
-devtools::install_github("Nanostring-Biostats/Extensions",
-subdir="SpatialDecon", ref = "refactor", build_vignettes = TRUE)
+devtools::install_github("Nanostring-Biostats/SpatialDecon",
+                         ref = "master", 
+                         build_vignettes = TRUE)
 ```
 
 ## Getting started
