@@ -77,9 +77,8 @@ download_profile_matrix <- function(matrixname) {
     warning(paste0(matrixname, " is not an expected cell profile matrix name."))
   }
 
-  # X = as.matrix(utils::read.csv(paste0("https://github.com/Nanostring-Biostats/Extensions/blob/refactor/cell-profile-library/",
   X <- as.matrix(utils::read.csv(paste0(
-    "https://raw.githubusercontent.com/patrickjdanaher/cell-profile-library/master/profile_matrices/",
+    "https://raw.githubusercontent.com/Nanostring-Biostats/CellProfileLibrary/master/", 
     matrixname, ".csv"
   ), row.names = 1))
 
