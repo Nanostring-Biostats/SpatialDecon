@@ -21,3 +21,4 @@ Based on raw counts, uses past data to estimate each raw count's log-scale
 SD from technical noise.
 Specifies different error models for different platforms.
 }
+\keyword{internal}

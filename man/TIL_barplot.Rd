@@ -31,6 +31,7 @@ Draw barplot of the "betas" from a decon fit
 }
 \examples{
 data(mini_geomx_dataset)
+data(safeTME)
 # estimate background:
 mini_geomx_dataset$bg <- derive_GeoMx_background(
   norm = mini_geomx_dataset$normalized,

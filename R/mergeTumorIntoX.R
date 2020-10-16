@@ -43,6 +43,7 @@
 #' @return an updated X matrix with new columns, "tumor.1", "tumor.2", ...
 #' @examples
 #' data(mini_geomx_dataset)
+#' data(safeTME)
 #' mini_geomx_dataset$bg <- derive_GeoMx_background(
 #'   norm = mini_geomx_dataset$normalized,
 #'   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),
@@ -55,6 +56,7 @@
 #'   X = safeTME,
 #'   K = 3
 #' )
+#' @importFrom stats dist cutree hclust quantile
 #' @export
 mergeTumorIntoX <- function(norm, bg, pure_tumor_ids, X, K = 10) {
 

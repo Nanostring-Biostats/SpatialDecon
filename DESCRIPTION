@@ -6,11 +6,17 @@ Description: Using spatial or bulk gene expression data, estimates abundance of 
  within each observation. Based on "Advances in mixed cell deconvolution enable quantification
  of cell types in spatially-resolved gene expression data", Danaher (2020). Designed for use with
  the NanoString GeoMx platform, but applicable to any gene expression data. 
-Depends: R (>= 4.0.0), logNormReg
+Depends: R (>= 4.0.0)
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
-LazyData: true
+LazyData: FALSE
 RoxygenNote: 7.1.1
+Imports: 
+    logNormReg,
+    grDevices,
+    stats,
+    utils,
+    graphics,
 Suggests: 
     testthat,
     knitr,
@@ -21,3 +27,4 @@ biocViews:
     GeneExpression, 
     Transcriptomics
 VignetteBuilder: knitr
+BugReports: https://github.com/Nanostring-Biostats/SpatialDecon/issues

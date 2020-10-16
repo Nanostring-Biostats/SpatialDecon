@@ -34,6 +34,8 @@
 #'  biological variability as estimated by their residual SD from decon
 #'   performed on TCGA.
 #' @return A matrix of weights, in the same dimension as norm
+#' @keywords internal
+#' @importFrom utils data
 deriveWeights <- function(norm, raw = NULL, error.model = "dsp",
                           weight.by.TIL.resid.sd = FALSE) {
 
@@ -54,12 +56,13 @@ deriveWeights <- function(norm, raw = NULL, error.model = "dsp",
         sds.bio <- matrix(0.1, nrow(raw), ncol(raw), dimnames = dimnames(raw))
     }
     if (weight.by.TIL.resid.sd) {
+        utils::data("mean.resid.sd", envir = environment())
         sds.bio <- matrix(NA, nrow(raw), ncol(raw), dimnames = dimnames(raw))
         for (gene in intersect(
-            names(SpatialDecon::mean.resid.sd),
+            names(mean.resid.sd),
             rownames(sds.bio)
         )) {
-            sds.bio[gene, ] <- SpatialDecon::mean.resid.sd[gene]
+            sds.bio[gene, ] <- mean.resid.sd[gene]
         }
         sds.bio <- replace(sds.bio, is.na(sds.bio), mean(sds.bio, na.rm = TRUE))
     }

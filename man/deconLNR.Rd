@@ -29,3 +29,4 @@ derived by inverting the hessian from lognlm)
 \description{
 Calls lognlm() to optimize the model.
 }
+\keyword{internal}

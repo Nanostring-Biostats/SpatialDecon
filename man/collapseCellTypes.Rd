@@ -24,6 +24,8 @@ types to combine,
 }
 \examples{
 data(mini_geomx_dataset)
+data(safeTME)
+data(safeTME.matches)
 # estimate background:
 mini_geomx_dataset$bg <- derive_GeoMx_background(
   norm = mini_geomx_dataset$normalized,
@@ -38,6 +40,6 @@ res0 <- spatialdecon(
 )
 res1 <- collapseCellTypes(
     fit = res0,
-    matching = SpatialDecon::safeTME.matches
+    matching = safeTME.matches
 )
 }

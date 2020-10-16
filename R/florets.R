@@ -47,6 +47,7 @@
 #' @return Draws a coxcomb plot, returns no data.
 #' @examples
 #' data(mini_geomx_dataset)
+#' data(safeTME)
 #' # estimate background:
 #' mini_geomx_dataset$bg <- derive_GeoMx_background(
 #'   norm = mini_geomx_dataset$normalized,
@@ -65,12 +66,16 @@
 #'   y = mini_geomx_dataset$annot$y,
 #'   b = res0$beta, cex = 2
 #' )
+#' @importFrom graphics polygon plot lines text
+#' @importFrom grDevices colors
+#' @importFrom utils data
 #' @export
 florets <- function(x, y, b, col = NULL, legendwindow = FALSE,
                     rescale.by.sqrt = TRUE, border = NA, add = FALSE, cex = 1,
                     bty = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "",
                     ...) {
-    # rescale b by sqrt so magnitude is proportional to coxcomb area, not length
+    utils::data("cellcols", envir = environment())
+    
     if (rescale.by.sqrt) {
         b <- sqrt(b)
     }
@@ -83,11 +88,11 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE,
     }
     # choose colors if not given:
     if ((length(col) == 0) &
-        all(is.element(rownames(b), names(SpatialDecon::cellcols)))) {
-        col <- SpatialDecon::cellcols[rownames(b)]
+        all(is.element(rownames(b), names(cellcols)))) {
+        col <- cellcols[rownames(b)]
     }
     if ((length(col) == 0) &
-        !all(is.element(rownames(b), names(SpatialDecon::cellcols)))) {
+        !all(is.element(rownames(b), names(cellcols)))) {
         manycols <- c(
             "#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462",
             "#B3DE69", "#FCCDE5", "#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C",

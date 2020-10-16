@@ -32,3 +32,4 @@ A matrix of weights, in the same dimension as norm
 Compute gene weights from pre-defined biological noise estimates and from
  raw count/ error-model-defined technical noise estimates
 }
+\keyword{internal}

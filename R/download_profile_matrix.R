@@ -59,6 +59,7 @@
 #' @examples
 #' X <- download_profile_matrix(matrixname = "Human_brain")
 #' head(X)
+#' @importFrom utils read.csv
 #' @export
 download_profile_matrix <- function(matrixname) {
 

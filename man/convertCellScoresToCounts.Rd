@@ -28,3 +28,4 @@ Converts cell abundance scores to cell counts, under the assumption that the
  observation with
  the greatest sum of cell abundance scores is 100% modelled cells.
 }
+\keyword{internal}

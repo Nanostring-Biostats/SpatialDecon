@@ -96,6 +96,8 @@
 #' }
 #' @examples
 #' data(mini_geomx_dataset)
+#' data(safeTME)
+#' data(safeTME.matches)
 #' # estimate background:
 #' mini_geomx_dataset$bg <- derive_GeoMx_background(
 #'   norm = mini_geomx_dataset$normalized,
@@ -117,6 +119,8 @@
 #'   cell_counts = mini_geomx_dataset$annot$nuclei,
 #'   is_pure_tumor = mini_geomx_dataset$annot$AOI.name == "Tumor"
 #' )
+#' @importFrom stats pt
+#' @importFrom utils data
 #' @export
 spatialdecon <- function(norm, bg, X = NULL,
                          raw = NULL, wts = NULL,
@@ -155,7 +159,8 @@ spatialdecon <- function(norm, bg, X = NULL,
 
     # prep training matrix:
     if (length(X) == 0) {
-        X <- SpatialDecon::safeTME
+        utils::data("safeTME", envir = environment())
+        X <- safeTME
     }
     sharedgenes <- intersect(rownames(norm), rownames(X))
     if (length(sharedgenes) == 0) {
@@ -173,7 +178,7 @@ spatialdecon <- function(norm, bg, X = NULL,
     # wts = replace(norm, TRUE, 1)
     if (length(raw) > 0) {
         weight.by.TIL.resid.sd <-
-            length(intersect(colnames(X), colnames(SpatialDecon::safeTME))) > 10
+            length(intersect(colnames(X), colnames(safeTME))) > 10
         wts <- deriveWeights(norm,
             raw = raw, error.model = "dsp",
             weight.by.TIL.resid.sd = weight.by.TIL.resid.sd

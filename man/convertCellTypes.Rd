@@ -37,3 +37,4 @@ Takes betas from a decon run, using any cell type names whatsoever, and maps
  same official cell type,
 in which case those rows will be added up.
 }
+\keyword{internal}

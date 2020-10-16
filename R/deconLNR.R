@@ -35,7 +35,8 @@
 #' @param maxit Maximum number of iterations. Default 1000.
 #' @return a list: beta (estimate), sigmas (covariance matrix of estimate,
 #' derived by inverting the hessian from lognlm)
-#' @import logNormReg
+#' @importFrom logNormReg lognlm
+#' @keywords internal
 deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL,
                      maxit = 1000) {
     if (length(weights) == 0) {
@@ -72,7 +73,7 @@ deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL,
         names(init) <- colnames(X)
 
         # run lognlm:
-        fit <- lognlm(pmax(y, epsilon) ~ b + Xtemp - 1,
+        fit <- logNormReg::lognlm(pmax(y, epsilon) ~ b + Xtemp - 1,
             lik = FALSE,
             weights = wts,
             start = c(1, init),

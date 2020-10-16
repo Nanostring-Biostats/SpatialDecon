@@ -36,6 +36,7 @@
 #' @import logNormReg
 #' @examples
 #' data(mini_geomx_dataset)
+#' data(safeTME)
 #' # estimate background:
 #' mini_geomx_dataset$bg <- derive_GeoMx_background(
 #'   norm = mini_geomx_dataset$normalized,
@@ -53,6 +54,8 @@
 #'   norm = mini_geomx_dataset$norm,
 #'   beta = res0$beta
 #' )
+#' @importFrom stats lm sd quantile cor
+#' @importFrom logNormReg lognlm
 #' @export
 reverseDecon <- function(norm, beta, epsilon = NULL) {
 

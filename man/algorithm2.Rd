@@ -65,3 +65,4 @@ Runs the generic SpatialDecon decon workflow, including:
 \item compute p-values
 }
 }
+\keyword{internal}
