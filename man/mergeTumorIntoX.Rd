@@ -37,6 +37,7 @@ profile matrix.
 }
 \examples{
 data(mini_geomx_dataset)
+data(safeTME)
 mini_geomx_dataset$bg <- derive_GeoMx_background(
   norm = mini_geomx_dataset$normalized,
   probepool = rep(1, nrow(mini_geomx_dataset$normalized)),

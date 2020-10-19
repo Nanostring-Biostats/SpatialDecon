@@ -47,6 +47,7 @@
 #' @return Draws a coxcomb plot, returns no data.
 #' @examples
 #' data(mini_geomx_dataset)
+#' data(safeTME)
 #' # estimate background:
 #' mini_geomx_dataset$bg <- derive_GeoMx_background(
 #'   norm = mini_geomx_dataset$normalized,
@@ -65,12 +66,16 @@
 #'   y = mini_geomx_dataset$annot$y,
 #'   b = res0$beta, cex = 2
 #' )
+#' @importFrom graphics polygon plot lines text
+#' @importFrom grDevices colors
+#' @importFrom utils data
 #' @export
 florets <- function(x, y, b, col = NULL, legendwindow = FALSE,
                     rescale.by.sqrt = TRUE, border = NA, add = FALSE, cex = 1,
                     bty = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "",
                     ...) {
-    # rescale b by sqrt so magnitude is proportional to coxcomb area, not length
+    utils::data("cellcols", envir = environment())
+    
     if (rescale.by.sqrt) {
         b <- sqrt(b)
     }

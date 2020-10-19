@@ -36,6 +36,7 @@
 #' @return Draws a barplot.
 #' @examples
 #' data(mini_geomx_dataset)
+#' data(safeTME)
 #' # estimate background:
 #' mini_geomx_dataset$bg <- derive_GeoMx_background(
 #'   norm = mini_geomx_dataset$normalized,
@@ -52,13 +53,18 @@
 #' TIL_barplot(mat = res0$beta)
 #' # run barplot and draw a color legend
 #' TIL_barplot(mat = res0$beta, draw_legend = TRUE)
+#' @importFrom graphics frame legend barplot
+#' @importFrom grDevices colors
+#' @importFrom utils data
 #' @export
 TIL_barplot <- function(mat, draw_legend = FALSE, main = "", col = NULL, ...) {
 
 
     # infer colors:
     if (length(col) == 0) {
+        
         # use safeTME colors if the right cells are present:
+        #utils::data("cellcols", envir = environment())
         if (all(is.element(rownames(mat), names(SpatialDecon::cellcols)))) {
             col <- SpatialDecon::cellcols[rownames(mat)]
         }
@@ -75,8 +81,6 @@ TIL_barplot <- function(mat, draw_legend = FALSE, main = "", col = NULL, ...) {
         }
     }
 
-
-    #  usecells <- intersect(rownames(mat), names(SpatialDecon::cellcols))
     usecells <- rownames(mat)
 
     # draw barplot:

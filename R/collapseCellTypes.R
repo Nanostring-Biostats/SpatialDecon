@@ -31,6 +31,8 @@
 #' @return A reshaped deconvolution result object
 #' @examples
 #' data(mini_geomx_dataset)
+#' data(safeTME)
+#' data(safeTME.matches)
 #' # estimate background:
 #' mini_geomx_dataset$bg <- derive_GeoMx_background(
 #'   norm = mini_geomx_dataset$normalized,
@@ -45,8 +47,9 @@
 #' )
 #' res1 <- collapseCellTypes(
 #'     fit = res0,
-#'     matching = SpatialDecon::safeTME.matches
+#'     matching = safeTME.matches
 #' )
+#' @importFrom stats pt
 #' @export
 collapseCellTypes <- function(fit, matching) {
 

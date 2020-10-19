@@ -29,3 +29,4 @@ Analyses a decon result's residuals to identify poorly-fit genes and flag
 them for removal.
  Rule: flag anything with
 }
+\keyword{internal}

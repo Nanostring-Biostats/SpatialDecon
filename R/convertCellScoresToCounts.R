@@ -35,6 +35,7 @@
 #' @return A list with two elements, each a rescaled version of beta.
 #' cells.per.100 gives estimated
 #'  percents of total, and cell.counts is cells.per.100 * nuclei.counts.
+#' @keywords internal
 convertCellScoresToCounts <- function(beta, nuclei.counts = NULL,
                                       omit.tumor = FALSE) {
     # strip tumor rows if called for:

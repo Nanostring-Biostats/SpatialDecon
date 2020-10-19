@@ -43,6 +43,8 @@ Plotting functions:
 
 \examples{
 data(mini_geomx_dataset)
+data(safeTME)
+data(safeTME.matches)
 # estimate background:
 mini_geomx_dataset$bg <- derive_GeoMx_background(
   norm = mini_geomx_dataset$normalized,

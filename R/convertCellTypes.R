@@ -43,6 +43,7 @@
 #' \item sigma: an array of covariance matrices for each observation's beta
 #' vector
 #' }
+#' @keywords internal
 convertCellTypes <- function(beta, matching, stat = sum,
                              na.rm = FALSE, sigma = NULL) {
     # format matching list as a matrix to take a linear combination of beta:

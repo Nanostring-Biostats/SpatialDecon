@@ -31,6 +31,7 @@
 #' "rawCounts". Default to "dsp".
 #'  Other options include "ncounter", "rsem" and "quantile".
 #' @return a matrix of log2-scale SDs
+#' @keywords internal
 runErrorModel <- function(counts, platform = "general") {
     if (platform == "ncounter") {
         sds <- counts * 0 + 0.1

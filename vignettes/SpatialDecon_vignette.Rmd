@@ -1,6 +1,8 @@
 ---
 title: "Use of the SpatialDecon package in estimating and exploring mixed cell abundance in spatially-resolved gene expression data"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette: 
+    toc: true
 vignette: >
   %\VignetteIndexEntry{SpatialDecon_vignette}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,6 +22,16 @@ knitr::opts_chunk$set(
 )
 ```
 
+
+### Installation
+
+```{r installation, eval=FALSE}
+
+if(!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("SpatialDecon")
+
+```
 
 ### Overview
 
@@ -106,6 +118,9 @@ see the SpatialDecon manuscript for details.)
 Let's take a glance at the safeTME matrix:
 
 ```{r showsafetme, fig.height=5, fig.width=10, fig.cap = "The safeTME cell profile matrix"}
+data("safeTME")
+data("safeTME.matches")
+
 signif(safeTME[seq_len(3), seq_len(3)], 2)
 
 heatmap(sweep(safeTME, 1, apply(safeTME, 1, max), "/"),
@@ -267,6 +282,7 @@ barplots of cell type abundance.
 ```{r barplot, fig.width=9, fig.height=6, fig.cap="Barplots of TIL abundance"}
 # For reference, show the TILs color data object used by the plotting functions 
 # when safeTME has been used:
+data("cellcols")
 cellcols
 
 # show just the TME segments, since that's where the immune cells are:
@@ -404,3 +420,10 @@ From the above plot, we can see that genes like CXCL14 vary independently of
 cell mixing, genes like LYZ are correlated with cell mixing but still have 
 variable expression, and genes like NKG7 serve as nothing but obtuse readouts 
 of cell mixing. 
+
+
+### Session Info
+
+```{r sessioninfo}
+sessionInfo()
+```

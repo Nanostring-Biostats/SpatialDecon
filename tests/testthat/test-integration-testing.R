@@ -10,6 +10,8 @@ context("spatialdecon")
 rm(list = ls())
 load("testdata.RData")
 load("expectedtestresults.RData")
+data('safeTME')
+data("safeTME.matches")
 sharedgenes <- intersect(rownames(safeTME), rownames(snr))
 
 
@@ -79,7 +81,7 @@ res <- spatialdecon(
   norm = snr,
   raw = raw,
   bg = replace(snr, TRUE, 1),
-  cellmerges = SpatialDecon::safeTME.matches,
+  cellmerges = safeTME.matches,
   is_pure_tumor = annot$AOI.name == "Tumor",
   cell_counts = annot$nuclei,
   n_tumor_clusters = 5
@@ -176,7 +178,7 @@ res2 <- spatialdecon(
 # collapse them:
 res2.collapsed <- collapseCellTypes(
   fit = res2,
-  matching = SpatialDecon::safeTME.matches
+  matching = safeTME.matches
 )
 # compare collapsed results from within spatialdecon vs. post-hoc:
 test_that("collapseCellTypes works", {

@@ -3,15 +3,19 @@
 \docType{data}
 \name{mini_geomx_dataset}
 \alias{mini_geomx_dataset}
-\title{Default colors for the cell types in the safeTME matrix}
+\title{Example GeoMx data}
 \format{
-A named vector
+A list with the following elements:
+ \itemize{
+ \item normalized: normalized data matrix
+ \item raw: raw data matrix
+ \item annot: AOI annotation data frane
+ }
 }
 \usage{
 mini_geomx_dataset
 }
 \description{
-A named vector of colors, giving colors for the cell types of the safeTME
- matrix.
+A miniature GeoMx dataset used by the spatialdecon examples.
 }
 \keyword{datasets}
