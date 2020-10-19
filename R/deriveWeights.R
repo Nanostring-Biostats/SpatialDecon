@@ -59,10 +59,10 @@ deriveWeights <- function(norm, raw = NULL, error.model = "dsp",
         utils::data("mean.resid.sd", envir = environment())
         sds.bio <- matrix(NA, nrow(raw), ncol(raw), dimnames = dimnames(raw))
         for (gene in intersect(
-            names(mean.resid.sd),
+            names(SpatialDecon::mean.resid.sd),
             rownames(sds.bio)
         )) {
-            sds.bio[gene, ] <- mean.resid.sd[gene]
+            sds.bio[gene, ] <- SpatialDecon::mean.resid.sd[gene]
         }
         sds.bio <- replace(sds.bio, is.na(sds.bio), mean(sds.bio, na.rm = TRUE))
     }

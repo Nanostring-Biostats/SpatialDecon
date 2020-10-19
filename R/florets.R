@@ -88,11 +88,11 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE,
     }
     # choose colors if not given:
     if ((length(col) == 0) &
-        all(is.element(rownames(b), names(cellcols)))) {
-        col <- cellcols[rownames(b)]
+        all(is.element(rownames(b), names(SpatialDecon::cellcols)))) {
+        col <- SpatialDecon::cellcols[rownames(b)]
     }
     if ((length(col) == 0) &
-        !all(is.element(rownames(b), names(cellcols)))) {
+        !all(is.element(rownames(b), names(SpatialDecon::cellcols)))) {
         manycols <- c(
             "#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462",
             "#B3DE69", "#FCCDE5", "#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C",
