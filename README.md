@@ -60,3 +60,12 @@ library(SpatialDecon)
 
 
 See the package's vignette for an example of its use. 
+
+
+## Other
+
+* Depends: R >= 4.0, Mac, Unix or Windows
+* Typical installation time: seconds
+* Expected run time for vignette: 1 minute
+* For reproducible code of all analyses in the SpatialDecon manuscript, see https://github.com/Nanostring-Biostats/SpatialDecon-manuscript-analyses
+* license: GPL-3

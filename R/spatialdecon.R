@@ -208,7 +208,8 @@ spatialdecon <- function(norm, bg, X = NULL,
         bg = bg[sharedgenes, ],
         X = X[sharedgenes, ],
         weights = wts[sharedgenes, ],
-        maxit = maxit
+        maxit = maxit,
+        resid_thresh = resid_thresh
     )
 
 
