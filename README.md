@@ -69,3 +69,17 @@ See the package's vignette for an example of its use.
 * Expected run time for vignette: 1 minute
 * For reproducible code of all analyses in the SpatialDecon manuscript, see https://github.com/Nanostring-Biostats/SpatialDecon-manuscript-analyses
 * license: GPL-3
+
+## Computational benchmarking
+
+The below memory usage and runtimes were gathered from applying spatialdecon to increasing numbers of GeoMx AOIs, using a 544-gene x 18 cell-type cell profile matrix:
+
+| n  | memory (MB) | runtime (ms)  |
+|---|---|---|
+| 10  | 324  | 500  |
+| 50  |  1598 | 2190  |
+| 100  | 3130  | 4280  |
+| 200  | 6266  | 8610  |
+| 500  | 15244  | 21610  |
+| 1000  | 30451  | 42580  |
+| 5000  | 61522  | 83720  |
