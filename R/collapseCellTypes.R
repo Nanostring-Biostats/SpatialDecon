@@ -49,7 +49,7 @@
 #'     fit = res0,
 #'     matching = safeTME.matches
 #' )
-#' @importFrom stats pt
+#' @importFrom stats pnorm
 #' @export
 collapseCellTypes <- function(fit, matching) {
 
@@ -103,7 +103,7 @@ collapseCellTypes <- function(fit, matching) {
         out$se <- tempse
         out$t <- (tempbeta / tempse)
         if (is.element("X", names(out))) {
-            out$p <- 2 * (1 - stats::pt(out$t, df = nrow(fit$X) - ncol(fit$X) - 1))
+            out$p <- 2 * (1 - stats::pnorm(out$t))
         }
     }
 

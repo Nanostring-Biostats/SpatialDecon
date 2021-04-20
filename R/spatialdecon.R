@@ -119,7 +119,7 @@
 #'   cell_counts = mini_geomx_dataset$annot$nuclei,
 #'   is_pure_tumor = mini_geomx_dataset$annot$AOI.name == "Tumor"
 #' )
-#' @importFrom stats pt
+#' @importFrom stats pnorm
 #' @importFrom utils data
 #' @export
 spatialdecon <- function(norm, bg, X = NULL,
@@ -240,7 +240,7 @@ spatialdecon <- function(norm, bg, X = NULL,
         tempse[, i] <- suppressWarnings(sqrt(diag(res$sigma[, , i])))
     }
     tempt <- (tempbeta / tempse)
-    tempp <- 2 * (1 - stats::pt(tempt, df = length(sharedgenes) - ncol(X) - 1))
+    tempp <- 2 * (1 - stats::pnorm(tempt))
     res$p <- tempp
     res$t <- tempt
     res$se <- tempse
