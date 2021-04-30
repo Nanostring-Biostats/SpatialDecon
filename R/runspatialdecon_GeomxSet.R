@@ -1,18 +1,12 @@
-setGeneric("runspatialdecon", signature = "object",
-           function(object, ...) standardGeneric("runspatialdecon"))
 
 
-#' Run spatialdecon on a Seurat object
+#' Run spatialdecon on a GeoMxSet object
 #' 
-#' A wrapper for applying spatialdecon to the Spatial data element in a Seurat object. 
-#' Unlike spatialdecon, which expects a normalized data matrix, this function operates 
-#' on raw counts. Scaling for total cells 
-#' @param object A seurat object. Must include a "Spatial" element in the "assays" slot.
+#' A wrapper for applying spatialdecon to a GeoMxSet object. 
+#' @param object A GeoMxSet object. 
+#' @param normalized_element The element name of the normalized assayData.
+#' @param raw_element The element name of the raw assayData.
 #' @param X Cell profile matrix. If NULL, the safeTME matrix is used.
-#' @param bg Expected background counts. Either a scalar applied equally to 
-#'  all points in the count matrix, or a matrix with the same dimensions 
-#'  as the count matrix in GetAssayData(object, assay = "Spatial").
-#'  Recommended to use a small non-zero value, default of 0.1.
 #' @param wts Optional, a matrix of weights.
 #' @param resid_thresh A scalar, sets a threshold on how extreme individual data
 #'  points' values
@@ -65,18 +59,17 @@ setGeneric("runspatialdecon", signature = "object",
 #'  (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
 #' \item X: the cell profile matrix used in the decon fit.
 #' }
-#' @importFrom SeuratObject GetAssayData
+#' @importFrom ________ __________  
 #' @export
 #' @example 
-#' # get mouse brain data:
-#' library(SeuratData)
-#' brain <- SeuratData::LoadData("stxBrain", type = "anterior1")
-#' # get cell profile matrix:
-#' ref <- download_profile_matrix("Mouse_Brain")
-#' brain <- runspatialdecon(brain, X = ref)
-#' str(brain@misc$spatialdecon)
-setMethod("runspatialdecon", "Seurat", function(
+#' ________________
+#'
+#'
+#'
+setMethod("runspatialdecon", "GeoMxSet", function(
   object,
+  normalized_element,
+  raw_element = "exprs",
   X = NULL,
   bg = 0.1,  
   wts = NULL,
@@ -88,23 +81,19 @@ setMethod("runspatialdecon", "Seurat", function(
   cellmerges = NULL,
   maxit = 1000) {
   
-  # check that it's a spatial assay:
-  if (!is.element("Spatial", names(object@assays))) {
-    stop("Expecting \'Spatial\' element in assays slot")
-  }
+  # check that the object is in proper geomxset format:
   
-  # prep components:
-  raw <- as.matrix(SeuratObject::GetAssayData(object, assay = "Spatial"))
-  # make bg a matrix if only a scalar was specified:
-  if (length(bg) == 1) {
-    bg <- 0 * raw + bg
-  }
+  
+  # estimate background
+  bg <- derive_GeoMx_background(norm = assayDataElement( demoData , elt = "normalized_element"),
+                                probepool = _____,  #<------ need to access the probe pool information from the feature metadata
+                                negnames = _____)   #<------ need to access the names of the negative control probes
   
   # run spatialdecon:
-  res <- spatialdecon(norm = raw, 
+  res <- spatialdecon(norm = assayDataElement( demoData , elt = "normalized_element"), 
                       bg = bg, 
                       X = X,
-                      raw = raw, 
+                      raw = assayDataElement( demoData , elt = "raw_element"), 
                       wts = NULL,
                       resid_thresh = resid_thresh, lower_thresh = lower_thresh,
                       align_genes = align_genes,
@@ -113,7 +102,6 @@ setMethod("runspatialdecon", "Seurat", function(
                       cellmerges = cellmerges,
                       maxit = maxit) 
   
-  return(res)
+  # append to object:
+  __________
 })
-
-
