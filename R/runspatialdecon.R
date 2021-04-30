@@ -73,8 +73,8 @@ setGeneric("runspatialdecon", signature = "object",
 #' brain <- SeuratData::LoadData("stxBrain", type = "anterior1")
 #' # get cell profile matrix:
 #' ref <- download_profile_matrix("Mouse_Brain")
-#' brain <- runspatialdecon(brain, X = ref)
-#' str(brain@misc$spatialdecon)
+#' res <- runspatialdecon(brain, X = ref)
+#' str(res)
 setMethod("runspatialdecon", "Seurat", function(
   object,
   X = NULL,
