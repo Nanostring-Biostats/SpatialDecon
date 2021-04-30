@@ -94,7 +94,7 @@ setMethod("runspatialdecon", "GeoMxSet", function(
                       bg = bg, 
                       X = X,
                       raw = assayDataElement( demoData , elt = "raw_element"), 
-                      wts = NULL,
+                      wts = wts,
                       resid_thresh = resid_thresh, lower_thresh = lower_thresh,
                       align_genes = align_genes,
                       is_pure_tumor = is_pure_tumor, n_tumor_clusters = n_tumor_clusters,
@@ -102,6 +102,5 @@ setMethod("runspatialdecon", "GeoMxSet", function(
                       cellmerges = cellmerges,
                       maxit = maxit) 
   
-  # append to object:
-  __________
+  return(res)
 })

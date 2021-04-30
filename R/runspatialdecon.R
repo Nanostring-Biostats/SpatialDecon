@@ -105,7 +105,7 @@ setMethod("runspatialdecon", "Seurat", function(
                       bg = bg, 
                       X = X,
                       raw = raw, 
-                      wts = NULL,
+                      wts = wts,
                       resid_thresh = resid_thresh, lower_thresh = lower_thresh,
                       align_genes = align_genes,
                       is_pure_tumor = is_pure_tumor, n_tumor_clusters = n_tumor_clusters,
