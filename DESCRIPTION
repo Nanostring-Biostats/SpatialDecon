@@ -1,6 +1,6 @@
 Package: SpatialDecon
 Title: Deconvolution of mixed cells from spatial and/or bulk gene expression data
-Version: 1.2.0
+Version: 1.3.0
 Authors@R: person("Patrick", "Danaher", email = "pdanaher@nanostring.com", role = c("aut", "cre"))
 Description: Using spatial or bulk gene expression data, estimates abundance of mixed cell types
  within each observation. Based on "Advances in mixed cell deconvolution enable quantification
