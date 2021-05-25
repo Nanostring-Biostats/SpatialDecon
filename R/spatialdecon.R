@@ -157,6 +157,12 @@ spatialdecon <- function(norm, bg, X = NULL,
         )
     }
 
+    # If a matrix other than safeTME is input, rescale training matrix to avoid bad convergence properties:
+    if (length(X) > 0) {
+        # rescale matrix so its 99th percentile is near that of safeTME (which has a 99th percentile = 2.3)
+        X <- X * 2 / quantile(X, 0.99)
+    }
+    
     # prep training matrix:
     if (length(X) == 0) {
         utils::data("safeTME", envir = environment())
