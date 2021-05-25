@@ -88,7 +88,7 @@ download_profile_matrix <- function(matrixname) {
     }
 
     X <- as.matrix(utils::read.csv(paste0(
-        "https://raw.githubusercontent.com/patrickjdanaher/cell-profile-library/master/profile_matrices/",
+        "https://raw.githubusercontent.com/Nanostring-Biostats/CellProfileLibrary/master/",
         matrixname, ".csv"
     ), row.names = 1))
 
