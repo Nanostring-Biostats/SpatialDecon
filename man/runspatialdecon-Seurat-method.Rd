@@ -69,7 +69,28 @@ NULL, then defaults to a mapping of granular immune cell definitions to
 \item{maxit}{Maximum number of iterations. Default 1000.}
 }
 \value{
-Appends spatialdecon results to the object as \code{object@misc$spatialdecon}
+a list:
+\itemize{
+\item beta: matrix of cell abundance estimates, cells in rows and
+observations in columns
+\item sigmas: covariance matrices of each observation's beta estimates
+\item p: matrix of p-values for H0: beta == 0
+\item t: matrix of t-statistics for H0: beta == 0
+\item se: matrix of standard errors of beta values
+\item prop_of_all: rescaling of beta to sum to 1 in each observation
+\item prop_of_nontumor: rescaling of beta to sum to 1 in each observation,
+excluding tumor abundance estimates
+\item cell.counts: beta rescaled to estimate cell numbers, based on
+prop_of_all and nuclei count
+\item beta.granular: cell abundances prior to combining closely-related
+cell types
+\item sigma.granular: sigmas prior to combining closely-related cell types
+\item cell.counts.granular: cell.counts prior to combining closely-related
+cell types
+\item resids: a matrix of residuals from the model fit.
+ (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
+\item X: the cell profile matrix used in the decon fit.
+}
 }
 \description{
 A wrapper for applying spatialdecon to the Spatial data element in a Seurat object. 
