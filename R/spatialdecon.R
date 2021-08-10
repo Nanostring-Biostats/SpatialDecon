@@ -270,7 +270,7 @@ spatialdecon <- function(norm, bg, X = NULL,
             nuclei.counts = cell_counts,
             omit.tumor = TRUE
         )
-        if (exists("res$beta.granular") > 0) {
+        if (length(res$beta.granular) > 0) {
             res$cell.counts.granular <- convertCellScoresToCounts(
                 beta = res$beta.granular,
                 nuclei.counts = cell_counts,
