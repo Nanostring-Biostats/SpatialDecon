@@ -10,7 +10,7 @@ Details can be found in the SpatialDecon manuscript: Danaher & Kim (2020), "Adva
 
 #### Data preparation functions:
 
-* "download_profile_matrix" Downloads any one of ~30 cell profile matrices compiled for deconvolution of diverse tissue types. 
+* "download_profile_matrix" Downloads any one of ~75 cell profile matrices compiled for deconvolution of diverse tissue types. 
 * "derive_GeoMx_background_at_normalized_scale" Estimates the background expected from each data point in a GeoMx dataset. Accurate background estimation is key for SpatialDecon's accuracy. 
 
 #### SpatialDecon: the core deconvolution function:
