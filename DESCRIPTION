@@ -17,6 +17,7 @@ Imports:
     stats,
     utils,
     graphics,
+    SeuratObject,
 Suggests: 
     testthat,
     knitr,

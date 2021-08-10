@@ -1,10 +1,10 @@
 ---
-title: "Use of the SpatialDecon package in estimating and exploring mixed cell abundance in spatially-resolved gene expression data"
+title: "Use of SpatialDecon in a large GeoMx dataset"
 output: 
   rmarkdown::html_vignette: 
     toc: true
 vignette: >
-  %\VignetteIndexEntry{SpatialDecon_vignette_NSCLC}
+  %\VignetteIndexEntry{Use of SpatialDecon in a large GeoMx dataet}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
