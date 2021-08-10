@@ -4,51 +4,29 @@
 \alias{download_profile_matrix}
 \title{Download a cell profile matrix}
 \usage{
-download_profile_matrix(matrixname)
+download_profile_matrix(species, age_group, matrixname)
 }
 \arguments{
-\item{matrixname}{A name}
+\item{species}{species of profile matrix}
+
+\item{age_group}{age_group of profile matrix, if fetal mouse please add the 
+developmental stage separated with /, i.e. Fetal/E14.5}
+
+\item{matrixname}{name of profile matrix}
 }
 \value{
-A cell profile matrix
+A cell profile matrix, suggested cell groups, and paper metadata
 }
 \description{
 Download a cell profile matrix from the online library
 }
 \details{
-Valid values for the matrixname argument include:
-\itemize{
-\item Airway_Epithelium
-\item Atlas_Adult_Retina_10x
-\item Census_Adult_Immune_10x
-\item Census_Newborn_Blood_10x
-\item Diff_Fetal_Neuron_SS2
-\item FetalMaternal_Adult_Blood_10x
-\item FetalMaternal_Adult_Blood_SS2
-\item FetalMaternal_Adult_Decidua_10x
-\item FetalMaternal_Adult_Decidua_SS2
-\item FetalMaternal_Fetal_Placenta_10x
-\item Human_brain
-\item Human_Cell_Landscape
-\item IBD_Adult_Colon_10x
-\item Landscape_Adult_Liver_10x
-\item Lung_plus_neutrophils
-\item Mouse_Brain
-\item Profiling_Adult_BoneMarrow_10x
-\item Reprogram_Embryo_Dendritic_10x
-\item Sensitivity_Adult_Esophagus_10x
-\item Sensitivity_Adult_Lung_10x
-\item Sensitivity_Adult_Spleen_10x
-\item Somatic_Adult_Pancreas_SS2
-\item SpatioTemporal_Adult_Kidney_10x
-\item SpatioTemporal_Fetal_Kidney_10x
-\item Tcell_Adult_Blood_10x
-\item Tcell_Adult_BoneMarrow_10x
-\item Tcell_Adult_Lung_10x
-\item Tcell_Adult_LymphNode_10x
-}
+Valid matrices can be found on the github site 
+\url{https://github.com/Nanostring-Biostats/CellProfileLibrary/tree/NewProfileMatrices}
 }
 \examples{
-X <- download_profile_matrix(matrixname = "Human_brain")
-head(X)
+download_profile_matrix(species = "Human", age_group = "Adult", matrixname = "Colon_HCA")
+head(profile_matrix)
+print(cellGroups)
+print(metadata)
 }
