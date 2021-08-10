@@ -1,3 +1,8 @@
+#' Run spatialdecon
+#' 
+#' Runs spatialdecon from an S4 object
+#' @param object An S4 object such as a Seurat object or a GeoMxSet object
+#' @param ... Arguments passed to spatialdecon
 setGeneric("runspatialdecon", signature = "object",
            function(object, ...) standardGeneric("runspatialdecon"))
 
