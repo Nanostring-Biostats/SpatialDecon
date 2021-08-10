@@ -4,7 +4,7 @@ output:
   rmarkdown::html_vignette: 
     toc: true
 vignette: >
-  %\VignetteIndexEntry{SpatialDecon_vignette}
+  %\VignetteIndexEntry{SpatialDecon_vignette_NSCLC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
