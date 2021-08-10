@@ -49,7 +49,7 @@ These include:
 ``` r
 devtools::install_github("Nanostring-Biostats/SpatialDecon",
                          ref = "master", 
-                         build_vignettes = TRUE)
+                         build_vignettes = FALSE)
 ```
 
 ## Getting started
