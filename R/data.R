@@ -7,7 +7,7 @@
 "cellcols"
 
 
-#' Example GeoMx data 
+#' Small example GeoMx data 
 #'
 #' A miniature GeoMx dataset used by the spatialdecon examples. 
 #'
@@ -18,6 +18,18 @@
 #'  \item annot: AOI annotation data frane
 #'  }
 "mini_geomx_dataset"
+
+#' Large example GeoMx data 
+#'
+#' A GeoMx dataset with dense AOIs gridded over a NSCLC tumor. Each AOI is split into tumor and microenvironment segments.
+#'
+#' @format A list with the following elements:
+#'  \itemize{
+#'  \item normalized: normalized data matrix
+#'  \item raw: raw data matrix
+#'  \item annot: AOI annotation data frane
+#'  }
+"nsclc"
 
 
 #' Mapping from granularly-defined cell populations to broaded cell populations

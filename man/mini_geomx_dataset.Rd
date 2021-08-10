@@ -3,7 +3,7 @@
 \docType{data}
 \name{mini_geomx_dataset}
 \alias{mini_geomx_dataset}
-\title{Example GeoMx data}
+\title{Small example GeoMx data}
 \format{
 A list with the following elements:
  \itemize{

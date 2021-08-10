@@ -81,10 +81,12 @@ download_profile_matrix <- function(species, age_group, matrixname) {
     
     matrixname <- paste(species, age_group, matrixname, sep = "/")
 
+
     suppressMessages(source_data(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", 
                                         matrixname, ".RData?raw=True"), 
                 cache = FALSE, rdata = TRUE, envir = globalenv()))
     
-    assign("profile_matrix", as.matrix(profile_matrix), envir = globalenv())
+    #assign("profile_matrix", as.matrix(profile_matrix), envir = globalenv())
+    return(as.matrix(profile_matrix))
 }
 

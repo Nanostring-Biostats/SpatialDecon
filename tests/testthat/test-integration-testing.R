@@ -54,15 +54,15 @@ gres <- spatialdecon(
 )
 
 test_that("spatialdecon is as expected: beta", {
-  expect_true(all(abs(ires.test$beta - gres$beta) < 1e-2))
+  expect_true(cor(as.vector(ires.test$beta), as.vector(gres$beta)) > 0.999)
 })
 
 test_that("spatialdecon is as expected: sigma", {
-  expect_true(all(abs(ires.test$sigmas - gres$sigmas) < 1e-2))
+  expect_true(cor(as.vector(ires.test$sigmas), as.vector(gres$sigmas)) > 0.999)
 })
 
 test_that("spatialdecon is as expected: yhat", {
-  expect_true(all(abs(ires.test$yhat - gres$yhat) < 1e-1))
+  expect_true(cor(as.vector(ires.test$yhat), as.vector(gres$yhat)) > 0.999)
 })
 
 test_that("spatialdecon is as expected: resids", {

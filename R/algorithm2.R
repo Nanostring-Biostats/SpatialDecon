@@ -60,7 +60,7 @@
 #' \item resids: a matrix of residuals from the model fit.
 #' (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
 #' }
-#' @importFrom stats pt
+#' @importFrom stats pnorm
 #' @keywords internal
 algorithm2 <- function(Y, X, bg = 0, weights = NULL,
                        resid_thresh = 3, lower_thresh = 0.5,
@@ -131,7 +131,7 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
         tempse[, i] <- suppressWarnings(sqrt(diag(out$sigmas[, , i])))
     }
     tempt <- (tempbeta / tempse)
-    tempp <- 2 * (1 - stats::pt(tempt, df = nrow(X) - ncol(X) - 1))
+    tempp <- 2 * (1 - stats::pnorm(tempt))
     out$p <- tempp
     out$t <- tempt
     out$se <- tempse
