@@ -1,10 +1,10 @@
 ---
-title: "Use of SpatialDecon in a large GeoMx dataset"
+title: "Use of SpatialDecon in a Spatial Transcriptomics dataset"
 output: 
   rmarkdown::html_vignette: 
     toc: true
 vignette: >
-  %\VignetteIndexEntry{Use of SpatialDecon in a large GeoMx dataset}
+  %\VignetteIndexEntry{Use of SpatialDecon in a Spatial Transcriptomics dataset}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -50,23 +50,24 @@ been profiled separately.
 First, we load the package:
 ```{r setup}
 library(SpatialDecon)
+library(SeuratObject)
 ```
 
-Now let's load our example data and examine it:
-
+Let's load the example ST Seurat object and examine it:
 ```{r loaddata}
-data("nsclc")
-norm = nsclc$normalized
-raw = nsclc$raw
-annot = nsclc$annot
-geneannot = nsclc$geneannot
-dim(raw)
-head(annot)
-raw[seq_len(5), seq_len(5)]
-
-# better segment names:
-colnames(norm) = colnames(raw) = rownames(annot) = 
-  paste0(annot$ROI, annot$AOI.name)
+# download data:
+con <- gzcon(url("https://github.com/almaan/her2st/raw/master/data/ST-cnts/G1.tsv.gz"))
+txt <- readLines(con)
+temp <- read.table(textConnection(txt), sep = "\t", header = T, row.names = 1)
+# parse data
+raw = t(as.matrix(temp))
+norm = sweep(raw, 2, colSums(raw), "/") * mean(colSums(raw))
+x = as.numeric(substr(rownames(temp), 1, unlist(gregexpr("x", rownames(temp))) - 1))
+y = -as.numeric(substr(rownames(temp), unlist(gregexpr("x", rownames(temp))) + 1, nchar(rownames(temp))))
+# put into a seurat object:
+andersson_g1 = CreateSeuratObject(counts = raw, assay="Spatial")
+andersson_g1@meta.data$x = x
+andersson_g1@meta.data$y = y
 
 ```
 
