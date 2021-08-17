@@ -28,10 +28,10 @@
 #'
 #' @param counts vector or matrix of raw counts
 #' @param platform String specifying which platform was used to create
-#' "rawCounts". Default to "dsp".
-#'  Other options include "ncounter", "rsem" and "quantile".
+#' "rawCounts". Default to "dsp", for digital spatial profiler/ aka GeoMx.
+#'  Other options include "ncounter", "rsem", "quantile", and "st" for spatial transcriptomics/visium.
 #' @return a matrix of log2-scale SDs
-#' @keywords internal
+#' @export
 runErrorModel <- function(counts, platform = "general") {
     if (platform == "ncounter") {
         sds <- counts * 0 + 0.1
@@ -84,6 +84,21 @@ runErrorModel <- function(counts, platform = "general") {
         }
     }
 
+    if (platform == "st") {
+        # assume poisson error:
+        sds <- counts * 0 + 03
+        sds <- replace(sds, counts < 500, 0.045)
+        sds <- replace(sds, counts < 200, 0.07)
+        sds <- replace(sds, counts < 100, 0.1)
+        sds <- replace(sds, counts < 50, 0.14)
+        sds <- replace(sds, counts < 30, 0.18)
+        sds <- replace(sds, counts < 20, 0.23)
+        sds <- replace(sds, counts < 15, 0.27)
+        sds <- replace(sds, counts < 10, 0.35)
+        sds <- replace(sds, counts < 5, 0.61)
+        sds <- replace(sds, counts < 2, 1.15)
+        sds <- replace(sds, counts < 1, 1.33)
+    }
 
     if (platform == "quantile") {
         if (is.vector(counts)) {
