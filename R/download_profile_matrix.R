@@ -68,7 +68,7 @@ download_profile_matrix <- function(species, age_group, matrixname) {
         stop(paste0("Age input is invalid; must be \"", paste(valid_ages, collapse = "\" or \""), "\" (case sensitive)"))
     }
     
-    metadata <- read.csv(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", species, "/",
+    metadata <- utils::read.csv(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", species, "/",
                                     species, "_datasets_metadata.csv"), header = T, sep = ",")
     
     librarynames <- paste0(metadata$Tissue, "_", metadata$Profile.Matrix)
@@ -82,7 +82,7 @@ download_profile_matrix <- function(species, age_group, matrixname) {
     matrixname <- paste(species, age_group, matrixname, sep = "/")
 
 
-    suppressMessages(source_data(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", 
+    suppressMessages(repmis::source_data(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", 
                                         matrixname, ".RData?raw=True"), 
                 cache = FALSE, rdata = TRUE, envir = globalenv()))
     

@@ -158,8 +158,8 @@ test_that("TIL_barplot does not error", {
 
 ### test matrix download:
 test_that("matrix download works", {
-  downloaded.X <- download_profile_matrix("Mouse_Brain")
-  expect_true(is.matrix(downloaded.X))
+  profile_matrix <- download_profile_matrix(species = "Human", age_group = "Adult", matrixname = "Colon_HCA")
+  expect_true(is.matrix(profile_matrix))
 })
 
 
