@@ -30,7 +30,7 @@
 #' @param matrixName name of final profile matrix
 #' @param outDir path to desired output directory
 #' @param geneList gene list to filter profile matrix to 
-#' @param normalized is data normalized? (T/F) if FALSE data will be normalized using total gene count
+#' @param normalize Should data be normalize? (T/F) if TRUE data will be normalize using total gene count
 #' @param scalingFactor what should all values be multiplied by for final matrix, set to 1 if no scaling is wanted
 #' @param minCellNum minimum number of cells of one type needed to create profile, exclusive 
 #' @param minGenes minimum number of genes expressed in a cell, exclusive
@@ -54,10 +54,10 @@
 #'                                         minGenes = 10,
 #'                                         scalingFactor = 1)
 #' head(profile_matrix)
-
+#' @export
 
 create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, matrixName = "Custom", 
-                                  outDir = "./", geneList = NULL, normalized = TRUE, scalingFactor = 5, minCellNum = 15, 
+                                  outDir = "./", geneList = NULL, normalize = FALSE, scalingFactor = 5, minCellNum = 15, 
                                   minGenes = 100, numCellTypesExpr = 1, filterCellTypes = TRUE) {
   
   # checking user input values
@@ -83,9 +83,9 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
     stop("cellNameCol not in cellAnnots")
   }
   
-  if(class(normalized) != "logical"){
-    warning("normalized not a boolean, continuing with assumption that data is normalized")
-    normalized <- TRUE
+  if(class(normalize) != "logical"){
+    warning("normalize not a boolean, continuing with assumption that data should not be normalized")
+    normalize <- TRUE
   }
   if(class(filterCellTypes) != "logical"){
     warning("filterCellTypes not a boolean, continuing with default of filtering cell types")
@@ -109,6 +109,9 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
     numCellTypesExpr <- 1
   }
   
+  #make a sparse matrix
+  mtx<- Matrix::Matrix(as.matrix(mtx), sparse = T) 
+  
   cellTypes <- NULL
   
   #read in cell type annotation file
@@ -121,7 +124,9 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
     stop("Individual cell's type are not valid")
   }
   
-  mtx <- as.data.frame(mtx)
+  rm(cellAnnots)
+  
+  # mtx <- as.data.frame(mtx)
   
   if(!any(names(cellTypes) %in% colnames(mtx)) & 
      any(names(cellTypes) %in% rownames(mtx))){
@@ -147,20 +152,17 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
   }
   
   #normalize data if necessary 
-  if(normalized == FALSE){
+  if(normalize == TRUE){
     print("Normalizing Matrix")
     med <- median(Matrix::colSums(mtx))
     cols <- colnames(mtx)
     rows <- rownames(mtx)
-    mtx<- as.data.frame(as.matrix(mtx) %*% as.matrix(diag(1/Matrix::colSums(mtx))*med))
+    mtx <- Matrix::Matrix(as.matrix(mtx) %*% as.matrix(diag(1/Matrix::colSums(mtx))*med), sparse = T) 
     
     colnames(mtx) <- cols
     rownames(mtx) <- rows
     
     rm(cols,rows)
-    
-    #make a sparse matrix
-    mtx<- Matrix::Matrix(as.matrix(mtx), sparse = T) 
   }
   
   atlas <- NULL
@@ -202,8 +204,23 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
     }
   }
   
+  rm(cellTypes)
+  
   #subset to genes expressed in at least a user defined number of cell type(s)
-  atlas <- atlas[which(Matrix::rowSums(atlas > 0) >= numCellTypesExpr),]
+  if(ncol(atlas) == 1){
+    w2kp <- which(Matrix::rowSums(atlas > 0) >= numCellTypesExpr)
+    cols <- colnames(atlas)
+    rows <- rownames(atlas)[w2kp]
+    
+    atlas <- as.matrix(atlas[w2kp,])
+    
+    colnames(atlas) <- cols
+    rownames(atlas) <- rows
+    
+    rm(cols, rows, w2kp)
+  }else{
+    atlas <- atlas[which(Matrix::rowSums(atlas > 0) >= numCellTypesExpr),]
+  }
   
   #scale data
   atlas <- atlas * scalingFactor
@@ -221,6 +238,6 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
   write.table(atlas, file = paste0(outDir, "/", matrixName, "_profileMatrix.csv"), 
               row.names = T, col.names = NA, quote = F, sep = ",")
   
-  return(atlas)
+  return(as.matrix(atlas))
 }
 

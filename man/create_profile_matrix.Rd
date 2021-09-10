@@ -4,10 +4,21 @@
 \alias{create_profile_matrix}
 \title{Create Custom Cell Profile Matrix}
 \usage{
-create_profile_matrix(mtx, cellAnnots, cellTypeCol, cellNameCol,
-  matrixName = "Custom", outDir = "./", geneList = NULL,
-  normalized = TRUE, scalingFactor = 5, minCellNum = 15,
-  minGenes = 100, numCellTypesExpr = 1, filterCellTypes = TRUE)
+create_profile_matrix(
+  mtx,
+  cellAnnots,
+  cellTypeCol,
+  cellNameCol,
+  matrixName = "Custom",
+  outDir = "./",
+  geneList = NULL,
+  normalize = FALSE,
+  scalingFactor = 5,
+  minCellNum = 15,
+  minGenes = 100,
+  numCellTypesExpr = 1,
+  filterCellTypes = TRUE
+)
 }
 \arguments{
 \item{mtx}{cell x gene count matrix}
@@ -24,7 +35,7 @@ create_profile_matrix(mtx, cellAnnots, cellTypeCol, cellNameCol,
 
 \item{geneList}{gene list to filter profile matrix to}
 
-\item{normalized}{is data normalized? (T/F) if FALSE data will be normalized using total gene count}
+\item{normalize}{Should data be normalize? (T/F) if TRUE data will be normalize using total gene count}
 
 \item{scalingFactor}{what should all values be multiplied by for final matrix, set to 1 if no scaling is wanted}
 
