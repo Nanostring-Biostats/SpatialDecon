@@ -1,5 +1,5 @@
 ---
-title: "Use of SpatialDecon in a small GeoMx dataet"
+title: "Use of SpatialDecon in a small GeoMx dataset"
 output: 
   rmarkdown::html_vignette: 
     toc: true
@@ -138,7 +138,7 @@ Below we download a matrix of cell profiles derived from scRNA-seq of a mouse
 brain. 
 
 ```{r downloadmatrix, fig.height=7, fig.width=10, fig.cap = "The Mouse Brain profile matrix"}
-download_profile_matrix(species = "Mouse", age_group = "Adult", matrixname = "Brain_AllenBrainAtlas")
+profile_matrix <- download_profile_matrix(species = "Mouse", age_group = "Adult", matrixname = "Brain_AllenBrainAtlas")
 profile_matrix <- as.matrix(profile_matrix)
 heatmap(sweep(profile_matrix, 1, apply(profile_matrix, 1, max), "/")[1:1000, ],
         labRow = NA, margins = c(12, 5), cexCol = 0.7)

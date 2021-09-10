@@ -110,7 +110,7 @@ Below we download a matrix of cell profiles derived from scRNA-seq of a mouse
 brain. 
 
 ```{r downloadmatrix, fig.height=7, fig.width=10, fig.cap = "The Mouse Brain profile matrix"}
-download_profile_matrix(species = "Mouse", age_group = "Adult", matrixname = "Brain_AllenBrainAtlas")
+profile_matrix <- download_profile_matrix(species = "Mouse", age_group = "Adult", matrixname = "Brain_AllenBrainAtlas")
 profile_matrix <- as.matrix(profile_matrix)
 heatmap(sweep(profile_matrix, 1, apply(profile_matrix, 1, max), "/")[1:1000, ],
         labRow = NA, margins = c(12, 5), cexCol = 0.7)
@@ -244,13 +244,15 @@ par(mar = c(0,0,0,0))
 frame()
 legend("center", fill = cellcols[rownames(restils$beta)], 
        legend = rownames(restils$beta), cex = 0.7)
+```
 
+```{r floretsxy, fig.width=8, fig.height=6, fig.cap = "TIL abundance plotted on physical space"}
 # and plot florets in space:
 par(mar = c(5,5,1,1))
 layout(mat = (matrix(c(1, 2), 1)), widths = c(6, 2))
 florets(x = x, y = y,
         b = restils$beta, cex = .5,
-        xlab = "PC1", ylab = "PC2")
+        xlab = "", ylab = "")
 par(mar = c(0,0,0,0))
 frame()
 legend("center", fill = cellcols[rownames(restils$beta)], 

@@ -128,7 +128,7 @@ Below we download a matrix of cell profiles derived from scRNA-seq of a mouse
 brain. 
 
 ```{r downloadmatrix, fig.height=7, fig.width=10, fig.cap = "The Mouse Brain profile matrix"}
-download_profile_matrix(species = "Mouse", age_group = "Adult", matrixname = "Brain_AllenBrainAtlas")
+profile_matrix <- download_profile_matrix(species = "Mouse", age_group = "Adult", matrixname = "Brain_AllenBrainAtlas")
 profile_matrix <- as.matrix(profile_matrix)
 heatmap(sweep(profile_matrix, 1, apply(profile_matrix, 1, max), "/")[1:1000, ],
         labRow = NA, margins = c(12, 5), cexCol = 0.7)
@@ -250,7 +250,7 @@ TIL_barplot(restils$cell.counts$cell.counts[, o], draw_legend = TRUE,
 # or the proportions of cells:
 temp = replace(restils$prop_of_nontumor, is.na(restils$prop_of_nontumor), 0)
 o = hclust(dist(t(temp[, annot$AOI.name == "TME"])))$order
-TIL_barplot(restils$prop_of_nontumor[, annot$AOI.name == "TME"], 
+TIL_barplot(restils$prop_of_nontumor[, annot$AOI.name == "TME"][, o], 
             draw_legend = TRUE, cex.names = 0.75)
 
 ```
