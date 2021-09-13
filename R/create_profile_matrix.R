@@ -30,22 +30,28 @@
 #' @param matrixName name of final profile matrix
 #' @param outDir path to desired output directory
 #' @param geneList gene list to filter profile matrix to 
-#' @param normalize Should data be normalize? (T/F) if TRUE data will be normalize using total gene count
+#' @param normalize Should data be normalized? (T/F) if TRUE data will be normalize using total gene count
 #' @param scalingFactor what should all values be multiplied by for final matrix, set to 1 if no scaling is wanted
 #' @param minCellNum minimum number of cells of one type needed to create profile, exclusive 
 #' @param minGenes minimum number of genes expressed in a cell, exclusive
-#' @param numCellTypesExpr minimum number of cell types a gene must be expressed in, inclusive
-#' @param filterCellTypes should cell types be filtered for types like mitotic, doublet, low quality, unknown, etc.
-#' @return A custom cell profile matrix 
+#' @param discardCellTypes should cell types be filtered for types like mitotic, doublet, low quality, unknown, etc.
+#' @return A custom cell profile matrix genes (rows) by cell types (columns), matrix gets written to disk and outDir
 #' @examples
 #' cellNames <- paste0("Cell", 1:1500)
 #' geneNames <- paste0("Gene", 1:1500)
-#' mtx <- matrix(data=runif(length(cellNames)*length(geneNames), max = 100), 
+#' mtx <- matrix(data=sample(size = length(cellNames)*length(geneNames), 
+#'                           replace = TRUE,
+#'                           x = 0:100, 
+#'                           prob = c(0.6784, rep(0.0075, 15), rep(0.005, 25),
+#'                                  rep(0.002, 25),  rep(0.001, 35))), 
 #'               ncol = length(cellNames), nrow = length(geneNames), 
 #'               dimnames = list(geneNames, 
 #'                               cellNames))
-#' cellAnnots <- as.data.frame(cbind(CellID=cellNames, cellType=sample(size = length(cellNames), replace = TRUE, 
-#'                                                                     x = c("A", "B", "C", "D"))))
+#' cellAnnots <- as.data.frame(cbind(CellID=cellNames, 
+#'                                   cellType=sample(size = length(cellNames), 
+#'                                                   replace = TRUE,
+#'                                                   x = c("A", "B", "C", "D"),
+#'                                                   prob = c(0.1, 0.4, 0.3, 0.2))))
 #' table(cellAnnots$cellType)
 #' profile_matrix <- create_profile_matrix(mtx = mtx,  
 #'                                         cellAnnots = cellAnnots, 
@@ -56,9 +62,11 @@
 #' head(profile_matrix)
 #' @export
 
-create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, matrixName = "Custom", 
-                                  outDir = "./", geneList = NULL, normalize = FALSE, scalingFactor = 5, minCellNum = 15, 
-                                  minGenes = 100, numCellTypesExpr = 1, filterCellTypes = TRUE) {
+create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, 
+                                  matrixName = "Custom", outDir = "./", 
+                                  geneList = NULL, normalize = FALSE, 
+                                  scalingFactor = 5, minCellNum = 15, 
+                                  minGenes = 100, discardCellTypes = FALSE) {
   
   # checking user input values
   if(is.null(mtx)){
@@ -87,9 +95,9 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
     warning("normalize not a boolean, continuing with assumption that data should not be normalized")
     normalize <- TRUE
   }
-  if(class(filterCellTypes) != "logical"){
-    warning("filterCellTypes not a boolean, continuing with default of filtering cell types")
-    filterCellTypes <- TRUE
+  if(class(discardCellTypes) != "logical"){
+    warning("discardCellTypes not a boolean, continuing with default of discarding cell types")
+    discardCellTypes <- TRUE
   }
   
   if(class(scalingFactor) != "numeric"){
@@ -104,13 +112,9 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
     warning("minGenes not a numeric, continuing with default value of 100")
     minGenes <- 100
   }
-  if(class(numCellTypesExpr) != "numeric"){
-    warning("numCellTypesExpr not a numeric, continuing with default value of 1")
-    numCellTypesExpr <- 1
-  }
   
   #make a sparse matrix
-  mtx<- Matrix::Matrix(as.matrix(mtx), sparse = T) 
+  mtx <- Matrix::Matrix(as.matrix(mtx), sparse = T) 
   
   cellTypes <- NULL
   
@@ -121,7 +125,9 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
   names(cellTypes) <- cellAnnots[[cellNameCol]]
   
   if(is.null(cellTypes)){
-    stop("Individual cell's type are not valid")
+    stop("cellAnnots and/or cellTypeCol arguments are incorrectly formatted. 
+         cellAnnots should be a data frame, and cellTypeCol should give the 
+         name of the column holding each cell's cell type.")
   }
   
   rm(cellAnnots)
@@ -142,7 +148,7 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
     warning(paste("not all cellNameCol names are in count matrix;", missing, "cells are missing"))
   }
   
-  if(filterCellTypes == TRUE){
+  if(discardCellTypes == TRUE){
     #remove cells with no cell type assignment
     w2rm <- which(is.na(cellTypes) | tolower(cellTypes) %in% c("unspecified", "unknown", "not available")) 
     w2rm <- unique(c(w2rm, grep(pattern = "doublet|dividing|low q|filtered|mitotic", x = tolower(cellTypes))))
@@ -157,7 +163,7 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
     med <- median(Matrix::colSums(mtx))
     cols <- colnames(mtx)
     rows <- rownames(mtx)
-    mtx <- Matrix::Matrix(as.matrix(mtx) %*% as.matrix(diag(1/Matrix::colSums(mtx))*med), sparse = T) 
+    mtx <- Matrix::Matrix(sweep(mtx, 2, Matrix::colSums(mtx), "/") * med, sparse = T) 
     
     colnames(mtx) <- cols
     rownames(mtx) <- rows
@@ -172,6 +178,7 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
   
   print("Creating Atlas")
   
+  #change to apply() if bioconductor requires it
   for(i in CTs){
     #print log of progress
     print(paste(which(CTs == i), "/", length(CTs), ":", i))
@@ -190,7 +197,6 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
         cellsType <- cellsType[which(sum(mtx[,cellsType] > 0) > minGenes)]
       }
       
-      
       if(length(cellsType) > minCellNum){
         #get average expression if there are enough cells for cell type
         if(length(cellsType) > minCellNum & length(cellsType) != 1){
@@ -200,11 +206,19 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
           atlas <- as.data.frame(cbind(atlas, mtx[,cellsType]))
           colnames(atlas)[ncol(atlas)] <- i
         }
+      }else{
+        warning(paste(i, "was dropped from matrix because it didn't have enough viable cells based on current filtering thresholds. 
+                    If this cell type is necessary consider changing minCellNum or minGenes"))
       }
+    }else{
+      warning(paste(i, "was dropped from matrix because it didn't have enough viable cells based on current filtering thresholds. 
+                    If this cell type is necessary consider changing minCellNum or minGenes"))
     }
   }
   
   rm(cellTypes)
+  
+  numCellTypesExpr <- 1
   
   #subset to genes expressed in at least a user defined number of cell type(s)
   if(ncol(atlas) == 1){
@@ -233,6 +247,9 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol, mat
       warning("geneList genes do not match genes in matrix, no filtering done")
     }
   }
+  
+  #ensure cell types don't contain ","
+  colnames(atlas) <- gsub(pattern = ",", replacement = "-", x = colnames(atlas))
   
   #write profile matrix
   write.table(atlas, file = paste0(outDir, "/", matrixName, "_profileMatrix.csv"), 

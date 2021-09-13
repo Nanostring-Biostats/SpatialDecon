@@ -16,8 +16,7 @@ create_profile_matrix(
   scalingFactor = 5,
   minCellNum = 15,
   minGenes = 100,
-  numCellTypesExpr = 1,
-  filterCellTypes = TRUE
+  discardCellTypes = FALSE
 )
 }
 \arguments{
@@ -35,7 +34,7 @@ create_profile_matrix(
 
 \item{geneList}{gene list to filter profile matrix to}
 
-\item{normalize}{Should data be normalize? (T/F) if TRUE data will be normalize using total gene count}
+\item{normalize}{Should data be normalized? (T/F) if TRUE data will be normalize using total gene count}
 
 \item{scalingFactor}{what should all values be multiplied by for final matrix, set to 1 if no scaling is wanted}
 
@@ -43,12 +42,10 @@ create_profile_matrix(
 
 \item{minGenes}{minimum number of genes expressed in a cell, exclusive}
 
-\item{numCellTypesExpr}{minimum number of cell types a gene must be expressed in, inclusive}
-
-\item{filterCellTypes}{should cell types be filtered for types like mitotic, doublet, low quality, unknown, etc.}
+\item{discardCellTypes}{should cell types be filtered for types like mitotic, doublet, low quality, unknown, etc.}
 }
 \value{
-A custom cell profile matrix
+A custom cell profile matrix genes (rows) by cell types (columns), matrix gets written to disk and outDir
 }
 \description{
 Create custom cell profile matrix using single cell data. The average gene expression for each cell type is returned.
@@ -56,12 +53,19 @@ Create custom cell profile matrix using single cell data. The average gene expre
 \examples{
 cellNames <- paste0("Cell", 1:1500)
 geneNames <- paste0("Gene", 1:1500)
-mtx <- matrix(data=runif(length(cellNames)*length(geneNames), max = 100), 
+mtx <- matrix(data=sample(size = length(cellNames)*length(geneNames), 
+                          replace = TRUE,
+                          x = 0:100, 
+                          prob = c(0.6784, rep(0.0075, 15), rep(0.005, 25),
+                                 rep(0.002, 25),  rep(0.001, 35))), 
               ncol = length(cellNames), nrow = length(geneNames), 
               dimnames = list(geneNames, 
                               cellNames))
-cellAnnots <- as.data.frame(cbind(CellID=cellNames, cellType=sample(size = length(cellNames), replace = TRUE, 
-                                                                    x = c("A", "B", "C", "D"))))
+cellAnnots <- as.data.frame(cbind(CellID=cellNames, 
+                                  cellType=sample(size = length(cellNames), 
+                                                  replace = TRUE,
+                                                  x = c("A", "B", "C", "D"),
+                                                  prob = c(0.1, 0.4, 0.3, 0.2))))
 table(cellAnnots$cellType)
 profile_matrix <- create_profile_matrix(mtx = mtx,  
                                         cellAnnots = cellAnnots, 
