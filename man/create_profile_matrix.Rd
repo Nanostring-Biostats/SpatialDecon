@@ -30,7 +30,7 @@ create_profile_matrix(
 
 \item{matrixName}{name of final profile matrix}
 
-\item{outDir}{path to desired output directory}
+\item{outDir}{path to desired output directory, set to NULL if matrix should not be written}
 
 \item{geneList}{gene list to filter profile matrix to}
 

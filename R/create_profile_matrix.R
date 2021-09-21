@@ -28,7 +28,7 @@
 #' @param cellTypeCol column containing cell type
 #' @param cellNameCol column containing cell ID/name
 #' @param matrixName name of final profile matrix
-#' @param outDir path to desired output directory
+#' @param outDir path to desired output directory, set to NULL if matrix should not be written
 #' @param geneList gene list to filter profile matrix to 
 #' @param normalize Should data be normalized? (T/F) if TRUE data will be normalize using total gene count
 #' @param scalingFactor what should all values be multiplied by for final matrix, set to 1 if no scaling is wanted
@@ -72,8 +72,10 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol,
   if(is.null(mtx)){
     stop("count matrix is necessary")
   }
-  if (!dir.exists(outDir)) {
-    stop("Output directory is not valid")
+  if(!is.null(outDir)){
+    if (!dir.exists(outDir) ) {
+      stop("Output directory is not valid")
+    }
   }
   if (is.null(cellAnnots)){
     stop("Cell Annotations are needed")
@@ -208,11 +210,11 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol,
         }
       }else{
         warning(paste(i, "was dropped from matrix because it didn't have enough viable cells based on current filtering thresholds. 
-                    If this cell type is necessary consider changing minCellNum or minGenes"))
+                    If this cell type is necessary consider changing minCellNum or minGenes\n"))
       }
     }else{
       warning(paste(i, "was dropped from matrix because it didn't have enough viable cells based on current filtering thresholds. 
-                    If this cell type is necessary consider changing minCellNum or minGenes"))
+                    If this cell type is necessary consider changing minCellNum or minGenes\n"))
     }
   }
   
@@ -251,9 +253,11 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol,
   #ensure cell types don't contain ","
   colnames(atlas) <- gsub(pattern = ",", replacement = "-", x = colnames(atlas))
   
-  #write profile matrix
-  write.table(atlas, file = paste0(outDir, "/", matrixName, "_profileMatrix.csv"), 
-              row.names = T, col.names = NA, quote = F, sep = ",")
+  if(!is.null(outDir)){
+    #write profile matrix
+    write.table(atlas, file = paste0(outDir, "/", matrixName, "_profileMatrix.csv"), 
+                row.names = T, col.names = NA, quote = F, sep = ",")
+  }
   
   return(as.matrix(atlas))
 }
