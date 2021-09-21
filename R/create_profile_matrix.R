@@ -209,11 +209,11 @@ create_profile_matrix <- function(mtx, cellAnnots, cellTypeCol, cellNameCol,
           colnames(atlas)[ncol(atlas)] <- i
         }
       }else{
-        warning(paste(i, "was dropped from matrix because it didn't have enough viable cells based on current filtering thresholds. 
+        warning(paste("\n", i, "was dropped from matrix because it didn't have enough viable cells based on current filtering thresholds. 
                     If this cell type is necessary consider changing minCellNum or minGenes\n"))
       }
     }else{
-      warning(paste(i, "was dropped from matrix because it didn't have enough viable cells based on current filtering thresholds. 
+      warning(paste("\n", i, "was dropped from matrix because it didn't have enough viable cells based on current filtering thresholds. 
                     If this cell type is necessary consider changing minCellNum or minGenes\n"))
     }
   }
