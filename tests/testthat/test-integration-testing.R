@@ -161,6 +161,45 @@ test_that("matrix download works", {
   downloaded.X <- download_profile_matrix("Mouse_Brain")
   expect_true(is.matrix(downloaded.X))
 })
+### test matrix creation
+test_that("matrix creation works", {
+  cellNames <- paste0("Cell", 1:1500)
+  geneNames <- paste0("Gene", 1:1500)
+  mtx <- matrix(data=sample(size = length(cellNames)*length(geneNames),
+                            replace = TRUE,
+                            x = 0:100,
+                            prob = c(0.6784, rep(0.0075, 15), rep(0.005, 25),
+                                   rep(0.002, 25),  rep(0.001, 35))),
+                ncol = length(cellNames), nrow = length(geneNames),
+                dimnames = list(geneNames,
+                                cellNames))
+  
+  celltypes <- c("A", "B", "C", "D")
+  cellAnnots <- as.data.frame(cbind(CellID=cellNames,
+                                    cellType=sample(size = length(cellNames),
+                                                    replace = TRUE,
+                                                    x = celltypes,
+                                                    prob = c(0.1, 0.4, 0.3, 0.2))))
+  
+  profile_matrix <- create_profile_matrix(mtx = mtx,
+                                        cellAnnots = cellAnnots,
+                                        cellTypeCol = "cellType",
+                                        cellNameCol = "CellID",
+                                        minGenes = 10,
+                                        scalingFactor = 1)
+  
+  
+
+  expect_true(is.matrix(profile_matrix))
+  
+  for(CT in celltypes){
+    w2kp <- which(cellAnnots$cellType == CT)
+    expect_true(all(rowMeans(mtx[,w2kp]) == profile_matrix[,CT]))
+  }
+  expect_true(file.exists("Custom_profileMatrix.csv"))
+  
+  unlink("Custom_profileMatrix.csv", force = TRUE)
+})
 
 
 ### test collapseCellTypes:
@@ -188,3 +227,5 @@ test_that("collapseCellTypes works", {
   expect_true(all(abs(res2.collapsed$t - res$t) < 1e-2))
   expect_true(all(abs(res2.collapsed$se - res$se) < 1e-2))
 })
+
+
