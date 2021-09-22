@@ -158,10 +158,15 @@ test_that("TIL_barplot does not error", {
 
 ### test matrix download:
 test_that("matrix download works", {
-  profile_matrix <- download_profile_matrix(species = "Human", age_group = "Adult", matrixname = "Colon_HCA")
-  expect_true(is.matrix(profile_matrix))
+  downloaded.X <- download_profile_matrix(species = "Human", 
+                                          age_group = "Adult",
+                                          matrixname = "Liver_HCA")
+  expect_true(is.matrix(downloaded.X))
+  expect_true(is.list(cellGroups))
+  expect_true(all(colnames(downloaded.X) %in% unlist(cellGroups)))
+  expect_true(all(downloaded.X == profile_matrix))
+  
 })
-
 
 ### test collapseCellTypes:
 
