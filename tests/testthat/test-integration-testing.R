@@ -1,5 +1,7 @@
 context("spatialdecon")
 
+library(testthat)
+
 
 # strategy here:
 # spatialdecon calls almost every function in the package
@@ -240,6 +242,8 @@ seur <- SeuratObject::CreateSeuratObject(counts = raw, assay="Spatial")
 test_that("runspatialdecon works on seurat objects", {
   res <- runspatialdecon(seur)
   
+  res2 <- spatialdecon(norm = raw, raw = raw, bg = 0.1)
+  
   expect_true(is.matrix(res$beta)) # test beta is a matrix
   expect_true(is.matrix(res$yhat)) 
   expect_true(is.matrix(res$resids))
@@ -250,4 +254,100 @@ test_that("runspatialdecon works on seurat objects", {
   expect_true(is.matrix(res$prop_of_all))
   expect_true(is.matrix(res$prop_of_nontumor))
   expect_true(is.matrix(res$X))
+  
+  expect_identical(res, res2)
+})
+
+## test wrapper for GeoMxSet objects:
+#make GeoMxSet object:
+
+datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools")
+demoData <- readRDS(file.path(datadir, "/demoData.rds"))
+
+demoData <- GeomxTools::shiftCountsOne(demoData)
+demoData <- GeomxTools::aggregateCounts(demoData)
+
+demoData <- GeomxTools::normalize(demoData, "quant")
+
+norm <- as.matrix(demoData@assayData$exprs_norm)
+
+bg <- derive_GeoMx_background(norm = norm,
+                              # access the probe pool information from the feature metadata
+                              probepool = demoData@featureData@data$Module,
+                              # access the names of the negative control probes
+                              negnames = demoData@featureData@data$TargetName[demoData@featureData@data$Negative])
+
+test_that("runspatialdecon works on GeoMxSet objects", {
+  res <- runspatialdecon(object = demoData, 
+                         norm_elt = "exprs_norm",
+                         raw_elt = "exprs")
+  
+  res2 <- spatialdecon(norm = norm, bg = bg, 
+                       raw = as.matrix(demoData@assayData$exprs))
+
+  expect_true(is.matrix(res@phenoData@data$beta)) # test beta is a matrix
+  expect_true(is.matrix(res@assayData$yhat)) 
+  expect_true(is.matrix(res@assayData$resids))
+  expect_true(length(dim(res@phenoData@data$sigmas)) == 3) # test sigmas is a 3d assar
+  expect_true(is.matrix(res@phenoData@data$p))
+  expect_true(is.matrix(res@phenoData@data$t))
+  expect_true(is.matrix(res@phenoData@data$se))
+  expect_true(is.matrix(res@phenoData@data$prop_of_all))
+  expect_true(is.matrix(res@phenoData@data$prop_of_nontumor))
+  expect_true(is.matrix(res@experimentData@other$SpatialDeconMatrix))
+  
+  expect_identical(res@phenoData@data$beta, t(res2$beta))
+  expect_identical(res@assayData$yhat[match(rownames(res2$yhat), rownames(res@assayData$yhat)),], 
+                   res2$yhat) 
+  expect_identical(res@assayData$resids[match(rownames(res2$resids), rownames(res@assayData$resids)),], 
+                   res2$resids)
+  expect_identical(res@phenoData@data$p, t(res2$p))
+  expect_identical(res@phenoData@data$t, t(res2$t))
+  expect_identical(res@phenoData@data$se, t(res2$se))
+  expect_identical(res@phenoData@data$prop_of_all, t(res2$prop_of_all))
+  expect_identical(res@phenoData@data$prop_of_nontumor, t(res2$prop_of_nontumor))
+  expect_identical(res@experimentData@other$SpatialDeconMatrix, res2$X)
+})
+
+sharedgenes <- intersect(rownames(safeTME), rownames(norm))
+
+test_that("runmergeTumorIntoX works on GeoMxSet objects", {
+    set.seed(0)
+    mergedX <- mergeTumorIntoX(
+      norm = norm,
+      bg = bg,
+      pure_tumor_ids = demoData@phenoData@data$`scan name` == "cw005 (PTL-10891) Slide1",
+      X = safeTME[sharedgenes, ],
+      K = 5
+    )
+    
+    mergedX.test <- runMergeTumorIntoX(demoData, 
+                                       norm_elt = "exprs_norm", 
+                                       pure_tumor_ids = demoData@phenoData@data$`scan name` == "cw005 (PTL-10891) Slide1",
+                                       X = safeTME[sharedgenes, ],
+                                       K=5)
+    
+    expect_true(all(abs(mergedX.test - mergedX) < 1e-3))
+})
+
+test_that("runreverseDecon works on GeoMxSet objects", {
+  res <- runspatialdecon(object = demoData, 
+                         norm_elt = "exprs_norm",
+                         raw_elt = "exprs")
+  
+  rdres <- suppressWarnings(runReverseDecon(demoData, 
+                                            norm_elt = "exprs_norm",
+                                            beta = res@phenoData@data$beta,
+                                            epsilon = 1))
+  
+  rdres.x <- suppressWarnings(reverseDecon(norm = norm,
+                                           beta = t(res@phenoData@data$beta),
+                                           epsilon = 1))
+  
+  
+  expect_true(all(abs(rdres@featureData@data$coefs - rdres.x$coefs) < 1e-3))
+  expect_true(all(abs(rdres@featureData@data$cors - rdres.x$cors) < 1e-3))
+  expect_true(all(abs(rdres@featureData@data$resid.sd - rdres.x$resid.sd) < 1e-3))
+  expect_true(all(abs(rdres@assayData$resids - rdres.x$resids) < 1e-3))
+  expect_true(all(abs(rdres@assayData$yhat - rdres.x$yhat) < 1e-3))
 })

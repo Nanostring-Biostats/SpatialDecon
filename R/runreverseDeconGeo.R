@@ -8,54 +8,75 @@
 #'  Columns are aligned to "norm".
 #' @param epsilon All y and yhat values are thresholded up to this point when performing decon.
 #'  Essentially says, "ignore variability in counts below this threshold."
-#' @return A list:
+#' @return a valid GeoMx S4 object including the following items:
 #' \itemize{
+#'  \item in fData
+#'  \itemize{
 #'  \item coefs, a matrix of coefficients for genes * cells, where element i,j is interpreted as
 #'               "every unit increase in cell score j is expected to increase expression of gene i by _".
-#'  \item yhat, a matrix of fitted values, in the same dimension as norm
-#'  \item resids, a matrix of log2-scale residuals from the reverse decon fit, in the same
-#'                dimension as norm
 #'  \item cors, a vector giving each gene's correlation between fitted and observed expression
 #'  \item resid.sd, a vector of each gene's residual SD, a metric of how much variability genes
 #'                  have independend of cell mixing.
+#'  }
+#'  \item in assayData
+#'  \itemize{
+#'    \item yhat, a matrix of fitted values, in the same dimension as norm
+#'    \item resids, a matrix of log2-scale residuals from the reverse decon fit, in the same
+#'                dimension as norm
+#'  }
+#'  
 #' }
-#' @import Biobase assayData
+#' @importFrom Biobase assayData
 #' @examples
-#' data(target_demoData)
+#' library(GeomxTools)
+#' datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools")
+#' demoData <- readRDS(file.path(datadir, "/demoData.rds"))
+#' 
+#' demoData <- shiftCountsOne(demoData)
+#' target_demoData <- aggregateCounts(demoData)
+#'                 
 #' # run basic decon:
-#' res0 <- runSpatialdeconGeomx(object = target_demoData,
-#'                       norm_elt = "neg_norm",
-#'                       raw_elt = "exprs")
+#' res0 <- runSpatialdecon(object = target_demoData,
+#'                         norm_elt = "exprs_norm",
+#'                         raw_elt = "exprs")
 #'
 #' # run reverse decon:
-#' runReverseDeconGeomx(object = target_demoData,
-#' norm_elt = "neg_norm",
-#' beta = res0$beta)
+#' target_demoData <- runReverseDecon(object = target_demoData,
+#'                                    norm_elt = "neg_norm",
+#'                                    beta = res0@phenoData@data$beta)
 #' )
 #'
 #' @export
 #'
 
 
-setGeneric("runReverseDeconGeomx", signature = "object",
-           function(object, ...) standardGeneric("runReverseDeconGeomx"))
+setGeneric("runReverseDecon", signature = "object",
+           function(object, ...) standardGeneric("runReverseDecon"))
 
-setMethod("runReverseDeconGeomx",  "NanoStringGeoMxSet",
-          function(object, norm_elt, beta, epsilon = NULL){
+setMethod("runReverseDecon",  "NanoStringGeoMxSet",
+          function(object, norm_elt = NULL, beta, epsilon = NULL){
+            
+            if(is.null(norm_elt)){
+              stop("norm_elt must be set")
+            }
+            
+            if (!is.element(norm_elt, names(object@assayData))) {
+              stop(paste(norm_elt, "is not an element in assaysData slot"))
+            }
 
             # prep components:
             norm <- as.matrix(Biobase::assayDataElement(object, elt = norm_elt))
 
             # run runReverseDeconGeomx:
-            result <- runReverseDeconGeomx(object = norm,
-                                      beta = t(beta),
-                                      epsilon = epsilon)
+            result <- reverseDecon(norm = norm,
+                                   beta = t(beta),
+                                   epsilon = epsilon)
 
 
             # append results to the object
             # add coefs
             Biobase::fData(object)[["coefs"]] <- matrix(NA, nrow = nrow(object), ncol = ncol(result$coefs),
-                                                       dimnames = list(featureNames(object), colnames(result$coefs)))
+                                                       dimnames = list(Biobase::featureNames(object), colnames(result$coefs)))
             Biobase::fData(object)[["coefs"]][rownames(result$coefs), ] <- result$coefs
 
 
@@ -75,26 +96,14 @@ setMethod("runReverseDeconGeomx",  "NanoStringGeoMxSet",
 
             # add cors
             Biobase::fData(object)[["cors"]] <- NA
-            Biobase::fData(object)[["cors"]][match(names(result$cors), featureNames(object), nomatch = 0)] <- result$cors
+            Biobase::fData(object)[["cors"]][match(names(result$cors), Biobase::featureNames(object), nomatch = 0)] <- result$cors
 
 
             # add resid.sd
             Biobase::fData(object)[["resid.sd"]] <- NA
-            Biobase::fData(object)[["resid.sd"]][match(names(result$resid.sd), featureNames(object), nomatch = 0)] <- result$resid.sd
+            Biobase::fData(object)[["resid.sd"]][match(names(result$resid.sd), Biobase::featureNames(object), nomatch = 0)] <- result$resid.sd
 
             return(object)
 
             })
 
-
-setMethod("runReverseDeconGeomx",  "matrix",
-          function(object, beta, epsilon = NULL){
-
-          # run reverseDecon
-          res <- reverseDecon(norm = object,
-                                beta = beta,
-                                epsilon = epsilon)
-
-          return(res)
-
-          })

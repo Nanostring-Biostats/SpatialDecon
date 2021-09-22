@@ -12,14 +12,22 @@
 #' @return an updated X matrix with new columns, "tumor.1", "tumor.2", ...
 #' @importFrom Biobase assayData
 #' @examples
-#' data(target_demoData)
+#' library(GeomxTools)
+#' datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools")
+#' demoData <- readRDS(file.path(datadir, "/demoData.rds"))
+#' 
+#' demoData <- shiftCountsOne(demoData)
+#' target_demoData <- aggregateCounts(demoData)
+#' 
+#' target_demoData <- normalize(target_demoData, "quant")
+#' 
 #' data(safeTME)
 #' tumor.ids <- as.logical(sample(x = c("TRUE","FALSE"), size = 88, replace = TRUE))
 #' safeTME.with.tumor <- runMergeTumorIntoX(object = target_demoData,
 #'                                          X = safeTME,
 #'                                          K = 3,
 #'                                          pure_tumor_ids = tumor.ids,
-#'                                          norm_elt = "neg_norm")
+#'                                          norm_elt = "exprs_norm")
 #'
 #' @export
 #'
@@ -29,8 +37,16 @@ setGeneric("runMergeTumorIntoX", signature = "object",
            function(object, ...) standardGeneric("runMergeTumorIntoX"))
 
 setMethod("runMergeTumorIntoX", "NanoStringGeoMxSet",
-          function(object, X, K = 10, pure_tumor_ids, norm_elt){
+          function(object, X, K = 10, pure_tumor_ids, norm_elt = NULL){
 
+            if(is.null(norm_elt)){
+              stop("norm_elt must be set")
+            }
+            
+            if (!is.element(norm_elt, names(object@assayData))) {
+              stop(paste(norm_elt, "is not an element in assaysData slot"))
+            }
+            
             #norm
             norm <- Biobase::assayDataElement(object, elt = norm_elt)
 
@@ -39,36 +55,22 @@ setMethod("runMergeTumorIntoX", "NanoStringGeoMxSet",
                                           # access the probe pool information from the feature metadata
                                           probepool = Biobase::fData(object)$Module,
                                           # access the names of the negative control probes
-                                          negnames = Biobase::fData(negativeControlSubset(object))$TargetName)
+                                          negnames = Biobase::fData(object)$TargetName[Biobase::fData(object)$Negative])
 
             # run runMergeTumorIntoX:
-            result <- runMergeTumorIntoX(object = norm,
+            result <- mergeTumorIntoX(norm = norm,
                                       bg = bg,
                                       pure_tumor_ids = pure_tumor_ids,
                                       X = X,
                                       K = K)
 
+            # # append result to the object
+            # # add tumor_res matrix
+            # Biobase::fData(object)[["tumor_res"]] <- matrix(NA, nrow = nrow(object), ncol = ncol(result),
+            #                                         dimnames = list(Biobase::featureNames(object), colnames(result)))
+            # Biobase::fData(object)[["tumor_res"]][rownames(result), ] <- result
 
-            # append result to the object
-            # add tumor_res matrix
-            Biobase::fData(object)[["tumor_res"]] <- matrix(NA, nrow = nrow(object), ncol = ncol(result),
-                                                    dimnames = list(featureNames(object), colnames(result)))
-            Biobase::fData(object)[["tumor_res"]][rownames(result), ] <- result
-
-            return(object)
-
-          })
-
-setMethod("runMergeTumorIntoX", "matrix",
-          function(object, bg, pure_tumor_ids, X, K = 10){
-
-            # run mergeTumorIntoX
-            res <- mergeTumorIntoX(norm = object,
-                                   bg = bg,
-                                   pure_tumor_ids = pure_tumor_ids,
-                                   X = X,
-                                   K = K)
-
-            return(res)
+            return(result)
 
           })
+
