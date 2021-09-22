@@ -2,6 +2,7 @@
 
 export(TIL_barplot)
 export(collapseCellTypes)
+export(create_profile_matrix)
 export(derive_GeoMx_background)
 export(download_profile_matrix)
 export(florets)
