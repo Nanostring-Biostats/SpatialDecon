@@ -37,14 +37,23 @@ setGeneric("runMergeTumorIntoX", signature = "object",
            function(object, ...) standardGeneric("runMergeTumorIntoX"))
 
 setMethod("runMergeTumorIntoX", "NanoStringGeoMxSet",
-          function(object, X, K = 10, pure_tumor_ids, norm_elt = NULL){
+          function(object, X, K = 10, pure_tumor_ids = NULL, norm_elt = NULL){
 
             if(is.null(norm_elt)){
               stop("norm_elt must be set")
             }
             
+            if(is.null(pure_tumor_ids)){
+              stop("pure_tumor_ids must be set")
+            }
+            
             if (!is.element(norm_elt, names(object@assayData))) {
               stop(paste(norm_elt, "is not an element in assaysData slot"))
+            }
+            
+            if (!any(pure_tumor_ids %in% Biobase::sampleNames(object)) & 
+                class(pure_tumor_ids) != "logical" & class(pure_tumor_ids) != "integer") {
+              stop(paste("No pure_tumor_ids match sample names in GeoMxSet object"))
             }
             
             #norm
