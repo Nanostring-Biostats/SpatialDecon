@@ -29,8 +29,6 @@ test_that("deriveWeights is as expected", {
   expect_true(all(abs(wts.test - wts) < 1e-3))
 })
 
-
-
 # merging tumor profiles:
 test_that("mergeTumorIntoX is as expected", {
   set.seed(0)
@@ -93,6 +91,15 @@ test_that("cell matching is as expected", {
   expect_equal(rownames(res.test$beta), rownames(res$beta))
 })
 
+test_that("spatialdeconTILs returned results as expected", {
+  cols <- c("beta", "yhat", "sigma", "p", "t", "se", "prop_of_all", "prop_of_nontumor", 
+            "cell.counts", "beta.granular", "sigma.granular", "cell.counts.granular", 
+            "resids", "X")
+  
+  expect_true(all(cols %in% names(res)))
+  expect_true(all(names(res) %in% cols))
+})
+
 
 test_that("spatialdeconTILs is as expected: beta", {
   expect_true(all(abs(res.test$beta - res$beta) < 1e-2))
@@ -120,6 +127,23 @@ test_that("spatialdeconTILs is as expected: props", {
   expect_true(all(abs(res.test$prob_of_nontumor - res$prob_of_nontumor) < 1e-2))
 })
 
+test_that("spatialdeconTILs is as expected: props of all", {
+  expect_true(all(abs(res.test$prob_of_all - res$prob_of_all) < 1e-2))
+  expect_true(all(abs(res.test$prob_of_nontumor - res$prob_of_nontumor) < 1e-2))
+})
+
+test_that("spatialdeconTILs is as expected: t", {
+  expect_true(all(abs(res.test$t - res$t) < 1e-2))
+})
+
+test_that("spatialdeconTILs is as expected: se", {
+  expect_true(all(abs(res.test$se - res$se) < 1e-2))
+})
+
+test_that("spatialdeconTILs is as expected: beta.granular", {
+  expect_true(all(abs(res.test$beta.granular - res$beta.granular) < 1e-2))
+})
+
 ### test reverse decon:
 rdres <- suppressWarnings(reverseDecon(
   norm = snr,
@@ -127,7 +151,7 @@ rdres <- suppressWarnings(reverseDecon(
   epsilon = 1
 ))
 
-test_that("reverseDecon is as expected: ", {
+test_that("reverseDecon is as expected", {
     expect_true(all(abs(rdres.test$resids - rdres$resids) < 1e-1))
     expect_true(all(abs(rdres.test$yhat - rdres$yhat) < 1))
     expect_true(all(abs(rdres.test$coefs - rdres$coefs) < 100))
@@ -277,6 +301,13 @@ bg <- derive_GeoMx_background(norm = norm,
                               # access the names of the negative control probes
                               negnames = demoData@featureData@data$TargetName[demoData@featureData@data$Negative])
 
+test_that("derive_GeoMx_background is in correct format", {
+  expect_true(all(dim(bg) == dim(norm)))
+  expect_true(all(colnames(bg) == colnames(norm)))
+  expect_true(all(rownames(bg) == rownames(norm)))
+})
+
+
 res <- runspatialdecon(object = demoData, 
                        norm_elt = "exprs_norm",
                        raw_elt = "exprs")
@@ -356,5 +387,4 @@ test_that("runCollapseCellTypes works on GeoMxSet objects", {
   expect_lt(ncol(collapsed$beta), ncol(res$beta))
   expect_equal(nrow(collapsed$beta), nrow(res$beta))
 })
-
 
