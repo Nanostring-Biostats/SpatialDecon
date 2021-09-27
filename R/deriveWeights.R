@@ -46,7 +46,7 @@ deriveWeights <- function(norm, raw = NULL, error.model = "dsp",
     if (length(raw) > 0) {
         sds.tech <- runErrorModel(
             counts = raw,
-            platform = error.model
+            platform = "dsp"
         )
     }
 
