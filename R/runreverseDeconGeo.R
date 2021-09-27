@@ -1,6 +1,6 @@
 #' Run reversedecon on a NanostringGeomxSet object
 #'
-#' A wrapper for applying reversedecon to the Spatial data element in a NanostringGeomxSet object.
+#' A wrapper for applying reversedecon to a NanostringGeomxSet object.
 #'
 #' @param object A NanostringGeomxSet object.
 #' @param norm_elt normalized data element in assayData.
@@ -34,6 +34,8 @@
 #' 
 #' demoData <- shiftCountsOne(demoData)
 #' target_demoData <- aggregateCounts(demoData)
+#' 
+#' target_demoData <- normalize(target_demoData, "quant")
 #'                 
 #' # run basic decon:
 #' res0 <- runSpatialdecon(object = target_demoData,
@@ -43,8 +45,7 @@
 #' # run reverse decon:
 #' target_demoData <- runReverseDecon(object = target_demoData,
 #'                                    norm_elt = "neg_norm",
-#'                                    beta = res0@phenoData@data$beta)
-#' )
+#'                                    beta = pData(res0)$beta)
 #'
 #' @export
 #'

@@ -134,7 +134,7 @@ if given both cellmerges and cell_counts, the valid GeoMx S4 object will
 }
 }
 \description{
-A wrapper for applying spatialdecon to the Spatial data element in a NanostringGeomxSet object.
+A wrapper for applying spatialdecon to a NanostringGeomxSet object.
 }
 \examples{
 
@@ -143,8 +143,11 @@ datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools"
 demoData <- readRDS(file.path(datadir, "/demoData.rds"))
 
 demoData <- shiftCountsOne(demoData)
-demoData <- aggregateCounts(demoData)
-demoData <- runspatialdecon(object = demoData, 
+target_demoData <- aggregateCounts(demoData)
+
+target_demoData <- normalize(target_demoData, "quant")
+
+demoData <- runspatialdecon(object = target_demoData, 
                             norm_elt = "exprs_norm",
                             raw_elt = "exprs")
 

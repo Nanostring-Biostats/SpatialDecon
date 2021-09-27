@@ -38,7 +38,7 @@ a valid GeoMx S4 object including the following items:
 }
 }
 \description{
-A wrapper for applying reversedecon to the Spatial data element in a NanostringGeomxSet object.
+A wrapper for applying reversedecon to a NanostringGeomxSet object.
 }
 \examples{
 library(GeomxTools)
@@ -47,6 +47,8 @@ demoData <- readRDS(file.path(datadir, "/demoData.rds"))
 
 demoData <- shiftCountsOne(demoData)
 target_demoData <- aggregateCounts(demoData)
+
+target_demoData <- normalize(target_demoData, "quant")
                 
 # run basic decon:
 res0 <- runSpatialdecon(object = target_demoData,
@@ -56,7 +58,6 @@ res0 <- runSpatialdecon(object = target_demoData,
 # run reverse decon:
 target_demoData <- runReverseDecon(object = target_demoData,
                                    norm_elt = "neg_norm",
-                                   beta = res0@phenoData@data$beta)
-)
+                                   beta = pData(res0)$beta)
 
 }

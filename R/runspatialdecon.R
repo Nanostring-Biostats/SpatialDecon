@@ -144,7 +144,7 @@ setMethod("runspatialdecon", "Seurat", function(
 
 #' Run spatialdecon on a NanostringGeomxSet object
 #'
-#' A wrapper for applying spatialdecon to the Spatial data element in a NanostringGeomxSet object.
+#' A wrapper for applying spatialdecon to a NanostringGeomxSet object.
 #'
 #' @param object A NanostringGeomxSet object.
 #' @param norm_elt normalized data element in assayData
@@ -254,8 +254,11 @@ setMethod("runspatialdecon", "Seurat", function(
 #' demoData <- readRDS(file.path(datadir, "/demoData.rds"))
 #' 
 #' demoData <- shiftCountsOne(demoData)
-#' demoData <- aggregateCounts(demoData)
-#' demoData <- runspatialdecon(object = demoData, 
+#' target_demoData <- aggregateCounts(demoData)
+#' 
+#' target_demoData <- normalize(target_demoData, "quant")
+#' 
+#' demoData <- runspatialdecon(object = target_demoData, 
 #'                             norm_elt = "exprs_norm",
 #'                             raw_elt = "exprs")
 #'
@@ -440,7 +443,7 @@ setMethod("runspatialdecon", "NanoStringGeoMxSet",
                                                                              nrow = ncol(object),
                                                                              ncol = 2,
                                                                              dimnames = list(Biobase::sampleNames(object),
-                                                                                             c("cells.per.100",                                                                                           "cells.counts"))))
+                                                                                             c("cells.per.100", "cell.counts"))))                                                                                           
                 # add cells.per.100 matrix
                 Biobase::pData(object)[["cell.counts"]][["cells.per.100"]] <- matrix(NA, nrow = ncol(object),
                                                                                      ncol = nrow(result$cell.counts$cells.per.100),
@@ -449,12 +452,12 @@ setMethod("runspatialdecon", "NanoStringGeoMxSet",
                 Biobase::pData(object)[["cell.counts"]][["cells.per.100"]][colnames(result$cell.counts$cells.per.100), ] <- t(result$cell.counts$cells.per.100)
                 
                 
-                # add cells.counts matrix
-                Biobase::pData(object)[["cell.counts"]][["cells.counts"]] <- matrix(NA, nrow = ncol(object),
-                                                                                    ncol = nrow(result$cell.counts$cells.counts),
+                # add cell.counts matrix
+                Biobase::pData(object)[["cell.counts"]][["cell.counts"]] <- matrix(NA, nrow = ncol(object),
+                                                                                    ncol = nrow(result$cell.counts$cell.counts),
                                                                                     dimnames = list(Biobase::sampleNames(object),
-                                                                                                    rownames(result$cell.counts$cells.counts)))
-                Biobase::pData(object)[["cell.counts"]][["cells.counts"]][colnames(result$cell.counts$cells.counts), ] <- t(result$cell.counts$cells.counts)
+                                                                                                    rownames(result$cell.counts$cell.counts)))
+                Biobase::pData(object)[["cell.counts"]][["cell.counts"]][colnames(result$cell.counts$cell.counts), ] <- t(result$cell.counts$cell.counts)
               } else {
                 # create cell.counts list
                 Biobase::pData(object)[["cell.counts"]] <- data.frame(matrix(NA,
@@ -482,7 +485,7 @@ setMethod("runspatialdecon", "NanoStringGeoMxSet",
                                                                                       ncol = 2,
                                                                                       dimnames = list(Biobase::sampleNames(object),
                                                                                                       c("cells.per.100",
-                                                                                                        "cells.counts"))))
+                                                                                                        "cell.counts"))))
                 # add cells.per.100 matrix
                 Biobase::pData(object)[["cell.counts.granular"]][["cells.per.100"]] <- matrix(NA, nrow = ncol(object),
                                                                                               ncol = nrow(result$cell.counts.granular$cells.per.100),
@@ -492,11 +495,11 @@ setMethod("runspatialdecon", "NanoStringGeoMxSet",
                 
                 
                 # add cells.count matrix
-                Biobase::pData(object)[["cell.counts.granular"]][["cells.counts"]] <- matrix(NA, nrow = ncol(object),
-                                                                                             ncol = nrow(result$cell.counts.granular$cells.counts),
+                Biobase::pData(object)[["cell.counts.granular"]][["cell.counts"]] <- matrix(NA, nrow = ncol(object),
+                                                                                             ncol = nrow(result$cell.counts.granular$cell.counts),
                                                                                              dimnames = list(Biobase::sampleNames(object),
-                                                                                                             rownames(result$cell.counts.granular$cells.counts)))
-                Biobase::pData(object)[["cell.counts.granular"]][["cells.counts"]][colnames(result$cell.counts.granular$cells.per.100), ] <- t(result$cell.counts.granular$cells.counts)
+                                                                                                             rownames(result$cell.counts.granular$cell.counts)))
+                Biobase::pData(object)[["cell.counts.granular"]][["cell.counts"]][colnames(result$cell.counts.granular$cells.per.100), ] <- t(result$cell.counts.granular$cell.counts)
               } else {
                 # create cell.counts.granular list
                 Biobase::pData(object)[["cell.counts.granular"]] <- data.frame(matrix(NA,

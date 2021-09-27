@@ -9,7 +9,7 @@ A list with the following elements:
  \itemize{
  \item normalized: normalized data matrix
  \item raw: raw data matrix
- \item annot: AOI annotation data frane
+ \item annot: AOI annotation data frame
  }
 }
 \usage{

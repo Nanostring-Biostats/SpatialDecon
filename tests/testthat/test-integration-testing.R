@@ -277,11 +277,11 @@ bg <- derive_GeoMx_background(norm = norm,
                               # access the names of the negative control probes
                               negnames = demoData@featureData@data$TargetName[demoData@featureData@data$Negative])
 
+res <- runspatialdecon(object = demoData, 
+                       norm_elt = "exprs_norm",
+                       raw_elt = "exprs")
+
 test_that("runspatialdecon works on GeoMxSet objects", {
-  res <- runspatialdecon(object = demoData, 
-                         norm_elt = "exprs_norm",
-                         raw_elt = "exprs")
-  
   res2 <- spatialdecon(norm = norm, bg = bg, 
                        raw = as.matrix(demoData@assayData$exprs))
 
@@ -331,10 +331,6 @@ test_that("runmergeTumorIntoX works on GeoMxSet objects", {
 })
 
 test_that("runreverseDecon works on GeoMxSet objects", {
-  res <- runspatialdecon(object = demoData, 
-                         norm_elt = "exprs_norm",
-                         raw_elt = "exprs")
-  
   rdres <- suppressWarnings(runReverseDecon(demoData, 
                                             norm_elt = "exprs_norm",
                                             beta = res@phenoData@data$beta,
@@ -351,3 +347,14 @@ test_that("runreverseDecon works on GeoMxSet objects", {
   expect_true(all(abs(rdres@assayData$resids - rdres.x$resids) < 1e-3))
   expect_true(all(abs(rdres@assayData$yhat - rdres.x$yhat) < 1e-3))
 })
+
+test_that("runCollapseCellTypes works on GeoMxSet objects", {
+  collapsed <- runCollapseCellTypes(object = res, 
+                                    matching = safeTME.matches)
+  
+  expect_true(all(colnames(collapsed$beta) %in% names(safeTME.matches)))
+  expect_lt(ncol(collapsed$beta), ncol(res$beta))
+  expect_equal(nrow(collapsed$beta), nrow(res$beta))
+})
+
+

@@ -161,21 +161,21 @@ This mini single cell dataset is a fraction of the data from Kinchen, J. et al. 
 ```{r single cell data}
 data("mini_singleCell_dataset")
 
-mtx@Dim # genes x cells
+mini_singleCell_dataset$mtx@Dim # genes x cells
 
-as.matrix(mtx)[1:4,1:4]
+as.matrix(mini_singleCell_dataset$mtx)[1:4,1:4]
 
-head(annots)
+head(mini_singleCell_dataset$annots)
 
-table(annots$LabeledCellType)
+table(mini_singleCell_dataset$annots$LabeledCellType)
 
 ```
 
 **Pericyte cell** and **smooth muscle cell of colon** will be dropped from this matrix due to low cell count. The average expression across all cells of one type is returned so the more cells of one type, the better reflection of the true gene expression. The confidence in these averages can be changed using the minCellNum filter.
 
 ```{r creatematrix, fig.height=7, fig.width=10, fig.cap = "Custom profile matrix"}
-custom_mtx <- create_profile_matrix(mtx = mtx,                        # cell x gene count matrix
-                                    cellAnnots = annots,              # cell annotations with cell type and cell name as columns 
+custom_mtx <- create_profile_matrix(mtx = mini_singleCell_dataset$mtx,            # cell x gene count matrix
+                                    cellAnnots = mini_singleCell_dataset$annots,  # cell annotations with cell type and cell name as columns 
                                     cellTypeCol = "LabeledCellType",  # column containing cell type
                                     cellNameCol = "CellID",           # column containing cell ID/name
                                     matrixName = "custom_mini_colon", # name of final profile matrix
@@ -203,12 +203,12 @@ library(Seurat)
 
 data("mini_singleCell_dataset")
 
-rownames(annots) <- annots$CellID
+rownames(mini_singleCell_dataset$annots) <- mini_singleCell_dataset$annots$CellID
 
-seuratObject <- CreateSeuratObject(counts = mtx, meta.data = annots)
+seuratObject <- CreateSeuratObject(counts = mini_singleCell_dataset$mtx, meta.data = mini_singleCell_dataset$annots)
 Idents(seuratObject) <- seuratObject$LabeledCellType
 
-rm(mtx, annots)
+rm(mini_singleCell_dataset)
 
 annots <- data.frame(cbind(cellType=as.character(Idents(seuratObject)), 
                            cellID=names(Idents(seuratObject))))

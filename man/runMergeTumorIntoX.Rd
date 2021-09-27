@@ -24,7 +24,7 @@ Can be indices, logicals or column names.}
 an updated X matrix with new columns, "tumor.1", "tumor.2", ...
 }
 \description{
-A wrapper for applying mergeTumorIntoX to the Spatial data element in a NanostringGeomxSet object.
+A wrapper for applying mergeTumorIntoX to a NanostringGeomxSet object.
 }
 \examples{
 library(GeomxTools)

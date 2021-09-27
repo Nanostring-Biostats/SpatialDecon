@@ -5,12 +5,7 @@
 \alias{nsclc}
 \title{Large example GeoMx data}
 \format{
-A list with the following elements:
- \itemize{
- \item normalized: normalized data matrix
- \item raw: raw data matrix
- \item annot: AOI annotation data frane
- }
+GeoMxSet Object
 }
 \usage{
 nsclc

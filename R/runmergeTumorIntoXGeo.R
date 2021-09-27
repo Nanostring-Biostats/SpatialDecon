@@ -1,6 +1,6 @@
 #' Run mergeTumorIntoX on a NanostringGeomxSet object
 #'
-#' A wrapper for applying mergeTumorIntoX to the Spatial data element in a NanostringGeomxSet object.
+#' A wrapper for applying mergeTumorIntoX to a NanostringGeomxSet object.
 #'
 #' @param object A NanostringGeomxSet object.
 #' @param bg matrix of expected background, on the scale of norm.

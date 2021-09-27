@@ -133,21 +133,21 @@ This mini single cell dataset is a fraction of the data from Kinchen, J. et al. 
 ```{r single cell data}
 data("mini_singleCell_dataset")
 
-mtx@Dim # genes x cells
+mini_singleCell_dataset$mtx@Dim # genes x cells
 
-as.matrix(mtx)[1:4,1:4]
+as.matrix(mini_singleCell_dataset$mtx)[1:4,1:4]
 
-head(annots)
+head(mini_singleCell_dataset$annots)
 
-table(annots$LabeledCellType)
+table(mini_singleCell_dataset$annots$LabeledCellType)
 
 ```
 
 **Pericyte cell** and **smooth muscle cell of colon** will be dropped from this matrix due to low cell count. The average expression across all cells of one type is returned so the more cells of one type, the better reflection of the true gene expression. The confidence in these averages can be changed using the minCellNum filter.
 
 ```{r creatematrix, fig.height=7, fig.width=10, fig.cap = "Custom profile matrix"}
-custom_mtx <- create_profile_matrix(mtx = mtx,                        # cell x gene count matrix
-                                    cellAnnots = annots,              # cell annotations with cell type and cell name as columns 
+custom_mtx <- create_profile_matrix(mtx = mini_singleCell_dataset$mtx,            # cell x gene count matrix
+                                    cellAnnots = mini_singleCell_dataset$annots,  # cell annotations with cell type and cell name as columns 
                                     cellTypeCol = "LabeledCellType",  # column containing cell type
                                     cellNameCol = "CellID",           # column containing cell ID/name
                                     matrixName = "custom_mini_colon", # name of final profile matrix
@@ -163,6 +163,41 @@ head(custom_mtx)
 heatmap(sweep(custom_mtx, 1, apply(custom_mtx, 1, max), "/"),
         labRow = NA, margins = c(10, 5), cexCol = 0.7)
 
+```
+
+Custom matrices can be created from all single cell data classes as long as a counts matrix and cell annotations can be passed to the function. Here is an example of creating a matrix using a Seurat object. 
+
+```{r createSeuratmatrix}
+if(!requireNamespace("Seurat", quietly = TRUE))
+  install.packages("Seurat")
+
+library(Seurat)
+
+data("mini_singleCell_dataset")
+
+rownames(mini_singleCell_dataset$annots) <- mini_singleCell_dataset$annots$CellID
+
+seuratObject <- CreateSeuratObject(counts = mini_singleCell_dataset$mtx, meta.data = mini_singleCell_dataset$annots)
+Idents(seuratObject) <- seuratObject$LabeledCellType
+
+rm(mini_singleCell_dataset)
+
+annots <- data.frame(cbind(cellType=as.character(Idents(seuratObject)), 
+                           cellID=names(Idents(seuratObject))))
+
+custom_mtx_seurat <- create_profile_matrix(mtx = seuratObject@assays$RNA@counts, 
+                                           cellAnnots = annots, 
+                                           cellTypeCol = "cellType", 
+                                           cellNameCol = "cellID", 
+                                           matrixName = "custom_mini_colon",
+                                           outDir = NULL, 
+                                           normalize = FALSE, 
+                                           minCellNum = 5, 
+                                           minGenes = 10)
+
+head(custom_mtx_seurat)
+
+paste("custom_mtx and custom_mtx_seurat are identical", all(custom_mtx == custom_mtx_seurat))
 ```
 
 
