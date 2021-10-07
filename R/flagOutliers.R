@@ -36,6 +36,7 @@
 #'  can be (in log2 units) before getting flagged as outliers and set to NA.
 #' @return a vector of names of poorly-fit genes
 #' @keywords internal
+#' @noRd
 flagOutliers <- function(Y, yhat, resids, wts, resid_thresh = 3) {
 
     # get weighted resids:

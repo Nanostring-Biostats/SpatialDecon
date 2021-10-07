@@ -62,6 +62,7 @@
 #' }
 #' @importFrom stats pnorm
 #' @keywords internal
+#' @noRd
 algorithm2 <- function(Y, X, bg = 0, weights = NULL,
                        resid_thresh = 3, lower_thresh = 0.5,
                        align_genes = TRUE, maxit = 1000) {
@@ -151,6 +152,8 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
 #' @param Y Data matrix
 #' @return X and Y, both formatted as matrices, with full dimnames and aligned
 #' to each other by dimname
+#' @keywords internal
+#' @noRd
 tidy_X_and_Y <- function(X, Y) {
 
     # format as matrices:

@@ -44,6 +44,7 @@
 #' vector
 #' }
 #' @keywords internal
+#' @noRd
 convertCellTypes <- function(beta, matching, stat = sum,
                              na.rm = FALSE, sigma = NULL) {
     # format matching list as a matrix to take a linear combination of beta:

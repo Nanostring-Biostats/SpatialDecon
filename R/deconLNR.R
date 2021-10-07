@@ -37,6 +37,7 @@
 #' derived by inverting the hessian from lognlm)
 #' @importFrom logNormReg lognlm
 #' @keywords internal
+#' @noRd
 deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL,
                      maxit = 1000) {
     if (length(weights) == 0) {

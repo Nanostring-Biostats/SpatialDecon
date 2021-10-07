@@ -35,6 +35,7 @@
 #'   performed on TCGA.
 #' @return A matrix of weights, in the same dimension as norm
 #' @keywords internal
+#' @noRd
 #' @importFrom utils data
 deriveWeights <- function(norm, raw = NULL, error.model = "dsp",
                           weight.by.TIL.resid.sd = FALSE) {

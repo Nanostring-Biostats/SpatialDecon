@@ -36,6 +36,7 @@
 #' cells.per.100 gives estimated
 #'  percents of total, and cell.counts is cells.per.100 * nuclei.counts.
 #' @keywords internal
+#' @noRd
 convertCellScoresToCounts <- function(beta, nuclei.counts = NULL,
                                       omit.tumor = FALSE) {
     # strip tumor rows if called for:
