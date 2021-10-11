@@ -67,11 +67,6 @@ NULL, then defaults to a mapping of granular immune cell definitions to
  broader categories.}
 
 \item{maxit}{Maximum number of iterations. Default 1000.}
-
-\item{bg}{Expected background counts. Either a scalar applied equally to
-all points in the count matrix, or a matrix with the same dimensions
-as the count matrix in assayDataElement(object , elt = norm_elt).
-Recommended to use a small non-zero value, default of 0.1.}
 }
 \value{
 if not given cellmerges and cell_counts, a valid GeoMx S4 object

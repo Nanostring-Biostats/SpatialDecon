@@ -39,7 +39,7 @@
 #' @importFrom repmis source_data
 #' @export
 download_profile_matrix <- function(species, age_group, matrixname) {
-
+    
     # check formatting:
     if (length(species) > 1) {
         stop("specify just one species")
@@ -69,10 +69,10 @@ download_profile_matrix <- function(species, age_group, matrixname) {
     }
     
     metadata <- utils::read.csv(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", species, "/",
-                                    species, "_datasets_metadata.csv"), header = T, sep = ",")
+                                       species, "_datasets_metadata.csv"), header = TRUE, sep = ",")
     
     librarynames <- paste0(metadata$Tissue, "_", metadata$Profile.Matrix)
-
+    
     
     if (!is.element(matrixname, librarynames)) {
         stop(paste0(matrixname, " is not an expected cell profile matrix name. Did you mean \"", 
@@ -80,13 +80,14 @@ download_profile_matrix <- function(species, age_group, matrixname) {
     }
     
     matrixname <- paste(species, age_group, matrixname, sep = "/")
-
-
-    suppressMessages(repmis::source_data(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", 
-                                        matrixname, ".RData?raw=True"), 
-                cache = FALSE, rdata = TRUE, envir = globalenv()))
     
-    assign("profile_matrix", as.matrix(profile_matrix), envir = globalenv())
+    
+    suppressMessages(repmis::source_data(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", 
+                                                matrixname, ".RData?raw=True"), 
+                                         cache = FALSE, rdata = TRUE, envir = globalenv()))
+    
+    #assign("profile_matrix", as.matrix(profile_matrix), envir = globalenv())
+    
     return(as.matrix(profile_matrix))
 }
 

@@ -59,29 +59,29 @@
 #' @importFrom stats dist cutree hclust quantile
 #' @export
 mergeTumorIntoX <- function(norm, bg, pure_tumor_ids, X, K = 10) {
-
+    
     # round up 0 values in norm:
     min.nonzero <- min(norm[norm > 0], na.rm = TRUE)
     norm <- pmax(norm, min.nonzero)
-
+    
     # subset data to only the pure tumor IDs:
     norm <- norm[, pure_tumor_ids, drop = FALSE]
     bg <- bg[, pure_tumor_ids, drop = FALSE]
-
+    
     # bg-subtract:
     norm <- pmax(norm - bg, min(norm) / 20)
-
+    
     # fix K if too big:
     if (ncol(norm) < K) {
         K <- ncol(norm)
     }
-
+    
     # case 1: want to use every column in norm as a separate profile:
     #  (includes case of just one column in norm)
     if (K == ncol(norm)) {
         tumorX <- norm
     }
-
+    
     # case 2: if many tumor AOIs, get profiles for K clusters of data:
     if (K < ncol(norm)) {
         # cluster and cut:
@@ -97,17 +97,17 @@ mergeTumorIntoX <- function(norm, bg, pure_tumor_ids, X, K = 10) {
         }
         colnames(tumorX) <- paste0("tumor.", seq_len(ncol(tumorX)))
     }
-
+    
     # align tumorX with X:
     sharedgenes <- intersect(rownames(tumorX), rownames(X))
     tumorX <- tumorX[sharedgenes, , drop = FALSE]
     X <- X[sharedgenes, , drop = FALSE]
-
+    
     # rescale tumor X:
     meanq90 <- max(mean(apply(X, 2, stats::quantile, 0.9)), 1e-3)
     tumorq90s <- apply(tumorX, 2, stats::quantile, 0.9)
     tumorX <- sweep(tumorX, 2, tumorq90s, "/") * meanq90
-
+    
     # merge:
     out <- cbind(X, tumorX)
     return(out)

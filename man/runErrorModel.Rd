@@ -21,3 +21,14 @@ Based on raw counts, uses past data to estimate each raw count's log-scale
 SD from technical noise.
 Specifies different error models for different platforms.
 }
+\examples{
+library(GeomxTools)
+datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools")
+demoData <- readRDS(file.path(datadir, "/demoData.rds"))
+
+demoData <- shiftCountsOne(demoData)
+target_demoData <- aggregateCounts(demoData)
+
+sd_from_noise <- runErrorModel(counts = exprs(target_demoData), platform = "dsp") 
+wts <- 1 / sd_from_noise
+}

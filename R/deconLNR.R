@@ -53,7 +53,7 @@ deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL,
     if (length(epsilon) == 0) {
         epsilon <- min(replace(Y, (Y == 0) & !is.na(Y), NA), na.rm = TRUE)
     }
-
+    
     # matrix-like data for apply:
     mat <- rbind(Y, bg, weights)
     # fn to apply:
@@ -62,27 +62,27 @@ deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL,
         y <- zz[seq_len((length(zz)) / 3)]
         b <- zz[seq_len((length(zz)) / 3) + (length(zz) / 3)]
         wts <- zz[seq_len((length(zz)) / 3) + (length(zz) / 3) * 2]
-
+        
         # remove NA data:
         use <- !is.na(y)
         y <- y[use]
         b <- b[use]
         Xtemp <- X[use, , drop = FALSE]
         wts <- wts[use]
-
+        
         init <- rep(mean(y) / (mean(X) * ncol(X)), ncol(X))
         names(init) <- colnames(X)
-
+        
         # run lognlm:
         fit <- logNormReg::lognlm(pmax(y, epsilon) ~ b + Xtemp - 1,
-            lik = FALSE,
-            weights = wts,
-            start = c(1, init),
-            method = "L-BFGS-B",
-            lower = c(1, rep(0, ncol(Xtemp))),
-            upper = c(1, rep(Inf, ncol(Xtemp))),
-            opt = "optim",
-            control = list(maxit = maxit)
+                                  lik = FALSE,
+                                  weights = wts,
+                                  start = c(1, init),
+                                  method = "L-BFGS-B",
+                                  lower = c(1, rep(0, ncol(Xtemp))),
+                                  upper = c(1, rep(Inf, ncol(Xtemp))),
+                                  opt = "optim",
+                                  control = list(maxit = maxit)
         )
         fnout <- list(
             beta = fit$coefficients[-1],
@@ -99,7 +99,7 @@ deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL,
     getsigma <- function(zz) {
         return(zz$sigma)
     }
-
+    
     beta <- vapply(X = fnlist, FUN = getbeta, FUN.VALUE = numeric(ncol(X)))
     rownames(beta) <- colnames(X)
     sigmas <- array(vapply(
@@ -110,7 +110,7 @@ deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL,
     dim = c(ncol(X), ncol(X), ncol(Y)),
     dimnames = list(colnames(X), colnames(X), colnames(Y))
     )
-
+    
     out <- list(beta = pmax(beta, 0), sigmas = sigmas)
     return(out)
 }

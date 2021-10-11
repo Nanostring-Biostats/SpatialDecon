@@ -3,6 +3,40 @@
 #' Runs spatialdecon from an S4 object
 #' @param object An S4 object such as a Seurat object or a GeoMxSet object
 #' @param ... Arguments passed to spatialdecon
+#' @return decon results in list or in GeoMxSet object
+#' @examples 
+#' ##Seurat
+#' # get dataset
+#' con <- gzcon(url("https://github.com/almaan/her2st/raw/master/data/ST-cnts/G1.tsv.gz"))
+#' txt <- readLines(con)
+#' temp <- read.table(textConnection(txt), sep = "\t", header = TRUE, row.names = 1)
+#' # parse data
+#' raw = t(as.matrix(temp))
+#' norm = sweep(raw, 2, colSums(raw), "/") * mean(colSums(raw))
+#' x = as.numeric(substr(rownames(temp), 1, unlist(gregexpr("x", rownames(temp))) - 1))
+#' y = -as.numeric(substr(rownames(temp), 
+#'                  unlist(gregexpr("x", rownames(temp))) + 1, nchar(rownames(temp))))
+#' # put into a seurat object:
+#' andersson_g1 = SeuratObject::CreateSeuratObject(counts = raw, assay="Spatial")
+#' andersson_g1@meta.data$x = x
+#' andersson_g1@meta.data$y = y
+#' 
+#' res <- runspatialdecon(andersson_g1)
+#' str(res)
+#' 
+#' ##GeomxTools
+#' library(GeomxTools)
+#' datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools")
+#' demoData <- readRDS(file.path(datadir, "/demoData.rds"))
+#' 
+#' demoData <- shiftCountsOne(demoData)
+#' target_demoData <- aggregateCounts(demoData)
+#' 
+#' target_demoData <- normalize(target_demoData, "quant")
+#' 
+#' demoData <- runspatialdecon(object = target_demoData, 
+#'                             norm_elt = "exprs_norm",
+#'                             raw_elt = "exprs")
 setGeneric("runspatialdecon", signature = "object",
            function(object, ...) standardGeneric("runspatialdecon"))
 
@@ -92,12 +126,22 @@ setGeneric("runspatialdecon", signature = "object",
 #' @importClassesFrom GeomxTools NanoStringGeoMxSet
 #' @export
 #' @examples
-#' # get mouse brain data:
-#' library(SeuratData)
-#' brain <- SeuratData::LoadData("stxBrain", type = "anterior1")
-#' # get cell profile matrix:
-#' ref <- download_profile_matrix("Mouse_Brain")
-#' res <- runspatialdecon(brain, X = ref)
+#' # get dataset
+#' con <- gzcon(url("https://github.com/almaan/her2st/raw/master/data/ST-cnts/G1.tsv.gz"))
+#' txt <- readLines(con)
+#' temp <- read.table(textConnection(txt), sep = "\t", header = TRUE, row.names = 1)
+#' # parse data
+#' raw = t(as.matrix(temp))
+#' norm = sweep(raw, 2, colSums(raw), "/") * mean(colSums(raw))
+#' x = as.numeric(substr(rownames(temp), 1, unlist(gregexpr("x", rownames(temp))) - 1))
+#' y = -as.numeric(substr(rownames(temp), 
+#'                  unlist(gregexpr("x", rownames(temp))) + 1, nchar(rownames(temp))))
+#' # put into a seurat object:
+#' andersson_g1 = SeuratObject::CreateSeuratObject(counts = raw, assay="Spatial")
+#' andersson_g1@meta.data$x = x
+#' andersson_g1@meta.data$y = y
+#' 
+#' res <- runspatialdecon(andersson_g1)
 #' str(res)
 setMethod("runspatialdecon", "Seurat", function(
   object,
@@ -150,10 +194,6 @@ setMethod("runspatialdecon", "Seurat", function(
 #' @param norm_elt normalized data element in assayData
 #' @param raw_elt raw data element in assayData
 #' @param X Cell profile matrix. If NULL, the safeTME matrix is used.
-#' @param bg Expected background counts. Either a scalar applied equally to
-#'  all points in the count matrix, or a matrix with the same dimensions
-#'  as the count matrix in assayDataElement(object , elt = norm_elt).
-#'  Recommended to use a small non-zero value, default of 0.1.
 #' @param wts Optional, a matrix of weights.
 #' @param resid_thresh A scalar, sets a threshold on how extreme individual data
 #'  points' values
@@ -377,8 +417,8 @@ setMethod("runspatialdecon", "NanoStringGeoMxSet",
             trans <- function(array){
               NewArray <- array(NA, dim = c(dim(array)[3], dim(array)[2], dim(array)[1]))
               
-              for(or in(1:dim(array)[1])){
-                for(oc in(1:dim(array)[2])){
+              for(or in(seq_len(dim(array)[1]))){
+                for(oc in(seq_len(dim(array)[2]))){
                   NewArray[,oc,or] <- array[or,oc,]
                 }
               }

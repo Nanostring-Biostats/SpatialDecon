@@ -110,22 +110,22 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE,
     if (is.vector(col)) {
         col <- matrix(col, nrow = nrow(b), ncol = ncol(b))
     }
-
+    
     # get radians:
     angles <- seq(0, 2 * pi, length.out = nrow(b) + 1)
-
+    
     # scale b based on the range of x and y:
     maxrange <- max(diff(range(x, na.rm = TRUE)), diff(range(y, na.rm = TRUE)))
     b <- b * maxrange / mean(b, na.rm = TRUE) * 0.007 * cex
-
+    
     # draw plot:
     if (!add) {
         graphics::plot(x, y,
-            col = 0, bty = bty, xaxt = xaxt, yaxt = yaxt,
-            xlab = xlab, ylab = ylab, ...
+                       col = 0, bty = bty, xaxt = xaxt, yaxt = yaxt,
+                       xlab = xlab, ylab = ylab, ...
         )
     }
-
+    
     # draw florets:
     if (nrow(b) > 1) {
         for (i in seq_len(length(x))) {
@@ -134,13 +134,13 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE,
                 xt <- b[j, i] * cos(tempangles)
                 yt <- b[j, i] * sin(tempangles)
                 graphics::polygon(x[i] + c(0, xt), y[i] + c(0, yt),
-                    col = col[j, i],
-                    border = border, lwd = 0.5
+                                  col = col[j, i],
+                                  border = border, lwd = 0.5
                 )
             }
         }
     }
-
+    
     # if just one point, draw a full circle:
     if (nrow(b) == 1) {
         for (i in seq_len(length(x))) {
@@ -149,26 +149,26 @@ florets <- function(x, y, b, col = NULL, legendwindow = FALSE,
                 xt <- b[j, i] * cos(tempangles)
                 yt <- b[j, i] * sin(tempangles)
                 graphics::polygon(x[i] + xt, y[i] + yt,
-                    col = col[j],
-                    border = border, lwd = 0.5
+                                  col = col[j],
+                                  border = border, lwd = 0.5
                 )
             }
         }
     }
-
+    
     # draw a legend:
     if (legendwindow) {
         graphics::plot(0, 0,
-            col = 0, xlim = c(-1, 1), ylim = c(-1, 1), xaxt = "n",
-            yaxt = "n", xlab = "", ylab = "", ...
+                       col = 0, xlim = c(-1, 1), ylim = c(-1, 1), xaxt = "n",
+                       yaxt = "n", xlab = "", ylab = "", ...
         )
         for (j in seq_len(length(angles))) {
             graphics::lines(c(0, 0.75 * cos(angles[j])), c(0, 0.75 * sin(angles[j])),
-                col = col[j], lwd = 2
+                            col = col[j], lwd = 2
             )
             graphics::text(0.85 * cos(angles[j]), 0.85 * sin(angles[j]),
-                rownames(b)[j],
-                cex = 1.4
+                           rownames(b)[j],
+                           cex = 1.4
             )
         }
     }

@@ -43,10 +43,10 @@ convertCellScoresToCounts <- function(beta, nuclei.counts = NULL,
     if (omit.tumor) {
         beta <- beta[!grepl("tumor", rownames(beta)), , drop = FALSE]
     }
-
+    
     # calc max abundance scores:
     max.total.abundance <- max(colSums(beta))
-
+    
     # calculate rescaled scores:
     out <- list()
     out$cells.per.100 <- beta / max.total.abundance * 100

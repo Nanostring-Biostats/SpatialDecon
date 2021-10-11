@@ -2,43 +2,20 @@
 % Please edit documentation in R/runreverseDeconGeo.R
 \name{runReverseDecon}
 \alias{runReverseDecon}
-\title{Run reversedecon on a NanostringGeomxSet object}
+\title{Run Reversedecon}
 \usage{
 runReverseDecon(object, ...)
 }
 \arguments{
-\item{object}{A NanostringGeomxSet object.}
+\item{object}{An S4 object such as a GeoMxSet object}
 
-\item{norm_elt}{normalized data element in assayData.}
-
-\item{beta}{Matrix of cell abundance estimates, with cells in columns and observations in rows.
-Columns are aligned to "norm".}
-
-\item{epsilon}{All y and yhat values are thresholded up to this point when performing decon.
-Essentially says, "ignore variability in counts below this threshold."}
+\item{...}{Arguments passed to reversedecon}
 }
 \value{
-a valid GeoMx S4 object including the following items:
-\itemize{
- \item in fData
- \itemize{
- \item coefs, a matrix of coefficients for genes * cells, where element i,j is interpreted as
-              "every unit increase in cell score j is expected to increase expression of gene i by _".
- \item cors, a vector giving each gene's correlation between fitted and observed expression
- \item resid.sd, a vector of each gene's residual SD, a metric of how much variability genes
-                 have independend of cell mixing.
- }
- \item in assayData
- \itemize{
-   \item yhat, a matrix of fitted values, in the same dimension as norm
-   \item resids, a matrix of log2-scale residuals from the reverse decon fit, in the same
-               dimension as norm
- }
- 
-}
+list containing modeled gene expression's ~ cell scores
 }
 \description{
-A wrapper for applying reversedecon to a NanostringGeomxSet object.
+Runs reversedecon from an S4 object
 }
 \examples{
 library(GeomxTools)
@@ -51,13 +28,13 @@ target_demoData <- aggregateCounts(demoData)
 target_demoData <- normalize(target_demoData, "quant")
                 
 # run basic decon:
-res0 <- runSpatialdecon(object = target_demoData,
+res0 <- runspatialdecon(object = target_demoData,
                         norm_elt = "exprs_norm",
                         raw_elt = "exprs")
 
 # run reverse decon:
 target_demoData <- runReverseDecon(object = target_demoData,
-                                   norm_elt = "neg_norm",
+                                   norm_elt = "exprs_norm",
                                    beta = pData(res0)$beta)
 
 }

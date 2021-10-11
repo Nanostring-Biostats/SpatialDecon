@@ -61,7 +61,7 @@ Let's load the example ST Seurat object and examine it:
 # download data:
 con <- gzcon(url("https://github.com/almaan/her2st/raw/master/data/ST-cnts/G1.tsv.gz"))
 txt <- readLines(con)
-temp <- read.table(textConnection(txt), sep = "\t", header = T, row.names = 1)
+temp <- read.table(textConnection(txt), sep = "\t", header = TRUE, row.names = 1)
 # parse data
 raw = t(as.matrix(temp))
 norm = sweep(raw, 2, colSums(raw), "/") * mean(colSums(raw))
@@ -168,10 +168,7 @@ heatmap(sweep(custom_mtx, 1, apply(custom_mtx, 1, max), "/"),
 Custom matrices can be created from all single cell data classes as long as a counts matrix and cell annotations can be passed to the function. Here is an example of creating a matrix using a Seurat object. 
 
 ```{r createSeuratmatrix}
-if(!requireNamespace("Seurat", quietly = TRUE))
-  install.packages("Seurat")
-
-library(Seurat)
+library(SeuratObject)
 
 data("mini_singleCell_dataset")
 

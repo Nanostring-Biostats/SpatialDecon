@@ -141,7 +141,7 @@ test_that("spatialdeconTILs is as expected: se", {
 })
 
 test_that("spatialdeconTILs is as expected: beta.granular", {
-  expect_true(all(abs(res.test$beta.granular - res$beta.granular) < 1e-2))
+  expect_true(all(abs(res.test$beta.granular - res$beta.granular) < 2e-2))
 })
 
 ### test reverse decon:

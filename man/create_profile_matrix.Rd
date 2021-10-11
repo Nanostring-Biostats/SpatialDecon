@@ -34,7 +34,7 @@ create_profile_matrix(
 
 \item{geneList}{gene list to filter profile matrix to}
 
-\item{normalize}{Should data be normalized? (T/F) if TRUE data will be normalize using total gene count}
+\item{normalize}{Should data be normalized? (TRUE/FALSE) if TRUE data will be normalize using total gene count}
 
 \item{scalingFactor}{what should all values be multiplied by for final matrix, set to 1 if no scaling is wanted}
 
@@ -51,23 +51,22 @@ A custom cell profile matrix genes (rows) by cell types (columns), matrix gets w
 Create custom cell profile matrix using single cell data. The average gene expression for each cell type is returned.
 }
 \examples{
-cellNames <- paste0("Cell", 1:1500)
-geneNames <- paste0("Gene", 1:1500)
-mtx <- matrix(data=sample(size = length(cellNames)*length(geneNames), 
+cellNames <- paste0("Cell", seq_len(1500))
+geneNames <- paste0("Gene", seq_len(1500))
+mtx <- matrix(data=sample(size = length(cellNames)*length(geneNames),
                           replace = TRUE,
-                          x = 0:100, 
+                          x = c(0,seq_len(100)), 
                           prob = c(0.6784, rep(0.0075, 15), rep(0.005, 25),
-                                 rep(0.002, 25),  rep(0.001, 35))), 
-              ncol = length(cellNames), nrow = length(geneNames), 
-              dimnames = list(geneNames, 
-                              cellNames))
+                                   rep(0.002, 25), rep(0.001, 35))), 
+                          ncol = length(cellNames), nrow = length(geneNames), 
+                          dimnames = list(geneNames, cellNames))
 cellAnnots <- as.data.frame(cbind(CellID=cellNames, 
                                   cellType=sample(size = length(cellNames), 
                                                   replace = TRUE,
                                                   x = c("A", "B", "C", "D"),
                                                   prob = c(0.1, 0.4, 0.3, 0.2))))
 table(cellAnnots$cellType)
-profile_matrix <- create_profile_matrix(mtx = mtx,  
+profile_matrix <- create_profile_matrix(mtx = mtx,    
                                         cellAnnots = cellAnnots, 
                                         cellTypeCol = "cellType",
                                         cellNameCol = "CellID",
