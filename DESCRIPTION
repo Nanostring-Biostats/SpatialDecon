@@ -18,10 +18,16 @@ Imports:
     utils,
     graphics,
     SeuratObject,
+    Biobase,
+    GeomxTools,
+    repmis,
+    methods,
+    Matrix
 Suggests: 
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    qpdf
 biocViews: 
     ImmunoOncology, 
     FeatureExtraction, 

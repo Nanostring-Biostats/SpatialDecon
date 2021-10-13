@@ -36,16 +36,17 @@
 #' cells.per.100 gives estimated
 #'  percents of total, and cell.counts is cells.per.100 * nuclei.counts.
 #' @keywords internal
+#' @noRd
 convertCellScoresToCounts <- function(beta, nuclei.counts = NULL,
                                       omit.tumor = FALSE) {
     # strip tumor rows if called for:
     if (omit.tumor) {
         beta <- beta[!grepl("tumor", rownames(beta)), , drop = FALSE]
     }
-
+    
     # calc max abundance scores:
     max.total.abundance <- max(colSums(beta))
-
+    
     # calculate rescaled scores:
     out <- list()
     out$cells.per.100 <- beta / max.total.abundance * 100

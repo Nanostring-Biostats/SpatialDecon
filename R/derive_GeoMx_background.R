@@ -44,26 +44,26 @@
 #' )
 #' @export
 derive_GeoMx_background <- function(norm, probepool, negnames) {
-
+    
     # check data input:
     if (nrow(norm) != length(probepool)) {
         stop("nrow(norm) != length(probepool)")
     }
-
+    
     # initialize:
     bg <- norm * 0
-
-
+    
+    
     # fill in expected background at scale of normalized data:
     for (pool in unique(probepool)) {
-
+        
         # get the pool's negProbes:
         tempnegs <- intersect(negnames, rownames(norm)[probepool == pool])
         if (length(tempnegs) == 0) {
             stop(paste0(pool, " probe pool didn't have any negprobes specified"))
         }
         tempnegfactor <- colMeans(norm[tempnegs, , drop = FALSE])
-
+        
         # fill in the corresponding elements of bg:
         bg[probepool == pool, ] <-
             sweep(bg[probepool == pool, ], 2, tempnegfactor, "+")

@@ -1,3 +1,33 @@
+#' Run Reversedecon
+#' 
+#' Runs reversedecon from an S4 object
+#' @param object An S4 object such as a GeoMxSet object
+#' @param ... Arguments passed to reversedecon
+#' @return list containing modeled gene expression's ~ cell scores
+#' @examples 
+#' library(GeomxTools)
+#' datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools")
+#' demoData <- readRDS(file.path(datadir, "/demoData.rds"))
+#' 
+#' demoData <- shiftCountsOne(demoData)
+#' target_demoData <- aggregateCounts(demoData)
+#' 
+#' target_demoData <- normalize(target_demoData, "quant")
+#'                 
+#' # run basic decon:
+#' res0 <- runspatialdecon(object = target_demoData,
+#'                         norm_elt = "exprs_norm",
+#'                         raw_elt = "exprs")
+#'
+#' # run reverse decon:
+#' target_demoData <- runReverseDecon(object = target_demoData,
+#'                                    norm_elt = "exprs_norm",
+#'                                    beta = pData(res0)$beta)
+#'
+
+setGeneric("runReverseDecon", signature = "object",
+           function(object, ...) standardGeneric("runReverseDecon"))
+
 #' Run reversedecon on a NanostringGeomxSet object
 #'
 #' A wrapper for applying reversedecon to a NanostringGeomxSet object.
@@ -38,73 +68,68 @@
 #' target_demoData <- normalize(target_demoData, "quant")
 #'                 
 #' # run basic decon:
-#' res0 <- runSpatialdecon(object = target_demoData,
+#' res0 <- runspatialdecon(object = target_demoData,
 #'                         norm_elt = "exprs_norm",
 #'                         raw_elt = "exprs")
 #'
 #' # run reverse decon:
 #' target_demoData <- runReverseDecon(object = target_demoData,
-#'                                    norm_elt = "neg_norm",
+#'                                    norm_elt = "exprs_norm",
 #'                                    beta = pData(res0)$beta)
 #'
 #' @export
 #'
-
-
-setGeneric("runReverseDecon", signature = "object",
-           function(object, ...) standardGeneric("runReverseDecon"))
-
 setMethod("runReverseDecon",  "NanoStringGeoMxSet",
           function(object, norm_elt = NULL, beta, epsilon = NULL){
-            
-            if(is.null(norm_elt)){
-              stop("norm_elt must be set")
-            }
-            
-            if (!is.element(norm_elt, names(object@assayData))) {
-              stop(paste(norm_elt, "is not an element in assaysData slot"))
-            }
-
-            # prep components:
-            norm <- as.matrix(Biobase::assayDataElement(object, elt = norm_elt))
-
-            # run runReverseDeconGeomx:
-            result <- reverseDecon(norm = norm,
-                                   beta = t(beta),
-                                   epsilon = epsilon)
-
-
-            # append results to the object
-            # add coefs
-            Biobase::fData(object)[["coefs"]] <- matrix(NA, nrow = nrow(object), ncol = ncol(result$coefs),
-                                                       dimnames = list(Biobase::featureNames(object), colnames(result$coefs)))
-            Biobase::fData(object)[["coefs"]][rownames(result$coefs), ] <- result$coefs
-
-
-            # add yhat matrix
-            yhat_mat <- matrix(NA, nrow = nrow(object), ncol = ncol(object),
-                               dimnames = dimnames(object))
-            yhat_mat[rownames(result$yhat), colnames(result$yhat)] <- result$yhat
-            Biobase::assayDataElement(object, "yhat") <- yhat_mat
-
-
-            # add resids matrix
-            resids_mat <- matrix(NA, nrow = nrow(object), ncol = ncol(object),
+              
+              if(is.null(norm_elt)){
+                  stop("norm_elt must be set")
+              }
+              
+              if (!is.element(norm_elt, names(object@assayData))) {
+                  stop(paste(norm_elt, "is not an element in assaysData slot"))
+              }
+              
+              # prep components:
+              norm <- as.matrix(Biobase::assayDataElement(object, elt = norm_elt))
+              
+              # run runReverseDeconGeomx:
+              result <- reverseDecon(norm = norm,
+                                     beta = t(beta),
+                                     epsilon = epsilon)
+              
+              
+              # append results to the object
+              # add coefs
+              Biobase::fData(object)[["coefs"]] <- matrix(NA, nrow = nrow(object), ncol = ncol(result$coefs),
+                                                          dimnames = list(Biobase::featureNames(object), colnames(result$coefs)))
+              Biobase::fData(object)[["coefs"]][rownames(result$coefs), ] <- result$coefs
+              
+              
+              # add yhat matrix
+              yhat_mat <- matrix(NA, nrow = nrow(object), ncol = ncol(object),
                                  dimnames = dimnames(object))
-            resids_mat[rownames(result$resids), colnames(result$resids)] <- result$resids
-            Biobase::assayDataElement(object, "resids") <- resids_mat
-
-
-            # add cors
-            Biobase::fData(object)[["cors"]] <- NA
-            Biobase::fData(object)[["cors"]][match(names(result$cors), Biobase::featureNames(object), nomatch = 0)] <- result$cors
-
-
-            # add resid.sd
-            Biobase::fData(object)[["resid.sd"]] <- NA
-            Biobase::fData(object)[["resid.sd"]][match(names(result$resid.sd), Biobase::featureNames(object), nomatch = 0)] <- result$resid.sd
-
-            return(object)
-
-            })
+              yhat_mat[rownames(result$yhat), colnames(result$yhat)] <- result$yhat
+              Biobase::assayDataElement(object, "yhat") <- yhat_mat
+              
+              
+              # add resids matrix
+              resids_mat <- matrix(NA, nrow = nrow(object), ncol = ncol(object),
+                                   dimnames = dimnames(object))
+              resids_mat[rownames(result$resids), colnames(result$resids)] <- result$resids
+              Biobase::assayDataElement(object, "resids") <- resids_mat
+              
+              
+              # add cors
+              Biobase::fData(object)[["cors"]] <- NA
+              Biobase::fData(object)[["cors"]][match(names(result$cors), Biobase::featureNames(object), nomatch = 0)] <- result$cors
+              
+              
+              # add resid.sd
+              Biobase::fData(object)[["resid.sd"]] <- NA
+              Biobase::fData(object)[["resid.sd"]][match(names(result$resid.sd), Biobase::featureNames(object), nomatch = 0)] <- result$resid.sd
+              
+              return(object)
+              
+          })
 

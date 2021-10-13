@@ -1,4 +1,4 @@
-Changes in version 1.3 (2021-09-28)
+Changes in version 1.3.0 (2021-09-28)
 + added S4 wrappers for Seurat and GeoMxSet objects
 + added custom profile matrix generation from single cell data
 + added ~75 profile matrices avaliable to download for human and mouse

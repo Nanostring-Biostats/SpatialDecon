@@ -36,8 +36,9 @@
 #'  can be (in log2 units) before getting flagged as outliers and set to NA.
 #' @return a vector of names of poorly-fit genes
 #' @keywords internal
+#' @noRd
 flagOutliers <- function(Y, yhat, resids, wts, resid_thresh = 3) {
-
+    
     # get weighted resids:
     if (length(wts) == 0) {
         wres <- resids
@@ -45,7 +46,7 @@ flagOutliers <- function(Y, yhat, resids, wts, resid_thresh = 3) {
     if (length(wts) > 0) {
         wres <- resids * wts
     }
-
+    
     # flag bad genes:
     outlier_genes <- c() # <-- this line makes it so no outlier genes are filtered
     # flag bad data points: (not doing anything for now)

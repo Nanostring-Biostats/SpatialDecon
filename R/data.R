@@ -54,15 +54,6 @@
 #' @format A named vector giving SDs of 1179 genes.
 "mean.resid.sd"
 
-#' A Spatial Transcriptome Seurat Object
-#'
-#' Andersson, A. et al. Spatial Deconvolution of HER2-positive Breast Tumors 
-#' Reveals Novel Intercellular Relationships. 
-#' http://biorxiv.org/lookup/doi/10.1101/2020.07.14.200600 (2020) doi:10.1101/2020.07.14.200600.
-#'
-#' @format A Seurat Object with a Spatial Assay
-"andersson_g1"
-
 #' Mini human colon single cell dataset
 #'
 #' Random 250 cells and most informative genes (CV > 10) between cell types from

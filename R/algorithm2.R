@@ -60,12 +60,14 @@
 #' \item resids: a matrix of residuals from the model fit.
 #' (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
 #' }
+#' @import stats
 #' @importFrom stats pnorm
 #' @keywords internal
+#' @noRd
 algorithm2 <- function(Y, X, bg = 0, weights = NULL,
                        resid_thresh = 3, lower_thresh = 0.5,
                        align_genes = TRUE, maxit = 1000) {
-
+    
     # align genes:
     if (align_genes) {
         sharedgenes <- intersect(rownames(X), rownames(Y))
@@ -78,7 +80,7 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
             weights <- weights[sharedgenes, ]
         }
     }
-
+    
     # format the data nicely:
     tidied <- tidy_X_and_Y(X, Y)
     X <- tidied$X
@@ -86,11 +88,11 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
     if ((length(bg) > 0) & (is.vector(bg))) {
         bg <- matrix(bg, nrow = length(bg))
     }
-
+    
     # select an epsilon (lowest non-zero value to use)
     epsilon <- min(Y[(Y > 0) & !is.na(Y)])
-
-
+    
+    
     # initial run to look for outliers:
     out0 <- deconLNR(
         Y = Y, X = X, bg = bg, weights = weights, epsilon = epsilon,
@@ -100,7 +102,7 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
     out0$yhat <- X %*% out0$beta + bg
     out0$resids <- log2(pmax(Y, lower_thresh)) -
         log2(pmax(out0$yhat, lower_thresh))
-
+    
     # ID bad genes:
     outliers <- flagOutliers(
         Y = Y,
@@ -109,10 +111,10 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
         resids = out0$resids,
         resid_thresh = resid_thresh
     )
-
+    
     # remove outlier data points:
     Y.nooutliers <- replace(Y, outliers, NA)
-
+    
     # re-run decon without outliers:
     out <- deconLNR(
         Y = Y.nooutliers,
@@ -123,7 +125,7 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
     )
     out$yhat <- X %*% out$beta + bg
     out$resids <- log2(pmax(Y.nooutliers, 0.5)) - log2(pmax(out$yhat, 0.5))
-
+    
     # compute p-values
     tempbeta <- out$beta
     tempse <- tempp <- tempt <- tempbeta * NA
@@ -135,7 +137,7 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
     out$p <- tempp
     out$t <- tempt
     out$se <- tempse
-
+    
     # structure of output: beta, hessians, yhat, resids
     return(out)
 }
@@ -151,15 +153,17 @@ algorithm2 <- function(Y, X, bg = 0, weights = NULL,
 #' @param Y Data matrix
 #' @return X and Y, both formatted as matrices, with full dimnames and aligned
 #' to each other by dimname
+#' @keywords internal
+#' @noRd
 tidy_X_and_Y <- function(X, Y) {
-
+    
     # format as matrices:
     Ynew <- Y
     if (is.vector(Y)) {
         Ynew <- matrix(Y, nrow = length(Y), dimnames = list(names(Y), "y"))
     }
     Xnew <- X
-
+    
     # check alignment:
     if (!identical(rownames(Y), rownames(X))) {
         warning("Rows (genes) of X and Y are mis-aligned.")

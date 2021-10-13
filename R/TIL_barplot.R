@@ -53,13 +53,14 @@
 #' TIL_barplot(mat = res0$beta)
 #' # run barplot and draw a color legend
 #' TIL_barplot(mat = res0$beta, draw_legend = TRUE)
+#' @import graphics
 #' @importFrom graphics frame legend barplot
 #' @importFrom grDevices colors
 #' @importFrom utils data
 #' @export
 TIL_barplot <- function(mat, draw_legend = FALSE, main = "", col = NULL, ...) {
-
-
+    
+    
     # infer colors:
     if (length(col) == 0) {
         
@@ -80,22 +81,22 @@ TIL_barplot <- function(mat, draw_legend = FALSE, main = "", col = NULL, ...) {
             names(col) <- rownames(mat)
         }
     }
-
+    
     usecells <- rownames(mat)
-
+    
     # draw barplot:
     graphics::barplot(mat[usecells, ],
-        cex.lab = 1.5,
-        col = col, border = NA,
-        las = 2, main = main, ...
+                      cex.lab = 1.5,
+                      col = col, border = NA,
+                      las = 2, main = main, ...
     )
-
+    
     # draw a legend:
     if (draw_legend) {
         graphics::frame()
         graphics::legend("center",
-            fill = rev(col),
-            legend = rev(names(col))
+                         fill = rev(col),
+                         legend = rev(names(col))
         )
     }
 }

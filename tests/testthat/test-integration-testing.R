@@ -141,7 +141,7 @@ test_that("spatialdeconTILs is as expected: se", {
 })
 
 test_that("spatialdeconTILs is as expected: beta.granular", {
-  expect_true(all(abs(res.test$beta.granular - res$beta.granular) < 1e-2))
+  expect_true(all(abs(res.test$beta.granular - res$beta.granular) < 2e-2))
 })
 
 ### test reverse decon:
@@ -214,11 +214,13 @@ test_that("matrix creation works", {
                                                     prob = c(0.1, 0.4, 0.3, 0.2))))
   
   profile_matrix <- create_profile_matrix(mtx = mtx,
-                                        cellAnnots = cellAnnots,
-                                        cellTypeCol = "cellType",
-                                        cellNameCol = "CellID",
-                                        minGenes = 10,
-                                        scalingFactor = 1)
+                                          cellAnnots = cellAnnots,
+                                          cellTypeCol = "cellType",
+                                          cellNameCol = "CellID",
+                                          minGenes = 10,
+                                          scalingFactor = 1,
+                                          outDir = NULL
+                                          )
   
   
 
@@ -228,9 +230,9 @@ test_that("matrix creation works", {
     w2kp <- which(cellAnnots$cellType == CT)
     expect_true(all(rowMeans(mtx[,w2kp]) == profile_matrix[,CT]))
   }
-  expect_true(file.exists("Custom_profileMatrix.csv"))
-  
-  unlink("Custom_profileMatrix.csv", force = TRUE)
+  # expect_true(file.exists("Custom_profileMatrix.csv"))
+  # 
+  # unlink("Custom_profileMatrix.csv", force = TRUE)
 })
 
 ### test collapseCellTypes:

@@ -154,9 +154,13 @@ heatmap(sweep(mousespleen, 1, apply(mousespleen, 1, max), "/"),
 ```
 
 
-For studies where the provided cell profile matrices aren't sufficient or if a specific single cell dataset is wanted, we can make a custom profile matrix using the function create_profile_matrix(). 
+For studies where the provided cell profile matrices aren't sufficient or if a 
+specific single cell dataset is wanted, we can make a custom profile matrix using 
+the function create_profile_matrix(). 
 
-This mini single cell dataset is a fraction of the data from Kinchen, J. et al. Structural Remodeling of the Human Colonic Mesenchyme in Inflammatory Bowel Disease. Cell 175, 372-386.e17 (2018).
+This mini single cell dataset is a fraction of the data from Kinchen, J. et al. 
+Structural Remodeling of the Human Colonic Mesenchyme in Inflammatory Bowel 
+Disease. Cell 175, 372-386.e17 (2018).
 
 ```{r single cell data}
 data("mini_singleCell_dataset")
@@ -171,7 +175,10 @@ table(mini_singleCell_dataset$annots$LabeledCellType)
 
 ```
 
-**Pericyte cell** and **smooth muscle cell of colon** will be dropped from this matrix due to low cell count. The average expression across all cells of one type is returned so the more cells of one type, the better reflection of the true gene expression. The confidence in these averages can be changed using the minCellNum filter.
+**Pericyte cell** and **smooth muscle cell of colon** will be dropped from this 
+matrix due to low cell count. The average expression across all cells of one type 
+is returned so the more cells of one type, the better reflection of the true gene 
+expression. The confidence in these averages can be changed using the minCellNum filter.
 
 ```{r creatematrix, fig.height=7, fig.width=10, fig.cap = "Custom profile matrix"}
 custom_mtx <- create_profile_matrix(mtx = mini_singleCell_dataset$mtx,            # cell x gene count matrix
@@ -193,19 +200,19 @@ heatmap(sweep(custom_mtx, 1, apply(custom_mtx, 1, max), "/"),
 
 ```
 
-Custom matrices can be created from all single cell data classes as long as a counts matrix and cell annotations can be passed to the function. Here is an example of creating a matrix using a Seurat object. 
+Custom matrices can be created from all single cell data classes as long as a 
+counts matrix and cell annotations can be passed to the function. Here is an 
+example of creating a matrix using a Seurat object. 
 
 ```{r createSeuratmatrix}
-if(!requireNamespace("Seurat", quietly = TRUE))
-  install.packages("Seurat")
-
-library(Seurat)
+library(SeuratObject)
 
 data("mini_singleCell_dataset")
 
 rownames(mini_singleCell_dataset$annots) <- mini_singleCell_dataset$annots$CellID
 
-seuratObject <- CreateSeuratObject(counts = mini_singleCell_dataset$mtx, meta.data = mini_singleCell_dataset$annots)
+seuratObject <- CreateSeuratObject(counts = mini_singleCell_dataset$mtx, 
+                                   meta.data = mini_singleCell_dataset$annots)
 Idents(seuratObject) <- seuratObject$LabeledCellType
 
 rm(mini_singleCell_dataset)

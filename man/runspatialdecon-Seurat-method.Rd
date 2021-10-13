@@ -116,11 +116,21 @@ Unlike spatialdecon, which expects a normalized data matrix, this function opera
 on raw counts. Scaling for total cells
 }
 \examples{
-# get mouse brain data:
-library(SeuratData)
-brain <- SeuratData::LoadData("stxBrain", type = "anterior1")
-# get cell profile matrix:
-ref <- download_profile_matrix("Mouse_Brain")
-res <- runspatialdecon(brain, X = ref)
+# get dataset
+con <- gzcon(url("https://github.com/almaan/her2st/raw/master/data/ST-cnts/G1.tsv.gz"))
+txt <- readLines(con)
+temp <- read.table(textConnection(txt), sep = "\t", header = TRUE, row.names = 1)
+# parse data
+raw = t(as.matrix(temp))
+norm = sweep(raw, 2, colSums(raw), "/") * mean(colSums(raw))
+x = as.numeric(substr(rownames(temp), 1, unlist(gregexpr("x", rownames(temp))) - 1))
+y = -as.numeric(substr(rownames(temp), 
+                 unlist(gregexpr("x", rownames(temp))) + 1, nchar(rownames(temp))))
+# put into a seurat object:
+andersson_g1 = SeuratObject::CreateSeuratObject(counts = raw, assay="Spatial")
+andersson_g1@meta.data$x = x
+andersson_g1@meta.data$y = y
+
+res <- runspatialdecon(andersson_g1)
 str(res)
 }
