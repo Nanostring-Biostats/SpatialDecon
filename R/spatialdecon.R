@@ -119,7 +119,7 @@
 #'   cell_counts = mini_geomx_dataset$annot$nuclei,
 #'   is_pure_tumor = mini_geomx_dataset$annot$AOI.name == "Tumor"
 #' )
-#' @importFrom stats pt
+#' @importFrom stats pnorm
 #' @importFrom utils data
 #' @export
 spatialdecon <- function(norm, bg, X = NULL,
@@ -157,6 +157,12 @@ spatialdecon <- function(norm, bg, X = NULL,
         )
     }
 
+    # If a matrix other than safeTME is input, rescale training matrix to avoid bad convergence properties:
+    if (length(X) > 0) {
+        # rescale matrix so its 99th percentile is near that of safeTME (which has a 99th percentile = 2.3)
+        X <- X * 2 / quantile(X, 0.99)
+    }
+    
     # prep training matrix:
     if (length(X) == 0) {
         utils::data("safeTME", envir = environment())
@@ -208,7 +214,9 @@ spatialdecon <- function(norm, bg, X = NULL,
         bg = bg[sharedgenes, ],
         X = X[sharedgenes, ],
         weights = wts[sharedgenes, ],
-        maxit = maxit
+        maxit = maxit,
+        resid_thresh = resid_thresh,
+        lower_thresh = lower_thresh
     )
 
 
@@ -238,7 +246,7 @@ spatialdecon <- function(norm, bg, X = NULL,
         tempse[, i] <- suppressWarnings(sqrt(diag(res$sigma[, , i])))
     }
     tempt <- (tempbeta / tempse)
-    tempp <- 2 * (1 - stats::pt(tempt, df = length(sharedgenes) - ncol(X) - 1))
+    tempp <- 2 * (1 - stats::pnorm(tempt))
     res$p <- tempp
     res$t <- tempt
     res$se <- tempse
@@ -262,7 +270,7 @@ spatialdecon <- function(norm, bg, X = NULL,
             nuclei.counts = cell_counts,
             omit.tumor = TRUE
         )
-        if (exists("res$beta.granular") > 0) {
+        if (length(res$beta.granular) > 0) {
             res$cell.counts.granular <- convertCellScoresToCounts(
                 beta = res$beta.granular,
                 nuclei.counts = cell_counts,

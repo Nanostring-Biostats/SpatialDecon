@@ -3,13 +3,13 @@
 \docType{data}
 \name{mini_geomx_dataset}
 \alias{mini_geomx_dataset}
-\title{Example GeoMx data}
+\title{Small example GeoMx data}
 \format{
 A list with the following elements:
  \itemize{
  \item normalized: normalized data matrix
  \item raw: raw data matrix
- \item annot: AOI annotation data frane
+ \item annot: AOI annotation data frame
  }
 }
 \usage{

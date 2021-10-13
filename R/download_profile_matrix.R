@@ -23,75 +23,70 @@
 #'
 #' Download a cell profile matrix from the online library
 #'
-#' @param matrixname A name
-#' @return A cell profile matrix
-#' @details Valid values for the matrixname argument include:
-#' \itemize{
-#' \item Airway_Epithelium
-#' \item Atlas_Adult_Retina_10x
-#' \item Census_Adult_Immune_10x
-#' \item Census_Newborn_Blood_10x
-#' \item Diff_Fetal_Neuron_SS2
-#' \item FetalMaternal_Adult_Blood_10x
-#' \item FetalMaternal_Adult_Blood_SS2
-#' \item FetalMaternal_Adult_Decidua_10x
-#' \item FetalMaternal_Adult_Decidua_SS2
-#' \item FetalMaternal_Fetal_Placenta_10x
-#' \item Human_brain
-#' \item Human_Cell_Landscape
-#' \item IBD_Adult_Colon_10x
-#' \item Landscape_Adult_Liver_10x
-#' \item Lung_plus_neutrophils
-#' \item Mouse_Brain
-#' \item Profiling_Adult_BoneMarrow_10x
-#' \item Reprogram_Embryo_Dendritic_10x
-#' \item Sensitivity_Adult_Esophagus_10x
-#' \item Sensitivity_Adult_Lung_10x
-#' \item Sensitivity_Adult_Spleen_10x
-#' \item Somatic_Adult_Pancreas_SS2
-#' \item SpatioTemporal_Adult_Kidney_10x
-#' \item SpatioTemporal_Fetal_Kidney_10x
-#' \item Tcell_Adult_Blood_10x
-#' \item Tcell_Adult_BoneMarrow_10x
-#' \item Tcell_Adult_Lung_10x
-#' \item Tcell_Adult_LymphNode_10x
-#' }
+#' @param species species of profile matrix 
+#' @param age_group age_group of profile matrix, if fetal mouse please add the 
+#' developmental stage separated with /, i.e. Fetal/E14.5 
+#' @param matrixname name of profile matrix 
+#' @return A cell profile matrix, suggested cell groups, and paper metadata
+#' @details Valid matrices can be found on the github site 
+#' \url{https://github.com/Nanostring-Biostats/CellProfileLibrary/tree/NewProfileMatrices}
 #' @examples
-#' X <- download_profile_matrix(matrixname = "Human_brain")
-#' head(X)
-#' @importFrom utils read.csv
+#' download_profile_matrix(species = "Human", age_group = "Adult", matrixname = "Colon_HCA")
+#' head(profile_matrix)
+#' print(cellGroups)
+#' print(metadata)
+#' @importFrom utils read.csv 
+#' @importFrom repmis source_data
 #' @export
-download_profile_matrix <- function(matrixname) {
+download_profile_matrix <- function(species, age_group, matrixname) {
 
     # check formatting:
+    if (length(species) > 1) {
+        stop("specify just one species")
+    }
+    if (length(age_group) > 1) {
+        stop("specify just one age")
+    }
     if (length(matrixname) > 1) {
         stop("specify just one matrixname")
     }
-
-    librarynames <- c(
-        "Airway_Epithelium", "Atlas_Adult_Retina_10x", "Census_Adult_Immune_10x",
-        "Census_Newborn_Blood_10x", "Diff_Fetal_Neuron_SS2",
-        "FetalMaternal_Adult_Blood_10x", "FetalMaternal_Adult_Blood_SS2",
-        "FetalMaternal_Adult_Decidua_10x", "FetalMaternal_Adult_Decidua_SS2",
-        "FetalMaternal_Fetal_Placenta_10x", "Human_brain", "Human_Cell_Landscape",
-        "IBD_Adult_Colon_10x", "Landscape_Adult_Liver_10x",
-        "Lung_plus_neutrophils", "Mouse_Brain", "Profiling_Adult_BoneMarrow_10x",
-        "Reprogram_Embryo_Dendritic_10x", "Sensitivity_Adult_Esophagus_10x",
-        "Sensitivity_Adult_Lung_10x", "Sensitivity_Adult_Spleen_10x",
-        "Somatic_Adult_Pancreas_SS2", "SpatioTemporal_Adult_Kidney_10x",
-        "SpatioTemporal_Fetal_Kidney_10x", "Tcell_Adult_Blood_10x",
-        "Tcell_Adult_BoneMarrow_10x", "Tcell_Adult_Lung_10x",
-        "Tcell_Adult_LymphNode_10x"
-    )
-    if (!is.element(matrixname, librarynames)) {
-        warning(paste0(matrixname, " is not an expected cell profile matrix name."))
+    
+    valid_species <- c("Human", "Mouse")
+    
+    if (!species %in% valid_species) {
+        stop(paste0("Species input is invalid; must be \"", paste(valid_species, 
+                                                                  collapse = "\" or \""), "\" (case sensitive)"))
     }
+    
+    if(species == "Human"){
+        valid_ages <- c("Adult", "COVID-Infected", "Fetal")
+    }else{
+        valid_ages <- c("Adult", "Fetal/E14.5", "Fetal/E9.5-13.5", "Neonatal")
+    }
+    
+    if (!age_group %in% valid_ages) {
+        stop(paste0("Age input is invalid; must be \"", paste(valid_ages, collapse = "\" or \""), "\" (case sensitive)"))
+    }
+    
+    metadata <- utils::read.csv(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", species, "/",
+                                    species, "_datasets_metadata.csv"), header = T, sep = ",")
+    
+    librarynames <- paste0(metadata$Tissue, "_", metadata$Profile.Matrix)
 
-    X <- as.matrix(utils::read.csv(paste0(
-        "https://raw.githubusercontent.com/patrickjdanaher/cell-profile-library/master/profile_matrices/",
-        matrixname, ".csv"
-    ), row.names = 1))
+    
+    if (!is.element(matrixname, librarynames)) {
+        stop(paste0(matrixname, " is not an expected cell profile matrix name. Did you mean \"", 
+                    paste(librarynames[agrep(matrixname, librarynames)], collapse = "\" or \""), "\"?"))
+    }
+    
+    matrixname <- paste(species, age_group, matrixname, sep = "/")
 
-    X <- X[rowSums(X) > 0, ]
-    return(X)
+
+    suppressMessages(repmis::source_data(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", 
+                                        matrixname, ".RData?raw=True"), 
+                cache = FALSE, rdata = TRUE, envir = globalenv()))
+    
+    assign("profile_matrix", as.matrix(profile_matrix), envir = globalenv())
+    return(as.matrix(profile_matrix))
 }
+

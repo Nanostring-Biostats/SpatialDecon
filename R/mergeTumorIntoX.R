@@ -100,8 +100,8 @@ mergeTumorIntoX <- function(norm, bg, pure_tumor_ids, X, K = 10) {
 
     # align tumorX with X:
     sharedgenes <- intersect(rownames(tumorX), rownames(X))
-    tumorX <- tumorX[sharedgenes, ]
-    X <- X[sharedgenes, ]
+    tumorX <- tumorX[sharedgenes, , drop = FALSE]
+    X <- X[sharedgenes, , drop = FALSE]
 
     # rescale tumor X:
     meanq90 <- max(mean(apply(X, 2, stats::quantile, 0.9)), 1e-3)
