@@ -10,7 +10,8 @@ Details can be found in the SpatialDecon manuscript: Danaher & Kim (2020), "Adva
 
 #### Data preparation functions:
 
-* "download_profile_matrix" Downloads any one of ~30 cell profile matrices compiled for deconvolution of diverse tissue types. 
+* "download_profile_matrix" Downloads any one of ~75 cell profile matrices compiled for deconvolution of diverse tissue types. 
+* "create_profile_matrix" Creates custom profile matrix from single cell data: count matrix and cell type annotations.  
 * "derive_GeoMx_background_at_normalized_scale" Estimates the background expected from each data point in a GeoMx dataset. Accurate background estimation is key for SpatialDecon's accuracy. 
 
 #### SpatialDecon: the core deconvolution function:
@@ -49,7 +50,7 @@ These include:
 ``` r
 devtools::install_github("Nanostring-Biostats/SpatialDecon",
                          ref = "master", 
-                         build_vignettes = TRUE)
+                         build_vignettes = FALSE)
 ```
 
 ## Getting started
@@ -60,3 +61,26 @@ library(SpatialDecon)
 
 
 See the package's vignette for an example of its use. 
+
+
+## Other
+
+* Depends: R >= 4.0, Mac, Unix or Windows
+* Typical installation time: seconds
+* Expected run time for vignette: 1 minute
+* For reproducible code of all analyses in the SpatialDecon manuscript, see https://github.com/Nanostring-Biostats/SpatialDecon-manuscript-analyses
+* license: GPL-3
+
+## Computational benchmarking
+
+The below memory usage and runtimes were gathered from applying spatialdecon to increasing numbers of GeoMx AOIs, using a 544-gene x 18 cell-type cell profile matrix:
+
+| n  | memory (MB) | runtime (ms)  |
+|---|---|---|
+| 10  | 324  | 500  |
+| 50  |  1598 | 2190  |
+| 100  | 3130  | 4280  |
+| 200  | 6266  | 8610  |
+| 500  | 15244  | 21610  |
+| 1000  | 30451  | 42580  |
+| 5000  | 61522  | 83720  |
