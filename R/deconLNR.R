@@ -35,7 +35,6 @@
 #' @param maxit Maximum number of iterations. Default 1000.
 #' @return a list: beta (estimate), sigmas (covariance matrix of estimate,
 #' derived by inverting the hessian from lognlm)
-#' @importFrom logNormReg lognlm
 #' @keywords internal
 #' @noRd
 deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL,
@@ -74,15 +73,15 @@ deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL,
         names(init) <- colnames(X)
         
         # run lognlm:
-        fit <- logNormReg::lognlm(pmax(y, epsilon) ~ b + Xtemp - 1,
-                                  lik = FALSE,
-                                  weights = wts,
-                                  start = c(1, init),
-                                  method = "L-BFGS-B",
-                                  lower = c(1, rep(0, ncol(Xtemp))),
-                                  upper = c(1, rep(Inf, ncol(Xtemp))),
-                                  opt = "optim",
-                                  control = list(maxit = maxit)
+        fit <- lognlm3(pmax(y, epsilon) ~ b + Xtemp - 1,
+                       lik = FALSE,
+                       weights = wts,
+                       start = c(1, init),
+                       method = "L-BFGS-B",
+                       lower = c(1, rep(0, ncol(Xtemp))),
+                       upper = c(1, rep(Inf, ncol(Xtemp))),
+                       opt = "optim",
+                       control = list(maxit = maxit)
         )
         fnout <- list(
             beta = fit$coefficients[-1],
@@ -113,4 +112,87 @@ deconLNR <- function(Y, X, bg = 0, weights = NULL, epsilon = NULL,
     
     out <- list(beta = pmax(beta, 0), sigmas = sigmas)
     return(out)
+}
+
+
+
+# lognlm function from logNormReg v3.0
+lognlm3 = function (formula, data, subset, weights, na.action, y = TRUE, 
+                    start, model = TRUE, lik = TRUE, opt = c("nlminb", "optim"), 
+                    contrasts = NULL, ...) 
+{
+    opt <- match.arg(opt)
+    call <- match.call()
+    if (missing(data)) 
+        data <- environment(formula)
+    mf <- match.call(expand.dots = FALSE)
+    m <- match(c("formula", "data", "subset", "weights", "na.action", 
+                 "offset"), names(mf), 0L)
+    mf <- mf[c(1, m)]
+    mf$drop.unused.levels <- TRUE
+    mf[[1L]] <- as.name("model.frame")
+    mf <- eval(mf, parent.frame())
+    mt <- attr(mf, "terms")
+    intercMt <- attr(mt, "intercept")
+    Y <- model.response(mf, "any")
+    if (length(dim(Y)) == 1L) {
+        nm <- rownames(Y)
+        dim(Y) <- NULL
+        if (!is.null(nm)) 
+            names(Y) <- nm
+    }
+    X <- if (!is.empty.model(mt)) 
+        model.matrix(mt, mf, contrasts)
+    else stop("error in the design matrix")
+    p <- ncol(X)
+    if (!missing(start)) {
+        if (lik && (length(start) != (p + 1))) 
+            stop("if 'lik=TRUE', length(start) should have ncol(X)+1 values ")
+        if (!lik && (length(start) != (p))) 
+            stop("if 'lik=FALSE',  length(start) should have ncol(X) values  ")
+    }
+    attrContr <- attr(X, "contrasts")
+    weights <- as.vector(model.weights(mf))
+    offset <- as.vector(model.offset(mf))
+    if (!is.null(offset)) {
+        if (length(offset) != NROW(Y)) 
+            stop(gettextf("number of offsets is %d, should equal %d (number of observations)", 
+                          length(offset), NROW(Y)), domain = NA)
+    }
+    n <- nrow(X)
+    if (!is.null(weights) && !is.numeric(weights)) 
+        stop("'weights' must be a numeric vector")
+    if (!is.null(weights) && any(weights < 0)) 
+        stop("negative weights not allowed")
+    if (missing(start)) {
+        b <- drop(solve(crossprod(X), crossprod(X, Y)))
+        if (colnames(X)[1] == "(Intercept)") 
+            b[1] <- max(b[1], median(Y))
+        s <- log(mad(Y))
+    }
+    else {
+        b <- start[1:p]
+        s <- start[p + 1]
+    }
+    par0 <- if (lik) 
+        c(b, s)
+    else b
+    obj <- lognlm.fit(X = X, y = Y, par = par0, lik = lik, opt = opt, 
+                      offset = offset, ...)
+    names(obj$coefficients) <- colnames(X)
+    names(obj$s2) <- ""
+    obj$call <- call
+    if (y) 
+        obj$y <- Y
+    class(obj) <- "lognlm"
+    obj$na.action <- attr(mf, "na.action")
+    obj$offset <- offset
+    obj$contrasts <- attr(X, "contrasts")
+    obj$xlevels <- .getXlevels(mt, mf)
+    obj$terms <- mt
+    obj$opt <- opt
+    obj$lik <- lik
+    if (model) 
+        obj$model <- mf
+    obj
 }
