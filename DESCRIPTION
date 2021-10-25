@@ -12,7 +12,7 @@ Encoding: UTF-8
 LazyData: TRUE
 RoxygenNote: 7.1.1
 Imports: 
-    logNormReg (<= 0.3),
+    logNormReg,
     grDevices,
     stats,
     utils,
