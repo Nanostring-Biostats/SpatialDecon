@@ -55,7 +55,6 @@
 #'   beta = res0$beta
 #' )
 #' @importFrom stats lm sd quantile cor
-#' @importFrom logNormReg lognlm
 #' @export
 reverseDecon <- function(norm, beta, epsilon = NULL) {
   
@@ -68,7 +67,7 @@ reverseDecon <- function(norm, beta, epsilon = NULL) {
   # run reverse decon for all genes:
   rd <- function(y) {
     fit <- suppressWarnings(
-      logNormReg::lognlm(y ~ t(beta),
+      lognlm3(y ~ t(beta),
                          lik = FALSE,
                          method = "L-BFGS-B",
                          lower = rep(0, ncol(beta) + 1),
