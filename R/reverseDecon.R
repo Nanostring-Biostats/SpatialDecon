@@ -33,7 +33,6 @@
 #' \item resid.sd, a vector of each gene's residual SD, a metric of how much variability genes
 #'  have independend of cell mixing.
 #' }
-#' @import logNormReg
 #' @examples
 #' data(mini_geomx_dataset)
 #' data(safeTME)
