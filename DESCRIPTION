@@ -1,6 +1,6 @@
 Package: SpatialDecon
 Title: Deconvolution of mixed cells from spatial and/or bulk gene expression data
-Version: 1.5.1
+Version: 1.5.2
 Authors@R: c(person("Nicole", "Ortogero", email = "nortogero@nanostring.com", role = c("cre")),
              person("Patrick", "Danaher", email = "pdanaher@nanostring.com", role = c("aut")),
              person("Maddy", "Griswold", email = "mgriswold@nanostring.com", role = c("aut")))
