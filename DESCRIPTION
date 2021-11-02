@@ -1,6 +1,6 @@
 Package: SpatialDecon
 Title: Deconvolution of mixed cells from spatial and/or bulk gene expression data
-Version: 1.5.2
+Version: 1.5.3
 Authors@R: c(person("Nicole", "Ortogero", email = "nortogero@nanostring.com", role = c("cre")),
              person("Patrick", "Danaher", email = "pdanaher@nanostring.com", role = c("aut")),
              person("Maddy", "Griswold", email = "mgriswold@nanostring.com", role = c("aut")))
@@ -12,7 +12,7 @@ Depends: R (>= 4.0.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: TRUE
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: 
     grDevices,
     stats,
