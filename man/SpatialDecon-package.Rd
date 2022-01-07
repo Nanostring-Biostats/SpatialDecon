@@ -3,7 +3,8 @@
 \docType{package}
 \name{SpatialDecon-package}
 \alias{SpatialDecon-package}
-\title{SpatialDecon: A package for computating the notorious bar statistic.}
+\title{SpatialDecon: A package for estimating mixed cell type abundance in the regions of 
+spatially-resolved gene expression studies}
 \description{
 The SpatialDecon package estimates mixed cell type abundance in the regions
 of spatially-resolved gene

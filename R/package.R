@@ -19,7 +19,8 @@
 # pdanaher@nanostring.com
 
 
-#' SpatialDecon: A package for computating the notorious bar statistic.
+#' SpatialDecon: A package for estimating mixed cell type abundance in the regions of 
+#' spatially-resolved gene expression studies
 #'
 #' The SpatialDecon package estimates mixed cell type abundance in the regions
 #' of spatially-resolved gene
