@@ -3,7 +3,7 @@
 
 The SpatialDecon library implements the SpatialDecon algorithm for mixed cell deconvolution in spatial gene expression datasets. (This algorithm also works in bulk expression profiling data.)
 
-Details can be found in the SpatialDecon manuscript: Danaher & Kim (2020), "Advances in mixed cell deconvolution enable quantification of cell types in spatially-resolved gene expression data.""
+Details can be found in the SpatialDecon manuscript: Danaher & Kim (2022), "Advances in mixed cell deconvolution enable quantification of cell types in spatial transcriptomic data." https://www.nature.com/articles/s41467-022-28020-5
 
 
 ## Guide to functions
