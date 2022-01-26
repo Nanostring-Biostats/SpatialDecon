@@ -20,14 +20,6 @@ BiocManager::install(version="release")
 BiocManager::install("SpatialDecon")
 ```
 
-### Install the development version from GitHub
-``` r
-install.packages("devtools")
-library("devtools")
-devtools::install_github("Nanostring-Biostats/SpatialDecon", 
-                         build_vignettes = TRUE, ref = "dev")
-```
-
 ## Documentation
 
 To learn how to start using SpatialDecon, view documentation for the
