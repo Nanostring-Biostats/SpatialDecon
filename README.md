@@ -5,6 +5,37 @@ The SpatialDecon library implements the SpatialDecon algorithm for mixed cell de
 
 Details can be found in the SpatialDecon manuscript: Danaher & Kim (2022), "Advances in mixed cell deconvolution enable quantification of cell types in spatial transcriptomic data." https://www.nature.com/articles/s41467-022-28020-5
 
+## Installation
+
+### Download the release version from Bioconductor
+<https://bioconductor.org/packages/release/bioc/html/SpatialDecon.html>
+
+### Install the release version from Bioconductor
+``` r
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(version="release")
+
+BiocManager::install("SpatialDecon")
+```
+
+### Install the development version from GitHub
+``` r
+install.packages("devtools")
+library("devtools")
+devtools::install_github("Nanostring-Biostats/SpatialDecon", 
+                         build_vignettes = TRUE, ref = "dev")
+```
+
+## Documentation
+
+To learn how to start using SpatialDecon, view documentation for the
+version of this package installed in your system, start R and enter:
+
+``` r
+browseVignettes("SpatialDecon")
+```
 
 ## Guide to functions
 
@@ -43,24 +74,6 @@ These include:
 #### Post-deconvolution analyses:
 
 * "reverseDecon" Models genes ~ decon-derived cell scores. It produces fitted values, residuals, and various metrics of how much genes depend on cell mixing. In studies where cell mixing is a dominant source of variance, these residuals aid interpretation. 
-
-
-## Installation
-
-``` r
-devtools::install_github("Nanostring-Biostats/SpatialDecon",
-                         ref = "master", 
-                         build_vignettes = FALSE)
-```
-
-## Getting started
-
-``` r
-library(SpatialDecon)
-```
-
-
-See the package's vignette for an example of its use. 
 
 
 ## Other
