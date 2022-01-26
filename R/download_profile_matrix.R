@@ -75,11 +75,21 @@ download_profile_matrix <- function(species, age_group, matrixname) {
     
     
     if (!is.element(matrixname, librarynames)) {
-        stop(paste0(matrixname, " is not an expected cell profile matrix name. Did you mean \"", 
+        stop(paste0(matrixname, " is not an expected cell profile matrix name for the species given. Did you mean \"", 
                     paste(librarynames[agrep(matrixname, librarynames)], collapse = "\" or \""), "\"?"))
     }
     
+    profilename <- matrixname
     matrixname <- paste(species, age_group, matrixname, sep = "/")
+    
+    
+    fulllibrarynames <- paste(metadata$Species, metadata$Age.Group, librarynames, sep = "/")
+    
+    if (!is.element(matrixname, fulllibrarynames)) {
+        stop(paste0(profilename, " does not correspond with the age_group given. Did you mean \"", 
+                    paste(unique(t(as.data.frame(strsplit(fulllibrarynames[agrep(profilename, fulllibrarynames)], "/")))[,2]), 
+                          collapse = "\" or \""), "\"?"))
+    }
     
     
     suppressMessages(repmis::source_data(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", 
