@@ -1,12 +1,11 @@
 Package: SpatialDecon
 Title: Deconvolution of mixed cells from spatial and/or bulk gene expression data
-Version: 1.5.4
-Authors@R: c(person("Nicole", "Ortogero", email = "nortogero@nanostring.com", role = c("cre")),
-             person("Patrick", "Danaher", email = "pdanaher@nanostring.com", role = c("aut")),
-             person("Maddy", "Griswold", email = "mgriswold@nanostring.com", role = c("aut")))
+Version: 1.5.5
+Authors@R: c(person("Maddy", "Griswold", email = "mgriswold@nanostring.com", role = c("cre", "aut")),
+             person("Patrick", "Danaher", email = "pdanaher@nanostring.com", role = c("aut")))
 Description: Using spatial or bulk gene expression data, estimates abundance of mixed cell types
- within each observation. Based on "Advances in mixed cell deconvolution enable quantification
- of cell types in spatially-resolved gene expression data", Danaher (2020). Designed for use with
+ within each observation. Based on "Advances in mixed cell deconvolution enable quantification of 
+ cell types in spatial transcriptomic data", Danaher (2022). Designed for use with
  the NanoString GeoMx platform, but applicable to any gene expression data. 
 Depends: R (>= 4.0.0)
 License: MIT + file LICENSE
