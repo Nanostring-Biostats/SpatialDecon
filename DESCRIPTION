@@ -32,6 +32,7 @@ biocViews:
     ImmunoOncology, 
     FeatureExtraction, 
     GeneExpression, 
-    Transcriptomics
+    Transcriptomics,
+    Spatial
 VignetteBuilder: knitr
 BugReports: https://github.com/Nanostring-Biostats/SpatialDecon/issues
