@@ -22,7 +22,8 @@ Imports:
     GeomxTools,
     repmis,
     methods,
-    Matrix
+    Matrix,
+    logNormReg
 Suggests: 
     testthat,
     knitr,

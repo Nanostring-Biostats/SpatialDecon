@@ -141,10 +141,10 @@ spatialdecon <- function(norm, bg, X = NULL,
         stop("X should be a matrix")
     }
     if ((length(raw) > 0) & (!is.matrix(raw))) {
-        stop("raw must be numeric")
+        stop("raw must be a matrix")
     }
     if ((length(wts) > 0) & (!is.matrix(wts))) {
-        stop("wts must be numeric")
+        stop("wts must be a matrix")
     }
     if ((length(cell_counts) > 0) & (!is.numeric(cell_counts))) {
         stop("cell_counts must be numeric")
