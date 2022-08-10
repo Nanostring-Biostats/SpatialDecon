@@ -4,39 +4,7 @@
 #' @param object An S4 object such as a Seurat object or a GeoMxSet object
 #' @param ... Arguments passed to spatialdecon
 #' @return decon results in list or in GeoMxSet object
-#' @examples 
-#' ##Seurat
-#' # get dataset
-#' con <- gzcon(url("https://github.com/almaan/her2st/raw/master/data/ST-cnts/G1.tsv.gz"))
-#' txt <- readLines(con)
-#' temp <- read.table(textConnection(txt), sep = "\t", header = TRUE, row.names = 1)
-#' # parse data
-#' raw = t(as.matrix(temp))
-#' norm = sweep(raw, 2, colSums(raw), "/") * mean(colSums(raw))
-#' x = as.numeric(substr(rownames(temp), 1, unlist(gregexpr("x", rownames(temp))) - 1))
-#' y = -as.numeric(substr(rownames(temp), 
-#'                  unlist(gregexpr("x", rownames(temp))) + 1, nchar(rownames(temp))))
-#' # put into a seurat object:
-#' andersson_g1 = SeuratObject::CreateSeuratObject(counts = raw, assay="Spatial")
-#' andersson_g1@meta.data$x = x
-#' andersson_g1@meta.data$y = y
-#' 
-#' res <- runspatialdecon(andersson_g1)
-#' str(res)
-#' 
-#' ##GeomxTools
-#' library(GeomxTools)
-#' datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools")
-#' demoData <- readRDS(file.path(datadir, "/demoData.rds"))
-#' 
-#' demoData <- shiftCountsOne(demoData)
-#' target_demoData <- aggregateCounts(demoData)
-#' 
-#' target_demoData <- normalize(target_demoData, "quant")
-#' 
-#' demoData <- runspatialdecon(object = target_demoData, 
-#'                             norm_elt = "exprs_norm",
-#'                             raw_elt = "exprs")
+#' @noRd
 setGeneric("runspatialdecon", signature = "object",
            function(object, ...) standardGeneric("runspatialdecon"))
 

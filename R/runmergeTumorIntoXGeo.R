@@ -4,23 +4,7 @@
 #' @param object An S4 object such as a GeoMxSet object
 #' @param ... Arguments passed to mergeTumorIntoX
 #' @return updated X matrix with new columns, "tumor.1", "tumor.2", ...
-#' @examples 
-#' library(GeomxTools)
-#' datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools")
-#' demoData <- readRDS(file.path(datadir, "/demoData.rds"))
-#' 
-#' demoData <- shiftCountsOne(demoData)
-#' target_demoData <- aggregateCounts(demoData)
-#' 
-#' target_demoData <- normalize(target_demoData, "quant")
-#' 
-#' data(safeTME)
-#' tumor.ids <- as.logical(sample(x = c("TRUE","FALSE"), size = 88, replace = TRUE))
-#' safeTME.with.tumor <- runMergeTumorIntoX(object = target_demoData,
-#'                                          X = safeTME,
-#'                                          K = 3,
-#'                                          pure_tumor_ids = tumor.ids,
-#'                                          norm_elt = "exprs_norm")
+#' @noRd
 
 setGeneric("runMergeTumorIntoX", signature = "object",
            function(object, ...) standardGeneric("runMergeTumorIntoX"))
@@ -57,7 +41,7 @@ setGeneric("runMergeTumorIntoX", signature = "object",
 #'
 #' @importFrom methods is
 #' @export
-#'
+#' @rdname runMergeTumorIntoX
 
 setMethod("runMergeTumorIntoX", "NanoStringGeoMxSet",
           function(object, X, K = 10, pure_tumor_ids = NULL, norm_elt = NULL){
