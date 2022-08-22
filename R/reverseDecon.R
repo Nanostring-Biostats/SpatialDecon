@@ -66,7 +66,7 @@ reverseDecon <- function(norm, beta, epsilon = NULL) {
   # run reverse decon for all genes:
   rd <- function(y) {
     fit <- suppressWarnings(
-      lognlm3(y ~ t(beta),
+      logNormReg::lognlm(y ~ t(beta),
                          lik = FALSE,
                          method = "L-BFGS-B",
                          lower = rep(0, ncol(beta) + 1),

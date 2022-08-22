@@ -4,27 +4,7 @@
 #' @param object An S4 object such as a GeoMxSet object
 #' @param ... Arguments passed to collapseCellTypes
 #' @return A reshaped deconvolution result object
-#' @examples
-#' library(GeomxTools)
-#' datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools")
-#' demoData <- readRDS(file.path(datadir, "/demoData.rds"))
-#' 
-#' demoData <- shiftCountsOne(demoData)
-#' target_demoData <- aggregateCounts(demoData)
-#' 
-#' target_demoData <- normalize(target_demoData, "quant")
-#'                 
-#' # run basic decon:
-#' res0 <- runspatialdecon(object = target_demoData,
-#'                         norm_elt = "exprs_norm",
-#'                         raw_elt = "exprs")
-#'
-#' # run reverse decon:
-#' target_demoData <- runReverseDecon(object = target_demoData,
-#'                                    norm_elt = "exprs_norm",
-#'                                    beta = pData(res0)$beta)
-#'
-
+#' @noRd
 setGeneric("runCollapseCellTypes", signature = "object",
            function(object, ...) standardGeneric("runCollapseCellTypes"))
 
@@ -62,7 +42,7 @@ setGeneric("runCollapseCellTypes", signature = "object",
 #'                                    beta = pData(res0)$beta)
 #'
 #' @export
-#'
+#' @rdname runCollapseCellTypes
 setMethod("runCollapseCellTypes",  "NanoStringGeoMxSet",
           function(object, matching = NULL){
               

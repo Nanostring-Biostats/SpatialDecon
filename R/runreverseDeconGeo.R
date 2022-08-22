@@ -4,26 +4,7 @@
 #' @param object An S4 object such as a GeoMxSet object
 #' @param ... Arguments passed to reversedecon
 #' @return list containing modeled gene expression's ~ cell scores
-#' @examples 
-#' library(GeomxTools)
-#' datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools")
-#' demoData <- readRDS(file.path(datadir, "/demoData.rds"))
-#' 
-#' demoData <- shiftCountsOne(demoData)
-#' target_demoData <- aggregateCounts(demoData)
-#' 
-#' target_demoData <- normalize(target_demoData, "quant")
-#'                 
-#' # run basic decon:
-#' res0 <- runspatialdecon(object = target_demoData,
-#'                         norm_elt = "exprs_norm",
-#'                         raw_elt = "exprs")
-#'
-#' # run reverse decon:
-#' target_demoData <- runReverseDecon(object = target_demoData,
-#'                                    norm_elt = "exprs_norm",
-#'                                    beta = pData(res0)$beta)
-#'
+#' @noRd
 
 setGeneric("runReverseDecon", signature = "object",
            function(object, ...) standardGeneric("runReverseDecon"))
@@ -78,7 +59,7 @@ setGeneric("runReverseDecon", signature = "object",
 #'                                    beta = pData(res0)$beta)
 #'
 #' @export
-#'
+#' @rdname runReverseDecon
 setMethod("runReverseDecon",  "NanoStringGeoMxSet",
           function(object, norm_elt = NULL, beta, epsilon = NULL){
               
