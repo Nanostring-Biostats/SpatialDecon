@@ -29,7 +29,7 @@
 #' @param matrixname name of profile matrix 
 #' @return A cell profile matrix, suggested cell groups, and paper metadata
 #' @details Valid matrices can be found on the github site 
-#' \url{https://github.com/Nanostring-Biostats/CellProfileLibrary/tree/NewProfileMatrices}
+#' \url{https://github.com/Nanostring-Biostats/CellProfileLibrary/tree/master}
 #' @examples
 #' download_profile_matrix(species = "Human", age_group = "Adult", matrixname = "Colon_HCA")
 #' head(profile_matrix)
@@ -68,21 +68,30 @@ download_profile_matrix <- function(species, age_group, matrixname) {
         stop(paste0("Age input is invalid; must be \"", paste(valid_ages, collapse = "\" or \""), "\" (case sensitive)"))
     }
     
-    metadata <- utils::read.csv(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", species, "/",
+    metadata <- utils::read.csv(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/master/", species, "/",
                                        species, "_datasets_metadata.csv"), header = TRUE, sep = ",")
     
     librarynames <- paste0(metadata$Tissue, "_", metadata$Profile.Matrix)
     
     
     if (!is.element(matrixname, librarynames)) {
-        stop(paste0(matrixname, " is not an expected cell profile matrix name. Did you mean \"", 
+        stop(paste0(matrixname, " is not an expected cell profile matrix name for the species given. Did you mean \"", 
                     paste(librarynames[agrep(matrixname, librarynames)], collapse = "\" or \""), "\"?"))
     }
     
+    profilename <- matrixname
     matrixname <- paste(species, age_group, matrixname, sep = "/")
     
+    fulllibrarynames <- paste(metadata$Species, metadata$Age.Group, librarynames, sep = "/")
     
-    suppressMessages(repmis::source_data(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/NewProfileMatrices/", 
+    if (!is.element(matrixname, fulllibrarynames)) {
+        stop(paste0(profilename, " does not correspond with the age_group given. Did you mean \"", 
+                    paste(unique(t(as.data.frame(strsplit(fulllibrarynames[agrep(profilename, fulllibrarynames)], "/")))[,2]), 
+                          collapse = "\" or \""), "\"?"))
+    }
+    
+    
+    suppressMessages(repmis::source_data(paste0("https://raw.github.com/Nanostring-Biostats/CellProfileLibrary/master/", 
                                                 matrixname, ".RData?raw=True"), 
                                          cache = FALSE, rdata = TRUE, envir = globalenv()))
     
