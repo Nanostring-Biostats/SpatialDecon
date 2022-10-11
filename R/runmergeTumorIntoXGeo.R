@@ -4,7 +4,7 @@
 #' @param object An S4 object such as a GeoMxSet object
 #' @param ... Arguments passed to mergeTumorIntoX
 #' @return updated X matrix with new columns, "tumor.1", "tumor.2", ...
-#' @noRd
+#'
 
 setGeneric("runMergeTumorIntoX", signature = "object",
            function(object, ...) standardGeneric("runMergeTumorIntoX"))
@@ -13,13 +13,11 @@ setGeneric("runMergeTumorIntoX", signature = "object",
 #'
 #' A wrapper for applying mergeTumorIntoX to a NanostringGeomxSet object.
 #'
-#' @param object A NanostringGeomxSet object.
 #' @param pure_tumor_ids Vector identifying columns of norm that are pure tumor.
 #'                       Can be indices, logicals or column names.
 #' @param X The training matrix
 #' @param K the number of clusters to fit
 #' @param norm_elt norm data element in assayData
-#' @return an updated X matrix with new columns, "tumor.1", "tumor.2", ...
 #' @importFrom Biobase assayData
 #' @examples
 #' library(GeomxTools)

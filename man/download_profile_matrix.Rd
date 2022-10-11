@@ -22,7 +22,7 @@ Download a cell profile matrix from the online library
 }
 \details{
 Valid matrices can be found on the github site 
-\url{https://github.com/Nanostring-Biostats/CellProfileLibrary/tree/NewProfileMatrices}
+\url{https://github.com/Nanostring-Biostats/CellProfileLibrary/tree/master}
 }
 \examples{
 download_profile_matrix(species = "Human", age_group = "Adult", matrixname = "Colon_HCA")

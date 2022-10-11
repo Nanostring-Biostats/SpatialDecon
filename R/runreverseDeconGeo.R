@@ -3,8 +3,8 @@
 #' Runs reversedecon from an S4 object
 #' @param object An S4 object such as a GeoMxSet object
 #' @param ... Arguments passed to reversedecon
-#' @return list containing modeled gene expression's ~ cell scores
-#' @noRd
+#' 
+#'
 
 setGeneric("runReverseDecon", signature = "object",
            function(object, ...) standardGeneric("runReverseDecon"))
@@ -13,7 +13,7 @@ setGeneric("runReverseDecon", signature = "object",
 #'
 #' A wrapper for applying reversedecon to a NanostringGeomxSet object.
 #'
-#' @param object A NanostringGeomxSet object.
+#'
 #' @param norm_elt normalized data element in assayData.
 #' @param beta Matrix of cell abundance estimates, with cells in columns and observations in rows.
 #'  Columns are aligned to "norm".

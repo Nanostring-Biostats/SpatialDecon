@@ -23,7 +23,7 @@ Imports:
     repmis,
     methods,
     Matrix,
-    logNormReg
+    logNormReg (>= 0.4)
 Suggests: 
     testthat,
     knitr,

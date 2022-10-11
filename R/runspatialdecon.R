@@ -1,166 +1,19 @@
 #' Run spatialdecon
 #' 
 #' Runs spatialdecon from an S4 object
-#' @param object An S4 object such as a Seurat object or a GeoMxSet object
+#' @param object An S4 object such as a Seurat object that includse a "Spatial" element in the "assays" slot or a GeoMxSet object
 #' @param ... Arguments passed to spatialdecon
 #' @return decon results in list or in GeoMxSet object
-#' @noRd
+#' 
 setGeneric("runspatialdecon", signature = "object",
            function(object, ...) standardGeneric("runspatialdecon"))
-
-
-#' Run spatialdecon on a Seurat object
-#' 
-#' A wrapper for applying spatialdecon to the Spatial data element in a Seurat object. 
-#' Unlike spatialdecon, which expects a normalized data matrix, this function operates 
-#' on raw counts. Scaling for total cells 
-#' @param object A seurat object. Must include a "Spatial" element in the "assays" slot.
-#' @param X Cell profile matrix. If NULL, the safeTME matrix is used.
-#' @param bg Expected background counts. Either a scalar applied equally to 
-#'  all points in the count matrix, or a matrix with the same dimensions 
-#'  as the count matrix in GetAssayData(object, assay = "Spatial").
-#'  Recommended to use a small non-zero value, default of 0.1.
-#' @param wts Optional, a matrix of weights.
-#' @param resid_thresh A scalar, sets a threshold on how extreme individual data
-#'  points' values
-#'  can be (in log2 units) before getting flagged as outliers and set to NA.
-#' @param lower_thresh A scalar. Before log2-scale residuals are calculated,
-#'  both observed and fitted
-#'  values get thresholded up to this value. Prevents log2-scale residuals from
-#'  becoming extreme in
-#'  points near zero.
-#' @param align_genes Logical. If TRUE, then Y, X, bg, and wts are row-aligned
-#'  by shared genes.
-#' @param is_pure_tumor A logical vector denoting whether each AOI consists of
-#'  pure tumor. If specified,
-#'  then the algorithm will derive a tumor expression profile and merge it with
-#'  the immune profiles matrix.
-#' @param cell_counts Number of cells estimated to be within each sample. If
-#' provided alongside norm_factors,
-#'  then the algorithm will additionally output cell abundance esimtates on the
-#'  scale of cell counts.
-#' @param cellmerges A list object holding the mapping from beta's cell names to
-#'  combined cell names. If left
-#'  NULL, then defaults to a mapping of granular immune cell definitions to
-#'   broader categories.
-#' @param n_tumor_clusters Number of tumor-specific columns to merge into the
-#' cell profile matrix.
-#'  Has an impact only when is_pure_tumor argument is used to indicate pure
-#'   tumor AOIs.
-#'  Takes this many clusters from the pure-tumor AOI data and gets the average
-#'  expression profile in each cluster.  Default 10.
-#' @param maxit Maximum number of iterations. Default 1000.
-#' @return if not given cellmerges and cell_counts, a list
-#' including the following items:
-#'  \itemize{
-#'    \item beta: matrix of cell abundance estimates, cells in rows and
-#'                observations in columns
-#'    \item p: matrix of p-values for H0: beta == 0
-#'    \item t: matrix of t-statistics for H0: beta == 0
-#'    \item se: matrix of standard errors of beta values
-#'    \item prop_of_all: rescaling of beta to sum to 1 in each observation
-#'    \item prop_of_nontumor: rescaling of beta to sum to 1 in each observation,
-#'                            excluding tumor abundance estimates
-#'    \item yhat: a matrix of fitted values
-#'    \item resids: a matrix of residuals from the model fit.
-#'                  (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
-#'    \item X: the cell profile matrix used in the decon fit.
-#'    \item sigmas: covariance matrices of each observation's beta estimates
-#'}
-#'
-#'
-#' if given cellmerges, the list will additionally include
-#' the following items
-#'  \itemize{
-#'    \item beta.granular: cell abundances prior to combining closely-related
-#'                         cell types
-#'    \item sigma.granular: sigmas prior to combining closely-related cell types
-#'}
-#'
-#' if given cell_counts, the list will additionally include
-#'  the following items
-#'  \itemize{
-#'    \item cell.counts: beta rescaled to estimate cell numbers, based on
-#'                       prop_of_all and nuclei count
-#'}
-#'
-#' if given both cellmerges and cell_counts, the list will
-#'  additionally include the following items
-#'  \itemize{
-#'    \item cell.counts.granular: cell.counts prior to combining closely-related
-#'                                cell types
-#'}
-#' @importFrom SeuratObject GetAssayData
-#' @importClassesFrom GeomxTools NanoStringGeoMxSet
-#' @export
-#' @examples
-#' # get dataset
-#' con <- gzcon(url("https://github.com/almaan/her2st/raw/master/data/ST-cnts/G1.tsv.gz"))
-#' txt <- readLines(con)
-#' temp <- read.table(textConnection(txt), sep = "\t", header = TRUE, row.names = 1)
-#' # parse data
-#' raw = t(as.matrix(temp))
-#' norm = sweep(raw, 2, colSums(raw), "/") * mean(colSums(raw))
-#' x = as.numeric(substr(rownames(temp), 1, unlist(gregexpr("x", rownames(temp))) - 1))
-#' y = -as.numeric(substr(rownames(temp), 
-#'                  unlist(gregexpr("x", rownames(temp))) + 1, nchar(rownames(temp))))
-#' # put into a seurat object:
-#' andersson_g1 = SeuratObject::CreateSeuratObject(counts = raw, assay="Spatial")
-#' andersson_g1@meta.data$x = x
-#' andersson_g1@meta.data$y = y
-#' 
-#' res <- runspatialdecon(andersson_g1)
-#' str(res)
-setMethod("runspatialdecon", "Seurat", function(
-  object,
-  X = NULL,
-  bg = 0.1,  
-  wts = NULL,
-  resid_thresh = 3, lower_thresh = 0.5,
-  align_genes = TRUE,
-  is_pure_tumor = NULL, 
-  n_tumor_clusters = 10,
-  cell_counts = NULL,
-  cellmerges = NULL,
-  maxit = 1000) {
-  
-  # check that it's a spatial assay:
-  if (!is.element("Spatial", names(object@assays))) {
-    stop("Expecting \'Spatial\' element in assays slot")
-  }
-  
-  # prep components:
-  raw <- as.matrix(SeuratObject::GetAssayData(object, assay = "Spatial"))
-  # make bg a matrix if only a scalar was specified:
-  if (length(bg) == 1) {
-    bg <- 0 * raw + bg
-  }
-  
-  # run spatialdecon:
-  res <- spatialdecon(norm = raw, 
-                      bg = bg, 
-                      X = X,
-                      raw = raw, 
-                      wts = wts,
-                      resid_thresh = resid_thresh, 
-                      lower_thresh = lower_thresh,
-                      align_genes = align_genes,
-                      is_pure_tumor = is_pure_tumor, 
-                      n_tumor_clusters = n_tumor_clusters,
-                      cell_counts = cell_counts,
-                      cellmerges = cellmerges,
-                      maxit = maxit) 
-  
-  return(res)
-})
 
 #' Run spatialdecon on a NanostringGeomxSet object
 #'
 #' A wrapper for applying spatialdecon to a NanostringGeomxSet object.
 #'
-#' @param object A NanostringGeomxSet object.
-#' @param norm_elt normalized data element in assayData
-#' @param raw_elt raw data element in assayData
+#' @param norm_elt normalized data element in assayData in NanostringGeomxSet object
+#' @param raw_elt raw data element in assayData in NanostringGeomxSet object
 #' @param X Cell profile matrix. If NULL, the safeTME matrix is used.
 #' @param wts Optional, a matrix of weights.
 #' @param resid_thresh A scalar, sets a threshold on how extreme individual data
@@ -196,7 +49,7 @@ setMethod("runspatialdecon", "Seurat", function(
 #' @importFrom Biobase assayData
 #' @importClassesFrom GeomxTools NanoStringGeoMxSet
 #'
-#' @return if not given cellmerges and cell_counts, a valid GeoMx S4 object
+#' @return For GeoMxSet object, if not given cellmerges and cell_counts, a valid GeoMx S4 object
 #' including the following items
 #'  \itemize{
 #'    \item In pData
@@ -257,6 +110,7 @@ setMethod("runspatialdecon", "Seurat", function(
 #'
 #' @examples
 #'
+#' ## GeoMxSet Object ##
 #' library(GeomxTools)
 #' datadir <- system.file("extdata", "DSP_NGS_Example_Data", package = "GeomxTools")
 #' demoData <- readRDS(file.path(datadir, "/demoData.rds"))
@@ -271,7 +125,7 @@ setMethod("runspatialdecon", "Seurat", function(
 #'                             raw_elt = "exprs")
 #'
 #' @export
-#'
+#' @rdname runspatialdecon
 
 setMethod("runspatialdecon", "NanoStringGeoMxSet",
           function(object, X = NULL, norm_elt = NULL, raw_elt = NULL,
@@ -296,7 +150,7 @@ setMethod("runspatialdecon", "NanoStringGeoMxSet",
             if (!is.element(raw_elt, names(object@assayData))) {
               stop(paste(raw_elt, "is not an element in assaysData slot"))
             }
-          
+            
             # prep components:
             norm <- as.matrix(Biobase::assayDataElement(object , elt = norm_elt))
             raw <- as.matrix(Biobase::assayDataElement(object , elt = raw_elt))
@@ -462,9 +316,9 @@ setMethod("runspatialdecon", "NanoStringGeoMxSet",
                 
                 # add cell.counts matrix
                 Biobase::pData(object)[["cell.counts"]][["cell.counts"]] <- matrix(NA, nrow = ncol(object),
-                                                                                    ncol = nrow(result$cell.counts$cell.counts),
-                                                                                    dimnames = list(Biobase::sampleNames(object),
-                                                                                                    rownames(result$cell.counts$cell.counts)))
+                                                                                   ncol = nrow(result$cell.counts$cell.counts),
+                                                                                   dimnames = list(Biobase::sampleNames(object),
+                                                                                                   rownames(result$cell.counts$cell.counts)))
                 Biobase::pData(object)[["cell.counts"]][["cell.counts"]][colnames(result$cell.counts$cell.counts), ] <- t(result$cell.counts$cell.counts)
               } else {
                 # create cell.counts list
@@ -504,9 +358,9 @@ setMethod("runspatialdecon", "NanoStringGeoMxSet",
                 
                 # add cells.count matrix
                 Biobase::pData(object)[["cell.counts.granular"]][["cell.counts"]] <- matrix(NA, nrow = ncol(object),
-                                                                                             ncol = nrow(result$cell.counts.granular$cell.counts),
-                                                                                             dimnames = list(Biobase::sampleNames(object),
-                                                                                                             rownames(result$cell.counts.granular$cell.counts)))
+                                                                                            ncol = nrow(result$cell.counts.granular$cell.counts),
+                                                                                            dimnames = list(Biobase::sampleNames(object),
+                                                                                                            rownames(result$cell.counts.granular$cell.counts)))
                 Biobase::pData(object)[["cell.counts.granular"]][["cell.counts"]][colnames(result$cell.counts.granular$cells.per.100), ] <- t(result$cell.counts.granular$cell.counts)
               } else {
                 # create cell.counts.granular list
@@ -530,4 +384,152 @@ setMethod("runspatialdecon", "NanoStringGeoMxSet",
             
           })
 
+
+
+
+#' Run spatialdecon on a Seurat object
+#' 
+#' A wrapper for applying spatialdecon to the Spatial data element in a Seurat object. 
+#' Unlike spatialdecon, which expects a normalized data matrix, this function operates 
+#' on raw counts. Scaling for total cells 
+#' @param X Cell profile matrix. If NULL, the safeTME matrix is used.
+#' @param bg Expected background counts. Either a scalar applied equally to 
+#'  all points in the count matrix, or a matrix with the same dimensions 
+#'  as the count matrix in GetAssayData(object, assay = "Spatial").
+#'  Recommended to use a small non-zero value, default of 0.1.
+#' @param wts Optional, a matrix of weights.
+#' @param resid_thresh A scalar, sets a threshold on how extreme individual data
+#'  points' values
+#'  can be (in log2 units) before getting flagged as outliers and set to NA.
+#' @param lower_thresh A scalar. Before log2-scale residuals are calculated,
+#'  both observed and fitted
+#'  values get thresholded up to this value. Prevents log2-scale residuals from
+#'  becoming extreme in
+#'  points near zero.
+#' @param align_genes Logical. If TRUE, then Y, X, bg, and wts are row-aligned
+#'  by shared genes.
+#' @param is_pure_tumor A logical vector denoting whether each AOI consists of
+#'  pure tumor. If specified,
+#'  then the algorithm will derive a tumor expression profile and merge it with
+#'  the immune profiles matrix.
+#' @param cell_counts Number of cells estimated to be within each sample. If
+#' provided alongside norm_factors,
+#'  then the algorithm will additionally output cell abundance esimtates on the
+#'  scale of cell counts.
+#' @param cellmerges A list object holding the mapping from beta's cell names to
+#'  combined cell names. If left
+#'  NULL, then defaults to a mapping of granular immune cell definitions to
+#'   broader categories.
+#' @param n_tumor_clusters Number of tumor-specific columns to merge into the
+#' cell profile matrix.
+#'  Has an impact only when is_pure_tumor argument is used to indicate pure
+#'   tumor AOIs.
+#'  Takes this many clusters from the pure-tumor AOI data and gets the average
+#'  expression profile in each cluster.  Default 10.
+#' @param maxit Maximum number of iterations. Default 1000.
+#' @return For Seurat Object, if not given cellmerges and cell_counts, a list
+#' including the following items:
+#'  \itemize{
+#'    \item beta: matrix of cell abundance estimates, cells in rows and
+#'                observations in columns
+#'    \item p: matrix of p-values for H0: beta == 0
+#'    \item t: matrix of t-statistics for H0: beta == 0
+#'    \item se: matrix of standard errors of beta values
+#'    \item prop_of_all: rescaling of beta to sum to 1 in each observation
+#'    \item prop_of_nontumor: rescaling of beta to sum to 1 in each observation,
+#'                            excluding tumor abundance estimates
+#'    \item yhat: a matrix of fitted values
+#'    \item resids: a matrix of residuals from the model fit.
+#'                  (log2(pmax(y, lower_thresh)) - log2(pmax(xb, lower_thresh))).
+#'    \item X: the cell profile matrix used in the decon fit.
+#'    \item sigmas: covariance matrices of each observation's beta estimates
+#'}
+#'
+#'
+#' if given cellmerges, the list will additionally include
+#' the following items
+#'  \itemize{
+#'    \item beta.granular: cell abundances prior to combining closely-related
+#'                         cell types
+#'    \item sigma.granular: sigmas prior to combining closely-related cell types
+#'}
+#'
+#' if given cell_counts, the list will additionally include
+#'  the following items
+#'  \itemize{
+#'    \item cell.counts: beta rescaled to estimate cell numbers, based on
+#'                       prop_of_all and nuclei count
+#'}
+#'
+#' if given both cellmerges and cell_counts, the list will
+#'  additionally include the following items
+#'  \itemize{
+#'    \item cell.counts.granular: cell.counts prior to combining closely-related
+#'                                cell types
+#'}
+#' @importFrom SeuratObject GetAssayData
+#' @importClassesFrom GeomxTools NanoStringGeoMxSet
+#' @export
+#' @examples
+#' ## Seurat Object ##
+#' # get dataset
+#' con <- gzcon(url("https://github.com/almaan/her2st/raw/master/data/ST-cnts/G1.tsv.gz"))
+#' txt <- readLines(con)
+#' temp <- read.table(textConnection(txt), sep = "\t", header = TRUE, row.names = 1)
+#' # parse data
+#' raw = t(as.matrix(temp))
+#' norm = sweep(raw, 2, colSums(raw), "/") * mean(colSums(raw))
+#' x = as.numeric(substr(rownames(temp), 1, unlist(gregexpr("x", rownames(temp))) - 1))
+#' y = -as.numeric(substr(rownames(temp), 
+#'                  unlist(gregexpr("x", rownames(temp))) + 1, nchar(rownames(temp))))
+#' # put into a seurat object:
+#' andersson_g1 = SeuratObject::CreateSeuratObject(counts = raw, assay="Spatial")
+#' andersson_g1@meta.data$x = x
+#' andersson_g1@meta.data$y = y
+#' 
+#' res <- runspatialdecon(andersson_g1)
+#' str(res)
+#' @rdname runspatialdecon
+setMethod("runspatialdecon", "Seurat", function(
+  object,
+  X = NULL,
+  bg = 0.1,  
+  wts = NULL,
+  resid_thresh = 3, lower_thresh = 0.5,
+  align_genes = TRUE,
+  is_pure_tumor = NULL, 
+  n_tumor_clusters = 10,
+  cell_counts = NULL,
+  cellmerges = NULL,
+  maxit = 1000) {
+  
+  # check that it's a spatial assay:
+  if (!is.element("Spatial", names(object@assays))) {
+    stop("Expecting \'Spatial\' element in assays slot")
+  }
+  
+  # prep components:
+  raw <- as.matrix(SeuratObject::GetAssayData(object, assay = "Spatial"))
+  # make bg a matrix if only a scalar was specified:
+  if (length(bg) == 1) {
+    bg <- 0 * raw + bg
+  }
+  
+  # run spatialdecon:
+  res <- spatialdecon(norm = raw, 
+                      bg = bg, 
+                      X = X,
+                      raw = raw, 
+                      wts = wts,
+                      resid_thresh = resid_thresh, 
+                      lower_thresh = lower_thresh,
+                      align_genes = align_genes,
+                      is_pure_tumor = is_pure_tumor, 
+                      n_tumor_clusters = n_tumor_clusters,
+                      cell_counts = cell_counts,
+                      cellmerges = cellmerges,
+                      maxit = maxit) 
+  
+  return(res)
+})
 

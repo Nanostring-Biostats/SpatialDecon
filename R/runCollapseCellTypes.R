@@ -4,7 +4,7 @@
 #' @param object An S4 object such as a GeoMxSet object
 #' @param ... Arguments passed to collapseCellTypes
 #' @return A reshaped deconvolution result object
-#' @noRd
+#' 
 setGeneric("runCollapseCellTypes", signature = "object",
            function(object, ...) standardGeneric("runCollapseCellTypes"))
 
@@ -14,11 +14,10 @@ setGeneric("runCollapseCellTypes", signature = "object",
 #' types to combine,
 #'  returns a reshaped deconvolution result object with the specified cell
 #'  types merged.
-#' @param object A NanostringGeomxSet object returned by the SpatialDecon algorithm
+#' 
 #' @param matching A list object holding the mapping from beta's cell names to
 #' official cell names.
 #'  See str(safeTME.matches) for an example.
-#' @return A reshaped deconvolution result object
 #' @importFrom stats pnorm
 #' @importFrom Biobase assayData
 #' @examples
