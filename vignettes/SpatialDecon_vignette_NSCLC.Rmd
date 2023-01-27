@@ -57,6 +57,8 @@ Now let's load our example data and examine it:
 ```{r loaddata}
 data("nsclc")
 
+updateGeoMxSet(nsclc)
+
 dim(nsclc)
 head(pData(nsclc))
 nsclc@assayData$exprs[seq_len(5), seq_len(5)]
