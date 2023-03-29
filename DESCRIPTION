@@ -1,6 +1,6 @@
 Package: SpatialDecon
 Title: Deconvolution of mixed cells from spatial and/or bulk gene expression data
-Version: 1.7.3
+Version: 1.9.1
 Authors@R: c(person("Maddy", "Griswold", email = "mgriswold@nanostring.com", role = c("cre", "aut")),
              person("Patrick", "Danaher", email = "pdanaher@nanostring.com", role = c("aut")))
 Description: Using spatial or bulk gene expression data, estimates abundance of mixed cell types
@@ -11,7 +11,7 @@ Depends: R (>= 4.0.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: TRUE
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Imports: 
     grDevices,
     stats,

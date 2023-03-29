@@ -57,6 +57,8 @@ Now let's load our example data and examine it:
 ```{r loaddata}
 data("nsclc")
 
+nsclc <- updateGeoMxSet(nsclc)
+
 dim(nsclc)
 head(pData(nsclc))
 nsclc@assayData$exprs[seq_len(5), seq_len(5)]
@@ -65,6 +67,9 @@ nsclc@assayData$exprs[seq_len(5), seq_len(5)]
 sampleNames(nsclc) <-  
   paste0(nsclc$ROI, nsclc$AOI.name)
 
+#This dataset is already on Target level (genes instead of probeIDs in rows), 
+# just need to reflect that in object. 
+featureType(nsclc) <- "Target"
 ```
 
 
