@@ -264,9 +264,9 @@ test_that("collapseCellTypes works", {
 
 ## test wrapper for seurat objects:
 #make seurat object:
-seur <- SeuratObject::CreateSeuratObject(counts = raw, assay="Spatial")
+seur <- suppressWarnings(SeuratObject::CreateSeuratObject(counts = raw, assay="Spatial"))
 test_that("runspatialdecon works on seurat objects", {
-  res <- runspatialdecon(seur)
+  res <- suppressWarnings(runspatialdecon(seur))
   
   res2 <- spatialdecon(norm = raw, raw = raw, bg = 0.1)
   

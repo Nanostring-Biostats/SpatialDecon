@@ -220,7 +220,7 @@ rm(mini_singleCell_dataset)
 annots <- data.frame(cbind(cellType=as.character(Idents(seuratObject)), 
                            cellID=names(Idents(seuratObject))))
 
-custom_mtx_seurat <- create_profile_matrix(mtx = seuratObject@assays$RNA@counts, 
+custom_mtx_seurat <- create_profile_matrix(mtx = seuratObject[["RNA"]]$counts, 
                                            cellAnnots = annots, 
                                            cellTypeCol = "cellType", 
                                            cellNameCol = "cellID", 
