@@ -131,7 +131,7 @@ heatmap(sweep(safeTME, 1, apply(safeTME, 1, max), "/"),
 For studies of other tissue types, we have provided a library of cell profile
 matrices, available on Github and downloadable with the "download_profile_matrix" function. 
 
-For a complete list of matrices, see [CellProfileLibrary GitHub Page](https://github.com/Nanostring-Biostats/CellProfileLibrary/tree/NewProfileMatrices)
+For a complete list of matrices, see [CellProfileLibrary GitHub Page](https://github.com/Nanostring-Biostats/CellProfileLibrary)
 
 Below we download a matrix of cell profiles derived from scRNA-seq of a mouse 
 spleen. 
@@ -206,6 +206,7 @@ example of creating a matrix using a Seurat object.
 
 ```{r createSeuratmatrix}
 library(SeuratObject)
+library(Seurat)
 
 data("mini_singleCell_dataset")
 
@@ -220,7 +221,9 @@ rm(mini_singleCell_dataset)
 annots <- data.frame(cbind(cellType=as.character(Idents(seuratObject)), 
                            cellID=names(Idents(seuratObject))))
 
-custom_mtx_seurat <- create_profile_matrix(mtx = seuratObject@assays$RNA@counts, 
+custom_mtx_seurat <- create_profile_matrix(mtx = Seurat::GetAssayData(object = seuratObject, 
+                                                                      assay = "RNA", 
+                                                                      slot = "counts"), 
                                            cellAnnots = annots, 
                                            cellTypeCol = "cellType", 
                                            cellNameCol = "cellID", 

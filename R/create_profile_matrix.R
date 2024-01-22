@@ -23,7 +23,7 @@
 #'
 #' Create custom cell profile matrix using single cell data. The average gene expression for each cell type is returned.
 #'
-#' @param mtx cell x gene count matrix
+#' @param mtx gene x cell count matrix
 #' @param cellAnnots cell annotations with cell type and cell name as columns
 #' @param cellTypeCol column containing cell type
 #' @param cellNameCol column containing cell ID/name

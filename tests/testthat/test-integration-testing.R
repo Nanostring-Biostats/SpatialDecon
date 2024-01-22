@@ -264,9 +264,30 @@ test_that("collapseCellTypes works", {
 
 ## test wrapper for seurat objects:
 #make seurat object:
+options(Seurat.object.assay.version = "v3")
 seur <- SeuratObject::CreateSeuratObject(counts = raw, assay="Spatial")
-test_that("runspatialdecon works on seurat objects", {
+test_that("runspatialdecon works on seurat objects - v3", {
   res <- runspatialdecon(seur)
+  res2 <- spatialdecon(norm = raw, raw = raw, bg = 0.1)
+  
+  expect_true(is.matrix(res$beta)) # test beta is a matrix
+  expect_true(is.matrix(res$yhat)) 
+  expect_true(is.matrix(res$resids))
+  expect_true(length(dim(res$sigmas)) == 3) # test sigmas is a 3d assar
+  expect_true(is.matrix(res$p))
+  expect_true(is.matrix(res$t))
+  expect_true(is.matrix(res$se))
+  expect_true(is.matrix(res$prop_of_all))
+  expect_true(is.matrix(res$prop_of_nontumor))
+  expect_true(is.matrix(res$X))
+  
+  expect_identical(res, res2)
+})
+
+options(Seurat.object.assay.version = "v5")
+seur <- suppressWarnings(SeuratObject::CreateSeuratObject(counts = raw, assay="Spatial"))
+test_that("runspatialdecon works on seurat objects - v5", {
+  res <- suppressWarnings(runspatialdecon(seur))
   
   res2 <- spatialdecon(norm = raw, raw = raw, bg = 0.1)
   

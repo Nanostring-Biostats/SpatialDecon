@@ -20,7 +20,7 @@ create_profile_matrix(
 )
 }
 \arguments{
-\item{mtx}{cell x gene count matrix}
+\item{mtx}{gene x cell count matrix}
 
 \item{cellAnnots}{cell annotations with cell type and cell name as columns}
 
